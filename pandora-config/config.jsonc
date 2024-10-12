@@ -1,0 +1,1335 @@
+/*
+-------------------------------------------------------------------------------
+pan.do/ra Configuration
+-------------------------------------------------------------------------------
+You can edit this file. Most changes are effective immediately; everything that
+affects the database layout (adding a new item key, annotation layer etc.) will
+require a server restart. You may also want to take a look at the configuration
+examples (config.SITENAME.jsonc) that are part of this pan.do/ra distribution.
+*/
+{
+    /*
+    "annotations" configures the annotation panel.
+        "separator" is the character, string or HTML tag that separates
+            annotations of type "string"
+        "showUsers": If true, include list of users in menu, so that
+            annotations by specific users can be turned on and off
+
+    */
+    "annotations": {
+        "separator": ";",
+        "showUsers": false
+    },
+    /*
+    "cantPlay" specifies the UI for clips or videos that a user is not allowed
+    to play.
+        "icon": Symbol name (see https://oxjs.org/#examples/symbols/live)
+        "link": URL loaded on click (for example "/rights", if "rights" is
+            defined in "sitePages")
+        "text": Text shown on mouseover
+    */
+    "cantPlay": {
+        "icon": "NoCopyright",
+        "link": "",
+        "text": ""
+    },
+    /*
+    "capabilities" are permissions per user level.
+    Depending on the capability, this is either global:
+        {level: true} means a user of that level has the capability
+    or related to the rights levels of items or texts:
+        {level: x} means a user of that level has the capability for items or
+        texts of a rights level up to and including x
+    */
+    "capabilities": {
+        "canAddItems": {"member": true, "staff": true, "admin": true},
+        "canAddDocuments": {"member": true, "staff": true, "admin": true},
+        "canDownloadVideo": {"guest": 1, "member": 1, "staff": 4, "admin": 4},
+        "canDownloadSource": {"member": 1, "staff": 4, "admin": 4},
+        "canEditAnnotations": {"staff": true, "admin": true},
+        "canEditDocuments": {"staff": true, "admin": true},
+        "canEditEntities": {"staff": true, "admin": true},
+        "canEditEvents": {"staff": true, "admin": true},
+        "canEditFeaturedCollections": {"staff": true, "admin": true},
+        "canEditFeaturedEdits": {"staff": true, "admin": true},
+        "canEditFeaturedLists": {"staff": true, "admin": true},
+        "canEditFeaturedTexts": {"staff": true, "admin": true},
+        "canEditMedia": {"staff": true, "admin": true},
+        "canEditMetadata": {"staff": true, "admin": true},
+        "canEditPlaces": {"staff": true, "admin": true},
+        "canEditRightsLevel": {"member": true, "staff": true, "admin": true},
+        "canEditSitePages": {"staff": true, "admin": true},
+        "canEditUsers": {"admin": true},
+        "canExportAnnotations": {"member": true, "staff": true, "admin": true},
+        "canImportAnnotations": {"member": true, "staff": true, "admin": true},
+        "canImportItems": {"member": true, "staff": true, "admin": true},
+        "canManageDocuments": {"member": true, "staff": true, "admin": true},
+        "canManageEntities": {"member": true, "staff": true, "admin": true},
+        "canManageHome": {"staff": true, "admin": true},
+        "canManagePlacesAndEvents": {"member": true, "staff": true, "admin": true},
+        "canManageTitlesAndNames": {"member": false, "staff": true, "admin": true},
+        "canManageTranslations": {"admin": true},
+        "canManageUsers": {"staff": true, "admin": true},
+        "canPlayClips": {"guest": 1, "member": 1, "staff": 4, "admin": 4},
+        "canPlayVideo": {"guest": 1, "member": 1, "staff": 4, "admin": 4},
+        "canReadText": {"guest": 0, "member": 0, "staff": 1, "admin": 1},
+        "canRemoveItems": {"staff": true, "admin": true},
+        "canRemoveDocuments": {"staff": true, "admin": true},
+        "canSeeAccessed": {"staff": true, "admin": true},
+        "canSeeAllTasks": {"staff": true, "admin": true},
+        "canSeeDebugMenu": {"staff": true, "admin": true},
+        "canSeeExtraItemViews": {"staff": true, "admin": true},
+        "canSeeMedia": {"staff": true, "admin": true},
+        "canSeeDocument": {"guest": 1, "member": 1, "staff": 4, "admin": 4},
+        "canSeeItem": {"guest": 1, "member": 1, "staff": 4, "admin": 4},
+        "canSeeSize": {"staff": true, "admin": true},
+        "canSeeSoftwareVersion": {"staff": true, "admin": true},
+        "canSendMail": {"staff": true, "admin": true}
+    },
+    /*
+    "clipKeys" are the properties that clips can be sorted by (the values are
+    populated automatically). If "sortOperator" is not specified, it will be
+    "+" (ascending) for strings and "-" (descending) for numbers.
+    */
+    "clipKeys": [
+        {"id": "text", "title": "Text", "type": "string"},
+        {"id": "position", "title": "Position", "type": "float", "sortOperator": "+"},
+        {"id": "duration", "title": "Duration", "type": "float"},
+        {"id": "hue", "title": "Hue", "type": "float", "sortOperator": "+"},
+        {"id": "saturation", "title": "Saturation", "type": "float"},
+        {"id": "lightness", "title": "Lightness", "type": "float"},
+        {"id": "volume", "title": "Volume", "type": "float"}
+    ],
+    /*
+    "clipLayers" is the ordered list of public layers that will appear as the
+    text of clips (in grid view, below the icon). Excluding a layer from this
+    list means it will not be included in find annotations.
+    */
+    "clipLayers": ["publicnotes", "keywords", "subtitles"],
+    /*
+    "documentKeys" defines the metadata associated with each document. Required keys
+    are "*", "id" and "title".
+    A documentKey must have the following properties:
+        "id": The unique id of the key (as used by the server)
+        "title": The title of the key (as displayed by the client)
+        "type": Can be "boolean", "date", "enum", "float", "hue", "integer",
+            "layer", "string", "text", "time" or ["..."] (list of values of
+            this type). If type is "layer", this is a reference to the
+            annotations layer with the same id.
+    and can have any of the following properties:
+        "additionalSort": Ordered list of {key, operator} objects, where key is
+            another itemKey and operator is "+" or "-". This can be used to
+            override user.ui.listSort when results are sorted by this key.
+        "autocomplete": If true, the find element will provide autocomplete
+        "autocompleteSort": Sort order of autocomplete suggestions
+        "capability": A capability required to see data for this key
+        "columnRequired": If true, the column can't be removed from list view
+        "columnWidth": Default column width in px. If absent, no column for
+            this key can be added in list view.
+        "filter": If true, one can filter results by this key
+        "find": If true, this key will appear as an option in the find element
+        "flag": Can be "country" or "language". If set (and filter is true), a
+            flag icon corresponding to the field's value will be displayed.
+        "format": {type: string, args: [value, value, ...]}, used for special
+            formatting. This will invoke Ox.formatType(args). For details, see
+            https://oxjs.org/#doc/Ox.formatArea etc.
+        "secondaryId": If true, loading the URL "/value" will redirect to the
+            corresponding item, in case there is an exact match for this key
+        "sort": If true, one can sort results by this key
+        "sortOperator": Sort order ("+" or "-"), in case it differs from the
+            default for the key's type ("+" for strings, "-" for numbers)
+        "sortType": Special sort type ("person" or "title") which can be
+            further configured in "Manage Names" or "Manage Titles"
+        "value": {key: string, type: string} or {layer: string, type: string},
+            for keys whose value is derived from other keys or layers (like
+            "number of actors" or "words per minute"). Possible values for type
+            are "length", "lengthperminute", "words", and "wordsperminute".
+            Alternatively, "value" can be set to the string "capability", which
+            results in an itemKey whose boolean value indicates the presence or
+            absence of a userLevel-dependent capability. This can be used to
+            create queries and lists like "all items this user can play" etc.
+        "values": [value, value, ...] Ordered list of values, in case "type" is
+            "enum"
+    */
+    "documentKeys": [
+        {
+            "id": "*",
+            "title": "All",
+            "type": "text",
+            "find": true
+        },
+        {
+            "id": "title",
+            "operator": "+",
+            "title": "Title",
+            "type": "string",
+            "find": true,
+            "sort": true,
+            "sortType": "title",
+            "autocomplete": true,
+            "columnWidth": 256
+        },
+        {
+            "id": "type",
+            "operator": "+",
+            "title": "Type",
+            "type": "string",
+            "filter": true,
+            "find": true,
+            "sort": true,
+            "autocomplete": true,
+            "columnWidth": 128
+        },
+        {
+            "id": "author",
+            "operator": "+",
+            "title": "Author",
+            "type": ["string"],
+            "filter": true,
+            "find": true,
+            "sort": true,
+            "sortType": "person",
+            "autocomplete": true,
+            "columnWidth": 256
+        },
+        {
+            "id": "publisher",
+            "operator": "+",
+            "title": "Publisher",
+            "type": "string",
+            "filter": true,
+            "find": true,
+            "sort": true,
+            "autocomplete": true,
+            "columnWidth": 256
+        },
+        {
+            "id": "place",
+            "title": "Place",
+            "type": ["string"],
+            "columnWidth": 128,
+            "filter": true,
+            "find": true,
+            "sort": true
+        },
+        {
+            "id": "date",
+            "title": "Date",
+            "type": "string",
+            "columnWidth": 120,
+            //"format": {"type": "date", "args": ["%a, %b %e, %Y"]},
+            "filter": true,
+            "sort": true
+        },
+        {
+            "id": "series",
+            "title": "Series",
+            "type": "string",
+            "columnWidth": 128,
+            "find": true,
+            "sort": true
+        },
+        {
+            "id": "edition",
+            "title": "Edition",
+            "type": "string",
+            "columnWidth": 128,
+            "find": true
+        },
+        {
+            "id": "language",
+            "title": "Language",
+            "type": ["string"],
+            "columnWidth": 128,
+            "filter": true,
+            "find": true,
+            "sort": true
+        },
+        {
+            "id": "id",
+            "operator": "+",
+            "title": "ID",
+            "type": "string",
+            "sort": true,
+            "columnWidth": 64
+        },
+        {
+            "id": "extension",
+            "operator": "+",
+            "title": "Extension",
+            "type": "string",
+            "filter": true,
+            "find": true,
+            "sort": true,
+            "autocomplete": true,
+            "columnWidth": 64
+        },
+        {
+            "id": "dimensions",
+            "operator": "-",
+            "title": "Dimensions",
+            "type": "integer",
+            "sort": true,
+            "columnWidth": 128
+        },
+        {
+            "id": "size",
+            "operator": "-",
+            "title": "Size",
+            "type": "integer",
+            "sort": true,
+            "format": {"type": "value", "args": ["B"]},
+            "columnWidth": 64
+        },
+        {
+            "id": "description",
+            "operator": "+",
+            "title": "Description",
+            "type": "text",
+            "find": true,
+            "sort": true,
+            "columnWidth": 256
+        },
+        {
+            "id": "matches",
+            "operator": "-",
+            "title": "Matches",
+            "type": "integer",
+            "sort": true,
+            "columnWidth": 64
+        },
+        {
+            "id": "user",
+            "operator": "+",
+            "title": "User",
+            "type": "string",
+            "filter": true,
+            "find": true,
+            "sort": true,
+            "autocomplete": true,
+            "columnWidth": 128
+        },
+        {
+            "id": "created",
+            "operator": "-",
+            "title": "Created",
+            "format": {"type": "date", "args": ["%Y-%m-%d %H:%M:%S"]},
+            "type": "date",
+            "sort": true,
+            "columnWidth": 144
+        },
+        {
+            "id": "modified",
+            "operator": "-",
+            "title": "Modified",
+            "format": {"type": "date", "args": ["%Y-%m-%d %H:%M:%S"]},
+            "type": "date",
+            "sort": true,
+            "columnWidth": 144
+        },
+        {
+            "id": "accessed",
+            "title": "Last Accessed",
+            "type": "date",
+            "capability": "canSeeAccessed",
+            "columnWidth": 150,
+            "format": {"type": "date", "args": ["%Y-%m-%d %H:%M:%S"]},
+            "sort": true
+        },
+        {
+            "id": "timesaccessed",
+            "title": "Times Accessed",
+            "type": "integer",
+            "capability": "canSeeAccessed",
+            "columnWidth": 60,
+            "format": {"type": "number", "args": []},
+            "sort": true
+        },
+        {
+            "id": "rightslevel",
+            "title": "Rights Level",
+            "type": "enum",
+            "columnWidth": 90,
+            "format": {"type": "ColorLevel", "args": [
+                ["Public", "Restricted", "Private"]
+            ]},
+            "sort": true,
+            "sortOperator": "+",
+            "values": ["Public", "Restricted", "Private", "Unknown"]
+        }
+    ],
+    /*
+    "documentRightsLevel" defines which initial rights level will be assigned to documents
+    created by users of these user levels.
+    */
+    "documentRightsLevel": {"member": 0, "staff": 0, "admin": 0},
+    /*
+    "documentRightsLevels" is an ordered list of rights levels, one of which will be
+    assigned to each document.
+    */
+    "documentRightsLevels": [
+        {"name": "Public", "color": [128, 255, 128]},
+        {"name": "Restricted", "color": [255, 212, 128]},
+        {"name": "Private", "color": [255, 128, 128]}
+    ],
+    /*
+    "entities" can be used to store arbitrary data. They can be referenced in
+    annotations, info view, or elsewhere. Each entry defines a specific class
+    of entity object, its properties and their types (for example an "actor"
+    with "name", "biography", "portrait" etc). The HTML representation for
+    entities can be customized by adding "/static/js/entity.SITENAME.js".
+    Each entity has the following properties:
+        "id": Unique internal ID (can be referenced in "layers")
+        "title": Human-readable title
+        "keys": List of properties
+        "sortType": Optional. If set to "person" or "title", then the sort
+            order can be configured in "Manage Names" or "Manage Titles"
+    Each key has the properties "id", "title" and "type". "type" can be
+    "boolean", "number", "string", "text", "document" (reference to the id of a
+    document added via "Manage Documents") or ["string"] (list of strings).
+    "id" and "name" keys are required. If "alternativeNames" is present, these
+    will act as synonyms when autocompleting values entered as annotations.
+    */
+    "entities": [
+        {
+            "id": "people",
+            "title": "People",
+            "keys": [
+                {"id": "id", "title": "ID", "type": "string"},
+                {"id": "name", "title": "Name", "type": "string"},
+                {"id": "additionalNames", "title": "Additional Names", "type": ["string"]},
+                {"id": "biography", "title": "Biography", "type": "text"},
+                {"id": "portrait", "title": "Portrait", "type": "document"}
+            ],
+            "sortType": "person"
+        },
+        {
+            "id": "categories",
+            "title": "Categories",
+            "keys": [
+                {"id": "id", "title": "ID", "type": "string"},
+                {"id": "name", "title": "Name", "type": "string"},
+                {"id": "additionalNames", "title": "Additional Names", "type": ["string"]},
+                {"id": "summary", "title": "Summary", "type": "text"}
+            ],
+            "sortType": "title"
+        }
+    ],
+    /*
+    "flags", if set to true, will cause flag icons to appear in filters.
+    */
+    "flags": true,
+    /*
+    "help" specifies the sections of the help dialog.
+    */
+    "help": [
+        {"id": "help", "title": "Help"},
+        {"id": "accounts", "title": "Accounts"},
+        {"id": "navigation", "title": "Navigation"},
+        {"id": "views", "title": "Views"},
+        {"id": "timelines", "title": "Timelines"},
+        {"id": "clips", "title": "Clips"},
+        {"id": "maps", "title": "Maps"},
+        {"id": "calendars", "title": "Calendars"},
+        {"id": "find", "title": "Find"},
+        {"id": "filters", "title": "Filters"},
+        {"id": "lists", "title": "Lists"},
+        {"id": "player", "title": "Player"},
+        {"id": "editor", "title": "Editor"},
+        {"id": "documents", "title": "Documents"},
+        {"id": "entities", "title": "Entities"},
+        {"id": "edits", "title": "Edits"},
+        {"id": "texts", "title": "Texts"},
+        {"id": "embeds", "title": "Embeds"}
+    ],
+    /*
+    "importMetadata" defines what fields (as defined in "itemKeys") will get
+    populated with imported metadata. There is metadata for "title",
+    "description", "uploader", "date", "tags", "id", "url", and the value must
+    be a format string (like "{title} ({id})"). The type of the itemKeys must
+    be "string", ["string"], "text", "date" or "year". The last two only work
+    with "{date}".
+    */
+    "importMetadata": {
+        "title": "{title}"
+    },
+    /*
+    "itemKeys" defines the metadata associated with each item. Required keys
+    are "*", "id" and "title". Annotation layers can be referenced too, which
+    makes them available in the find element. Adding a key with "annotations"
+    as id adds a "find in any annotation layer" option. Further, adding a key
+    with "random" as id can be used for a random sort order.
+    An itemKey must have the following properties:
+        "id": The unique id of the key (as used by the server)
+        "title": The title of the key (as displayed by the client)
+        "type": Can be "boolean", "date", "enum", "float", "hue", "integer",
+            "layer", "string", "text", "time" or ["..."] (list of values of
+            this type). If type is "layer", this is a reference to the
+            annotations layer with the same id.
+    and can have any of the following properties:
+        "additionalSort": Ordered list of {key, operator} objects, where key is
+            another itemKey and operator is "+" or "-". This can be used to
+            override user.ui.listSort when results are sorted by this key.
+        "autocomplete": If true, the find element will provide autocomplete
+        "autocompleteSort": Sort order of autocomplete suggestions
+        "capability": A capability required to see data for this key
+        "columnRequired": If true, the column can't be removed from list view
+        "columnWidth": Default column width in px. If absent, no column for
+            this key can be added in list view.
+        "filter": If true, one can filter results by this key
+        "find": If true, this key will appear as an option in the find element
+        "flag": Can be "country" or "language". If set (and filter is true), a
+            flag icon corresponding to the field's value will be displayed.
+        "format": {type: string, args: [value, value, ...]}, used for special
+            formatting. This will invoke Ox.formatType(args). For details, see
+            https://oxjs.org/#doc/Ox.formatArea etc.
+        "secondaryId": If true, loading the URL "/value" will redirect to the
+            corresponding item, in case there is an exact match for this key
+        "sort": If true, one can sort results by this key
+        "sortOperator": Sort order ("+" or "-"), in case it differs from the
+            default for the key's type ("+" for strings, "-" for numbers)
+        "sortType": Special sort type ("person" or "title") which can be
+            further configured in "Manage Names" or "Manage Titles"
+        "value": {key: string, type: string} or {layer: string, type: string},
+            for keys whose value is derived from other keys or layers (like
+            "number of actors" or "words per minute"). Possible values for type
+            are "length", "lengthperminute", "words", and "wordsperminute".
+            Alternatively, "value" can be set to the string "capability", which
+            results in an itemKey whose boolean value indicates the presence or
+            absence of a userLevel-dependent capability. This can be used to
+            create queries and lists like "all items this user can play" etc.
+        "values": [value, value, ...] Ordered list of values, in case "type" is
+            "enum"
+    */
+
+/*
+    Typ:
+        Curated/Artistic Video
+            Genre
+            Title
+        Recording (of an event)
+            Title: Title of the event
+            Place: Place of the event
+            Event: -> entity
+        Object representation
+            Title: "Name" of the object
+            Place: Museum, or part of a museum etc.
+            Event: -> entity
+
+Video:
+    Title
+    Description
+    Catalog Number
+    Languages
+    Contributors
+    Featuring
+    Creator (optional)
+    Source: of the video material
+    Year/Date of recording:
+    Release date:
+
+Object:
+    Legacy Catalog Number (Object number)
+
+*/
+
+    "itemKeys": [
+        {
+            "id": "*",
+            "title": "All",
+            "type": "text",
+            "find": true
+        },
+        {
+            "id": "title",
+            "title": "Title",
+            "type": "string",
+            "autocomplete": true,
+            "autocompleteSort": [{"key": "timesaccessed", "operator": "-"}],
+            "columnRequired": true,
+            "columnWidth": 180,
+            "find": true,
+            "sort": true,
+            "sortType": "title"
+        },
+        {
+            "id": "name",
+            "title": "Name",
+            "type": ["string"],
+            "autocomplete": true,
+            "find": true
+        },
+        {
+            "id": "director",
+            "title": "Director",
+            "type": ["string"],
+            "autocomplete": true,
+            "columnRequired": true,
+            "columnWidth": 180,
+            "filter": true,
+            "sort": true,
+            "sortType": "person"
+        },
+        {
+            "id": "featuring",
+            "title": "Featuring",
+            "type": ["string"],
+            "autocomplete": true,
+            "columnRequired": true,
+            "columnWidth": 180,
+            "filter": true,
+            "sort": true,
+            "sortType": "person"
+        },
+        {
+            "id": "language",
+            "title": "Language",
+            "type": ["string"],
+            "autocomplete": true,
+            "columnWidth": 120,
+            "filter": true,
+            "find": true,
+            "sort": true
+        },
+        {
+            "id": "country",
+            "title": "Country",
+            "type": ["string"],
+            "autocomplete": true,
+            "columnWidth": 180,
+            "filter": true,
+            "find": true,
+            "flag": "country",
+            "sort": true
+        },
+        {
+            "id": "year",
+            "title": "Year",
+            "type": "year",
+            "additionalSort": [
+                {"key": "director", "operator": "+"},
+                {"key": "title", "operator": "+"}
+            ],
+            "autocomplete": true,
+            "columnWidth": 60,
+            "filter": true,
+            "find": true,
+            "sort": true
+        },
+        {
+            "id": "summary",
+            "title": "Summary",
+            "type": "text",
+            "find": true
+        },
+        {
+            "id": "notes",
+            "title": "Notes",
+            "type": "text",
+            "capability": "canEditMetadata"
+        },
+        {
+            "id": "id",
+            "title": "ID",
+            "type": "string",
+            "columnWidth": 90,
+            "sort": true
+        },
+        {
+            "id": "keywords",
+            "title": "Keywords",
+            "type": "layer",
+            "autocomplete": true,
+            "filter": true,
+            "find": true
+        },
+        {
+            "id": "subtitles",
+            "title": "Subtitles",
+            "type": "layer",
+            "find": true
+        },
+        {
+            "id": "publicnotes",
+            "title": "Notes",
+            "type": "layer",
+            "find": true
+        },
+        {
+            "id": "numberofannotations",
+            "title": "Annotations",
+            "type": "integer",
+            "columnWidth": 60,
+            "sort": true
+        },
+        {
+            "id": "duration",
+            "title": "Duration",
+            "type": "time",
+            "columnWidth": 90,
+            "format": {"type": "duration", "args": [0, "short"]},
+            "sort": true
+        },
+        {
+            "id": "resolution",
+            "title": "Resolution",
+            "type": ["integer"],
+            "columnWidth": 90,
+            "format": {"type": "resolution", "args": ["px"]},
+            "sort": true
+        },
+        {
+            "id": "aspectratio",
+            "title": "Aspect Ratio",
+            "type": "float",
+            "columnWidth": 90,
+            "format": {"type": "unit", "args": [":1", 3]},
+            "sort": true
+        },
+        {
+            "id": "pixels",
+            "title": "Pixels",
+            "type": "integer",
+            "columnWidth": 90,
+            "format": {"type": "value", "args": ["px"]},
+            "sort": true
+        },
+        {
+            "id": "hue",
+            "title": "Hue",
+            "type": "hue",
+            "columnWidth": 90,
+            "format": {"type": "color", "args": ["hue"]},
+            "sort": true,
+            "sortOperator": "+"
+        },
+        {
+            "id": "saturation",
+            "title": "Saturation",
+            "type": "float",
+            "columnWidth": 90,
+            "format": {"type": "color", "args": ["saturation"]},
+            "sort": true
+        },
+        {
+            "id": "lightness",
+            "title": "Lightness",
+            "type": "float",
+            "columnWidth": 90,
+            "format": {"type": "color", "args": ["lightness"]},
+            "sort": true
+        },
+        {
+            "id": "volume",
+            "title": "Volume",
+            "type": "float",
+            "columnWidth": 60,
+            "format": {"type": "color", "args": ["lightness"]},
+            "sort": true
+        },
+        {
+            "id": "numberofcuts",
+            "title": "Number of Cuts",
+            "type": "integer",
+            "columnWidth": 60,
+            "format": {"type": "number", "args": []},
+            "sort": true,
+            "value": {"key": "cuts", "type": "length"}
+        },
+        {
+            "id": "cutsperminute",
+            "title": "Cuts per Minute",
+            "type": "float",
+            "columnWidth": 60,
+            "format": {"type": "number", "args": [3]},
+            "sort": true,
+            "value": {"key": "cuts", "type": "lengthperminute"}
+        },
+        {
+            "id": "words",
+            "title": "Number of Words",
+            "type": "integer",
+            "columnWidth": 60,
+            "format": {"type": "number", "args": []},
+            "sort": true,
+            "value": {"layer": "subtitles", "type": "words"}
+        },
+        {
+            "id": "wordsperminute",
+            "title": "Words per Minute",
+            "type": "float",
+            "columnWidth": 60,
+            "format": {"type": "number", "args": [3]},
+            "sort": true,
+            "value": {"layer": "subtitles", "type": "wordsperminute"}
+        },
+        {
+            "id": "size",
+            "title": "Size",
+            "type": "integer",
+            "capability": "canSeeMedia",
+            "columnWidth": 60,
+            "format": {"type": "value", "args": ["B"]},
+            "sort": true
+        },
+        {
+            "id": "bitrate",
+            "title": "Bitrate",
+            "type": "integer",
+            "columnWidth": 60,
+            "format": {"type": "value", "args": ["bps"]},
+            "sort": true
+        },
+        {
+            "id": "numberoffiles",
+            "title": "Number of Files",
+            "type": "integer",
+            "capability": "canSeeMedia",
+            "columnWidth": 60,
+            "sort": true,
+            "value": {"key": "files", "type": "length"}
+        },
+        {
+            "id": "user",
+            "title": "User",
+            "type": "string",
+            "capability": "canSeeMedia",
+            "find": true
+        },
+        {
+            "id": "created",
+            "title": "Date Created",
+            "type": "date",
+            "columnWidth": 120,
+            "format": {"type": "date", "args": ["%Y-%m-%d %H:%M:%S"]},
+            "sort": true
+        },
+        {
+            "id": "modified",
+            "title": "Last Modified",
+            "type": "date",
+            "columnWidth": 90,
+            "format": {"type": "date", "args": ["%Y-%m-%d %H:%M:%S"]},
+            "sort": true
+        },
+        {
+            "id": "accessed",
+            "title": "Last Accessed",
+            "type": "date",
+            "capability": "canSeeAccessed",
+            "columnWidth": 90,
+            "format": {"type": "date", "args": ["%Y-%m-%d %H:%M:%S"]},
+            "sort": true
+        },
+        {
+            "id": "timesaccessed",
+            "title": "Times Accessed",
+            "type": "integer",
+            "capability": "canSeeAccessed",
+            "columnWidth": 60,
+            "format": {"type": "number", "args": []},
+            "sort": true
+        },
+        {
+            "id": "rightslevel",
+            "title": "Rights Level",
+            "type": "enum",
+            "columnWidth": 90,
+            "format": {"type": "ColorLevel", "args": [
+                ["Public", "Restricted", "Private"]
+            ]},
+            "sort": true,
+            "sortOperator": "+",
+            "values": ["Public", "Restricted", "Private", "Unknown"]
+        },
+        {
+            "id": "random",
+            "title": "Random",
+            "type": "integer",
+            "sort": true
+        }
+    ],
+    /*
+    "itemName" specifies the name of items ("Movies", "Videos" or similar).
+    Note that anything excessively long may cause layout errors.
+    */
+    "itemName": {
+        "singular": "Video",
+        "plural": "Videos"
+    },
+    /*
+    "itemRequiresVideo" regulates if items without video can be created. If set
+    to true, the only way to add a new item is to upload a new video.
+    */
+    "itemRequiresVideo": true,
+    /*
+    "itemTitleKeys" is a list of itemKeys required to compose the item title
+    displayed at the top of the screen. This title can be customized by adding
+    "/static/js/getItemTitle.SITENAME.js".
+    */
+    "itemTitleKeys": ["title", "director", "year"],
+    /*
+    "itemViews" is an ordered list of available item views. Implemented views
+    are "info", "documents", "player", "editor", "timeline", "clips", "map",
+    "calendar", "data" and "media".
+    */
+    "itemViews": [
+        {"id": "info", "title": "Info"},
+        {"id": "player", "title": "Player"},
+        {"id": "editor", "title": "Editor"},
+        {"id": "timeline", "title": "Timeline"},
+        {"id": "clips", "title": "Clips"},
+        {"id": "map", "title": "Map"},
+        {"id": "calendar", "title": "Calendar"},
+        {"id": "documents", "title": "Documents"},
+        {"id": "data", "title": "Data"},
+        {"id": "media", "title": "Media"}
+    ],
+    /*
+    "language" is the default language for annotations of type "text". Text in
+    other languages can be added via markup, for example:
+        <span lang="fr">Voilà!</span>
+    */
+    "language": "en",
+    /*
+    "languages" is the list of languages that the interface can be switched to.
+    Currently, localization exists for "ar", "el", "en" and "hi".
+    */
+    "languages": ["ar", "el", "en", "hi"],
+    /*
+    "layers" defines the types of time-based annotations that can be entered.
+    Required keys are:
+        "id": Internal ID
+        "item": Name of one such annotation (singular)
+        "title": Display title
+        "type": Can be "entity", "string" or "text" (strings cannot contain
+            line breaks, text can contain HTML markup).
+    Optional keys are:
+        "autocomplete": Available if the layer is used as a filter
+        "canAddAnnotations": Permissions per user level
+        "canPlayClips": If true, clips from this layer will play for users
+            with canPlayClips access
+        "entity": ID of the referenced entity (if type is "entity")
+        "getDefaults": function in pandora namespace that gets called
+            to populate defaults for new annotations. i.e. getCurrentFrameAnnotation
+        "hasEvents": If true, the calendar will be populated with matches from
+            this layer
+        "hasPlaces": If true, the map will be populated with matches from this
+            layer
+        "isSubtitles": If true, this layer will be displayed as subtitles
+        "overlap": If true, overlapping annotations are allowed. Note that
+            enforcement of "overlap": false is not implemented
+        "showInfo": If true, user and creation time will be displayed in the
+            tooltip that appears on mouseover.
+    */
+    "layers": [
+        {
+            "id": "categories",
+            "title": "categories",
+            "canAddAnnotations": {"member": true, "staff": true, "admin": true},
+            "item": "Category",
+            "autocomplete": true,
+            "overlap": true,
+            "type": "entity",
+            "entity": "categories"
+        },
+        {
+            "id": "keywords",
+            "title": "Keywords",
+            "canAddAnnotations": {"member": true, "staff": true, "admin": true},
+            "item": "Keyword",
+            "autocomplete": true,
+            "overlap": true,
+            "type": "string"
+        },
+        {
+            "id": "privatenotes",
+            "title": "Private Notes",
+            "canAddAnnotations": {"member": true, "staff": true, "admin": true},
+            "item": "Private Note",
+            "overlap": true,
+            "private": true,
+            "showInfo": true,
+            "type": "text"
+        },
+        {
+            "id": "publicnotes",
+            "title": "Notes",
+            "canAddAnnotations": {"member": true, "staff": true, "admin": true},
+            "item": "Public Note",
+            "overlap": true,
+            "showInfo": true,
+            "type": "text"
+        },
+        {
+            "id": "subtitles",
+            "title": "Subtitles",
+            "canAddAnnotations": {"staff": true, "admin": true},
+            "canPlayClips": true,
+            "hasEvents": true,
+            "hasPlaces": true,
+            "isSubtitles": true,
+            "item": "Subtitle",
+            "type": "text"
+        }
+    ],
+    /*
+    "license" can be used to implement instance-specific license settings
+    */
+    "license": null,
+    /*
+    "listViews" is an ordered list of available list views. Implemented views
+    are "list", "grid", "timelines", "clips", "clip", "map" and "calendar".
+    */
+    "listViews": [
+        {"id": "list", "title": "as List"},
+        {"id": "grid", "title": "as Grid"},
+        {"id": "timelines", "title": "with Timelines"},
+        {"id": "clips", "title": "with Clips"},
+        {"id": "clip", "title": "as Clips"},
+        {"id": "map", "title": "on Map"},
+        {"id": "calendar", "title": "on Calendar"}
+    ],
+    /*
+    "media" defines additional media that gets added when importing items.
+        "importPosters": If true, a poster file will be imported (if present)
+        "importFrames": If true, 3 full-resolution frames per file will be
+            imported. This is useful to render high-resolution icons and
+            posters for an instance that has only low-resolution video.
+    */
+    "media": {
+        "importPosters": false,
+        "importFrames": false
+    },
+    /*
+    "menuExtras" can be used to add extra functionality to the main menu bar.
+    The plug-in architecture is not yet finalized, documentation forthcoming.
+    */
+    "menuExtras": [
+        "upload",
+        "user",
+        // "locale",
+        "reload"
+    ],
+    /*
+    "personalLists" specifies which pre-defined lists a new member will have
+    after signup. "title" is required. If "query" is present, this defines a
+    smart list. "query" can be any pan.do/ra query object, see /api/find for
+    further documentation. If you need to reference the username (for example
+    in order to include a default "My Videos" list), you can use the syntax
+    {"user": "{username}"}
+    */
+    "personalLists": [
+        {"title": "Favorites"}
+    ],
+    /*
+    "posters" contains details about the poster icons. "ratio" is the default
+    ratio (used to display a placeholder while poster icons are loading).
+    */
+    "posters": {
+        "ratio": 0.625
+    },
+    /*
+    "rightsLevel" defines which initial rights level will be assigned to items
+    and texts created by users of these user levels.
+    */
+    "rightsLevel": {"member": 2, "staff": 2, "admin": 2},
+    /*
+    "rightsLevels" is an ordered list of rights levels, one of which will be
+    assigned to each item.
+    */
+    "rightsLevels": [
+        {"name": "Public", "color": [128, 255, 128]},
+        {"name": "Restricted", "color": [255, 192, 128]},
+        {"name": "Private", "color": [255, 128, 128]}
+    ],
+    /*
+    "site" contains various settings for this instance. In "email", "contact"
+    if the address in the contact form (to), "system" is the address used by
+    the system (from).
+    */
+    "site": {
+        "description": "This is a demo of pan.do/ra - a free, open source media archive. It allows you to manage large, decentralized collections of video, to collaboratively create metadata and time-based annotations, and to serve your archive as a cutting-edge web application.",
+        "email": {
+            // E-mail address in contact form (to)
+            "contact": "system@pandora.local",
+            "footer": "-- \npan.do/ra - http://pan.do/ra",
+            "prefix": "pan.do/ra News -",
+            // E-mail address uses by the system (from)
+            "system": "system@pandora.local"
+        },
+        "https": false,
+        "id": "pandora",
+        "name": "pan.do/ra",
+        // Set to true to allow search engines to index the site
+        "public": false,
+        "sendReferrer": true,
+        "url": "pandora.local"
+    },
+    /*
+    "sitePages" defines the sections of the main site dialog. If "news" is
+    present, this will add an interface to add news items. If "contact" is
+    present, this will add an interface to contact the site owners.
+    */
+    "sitePages": [
+        {"id": "about", "title": "About"},
+        {"id": "news", "title": "News"},
+        // {"id": "tour", "title": "Take a Tour"},
+        {"id": "faq", "title": "Frequently Asked Questions"},
+        {"id": "terms", "title": "Terms of Service"},
+        {"id": "license", "title": "License"},
+        {"id": "contact", "title": "Contact"}
+    ],
+    /*
+    "sites" specifies which other pan.do/ra instances, if any, will appear in
+    the user interface for creating embeds. This allows for easier creation of
+    cross-instance references.
+    */
+    "sites": [
+        {"name": "0xDB", "url": "0xdb.org", "https": true},
+        {"name": "Pad.ma", "url": "pad.ma", "https": true},
+        {"name": "Indiancine.ma", "url": "indiancine.ma", "https": true}
+    ],
+    /*
+    "textRightsLevels" defines a list of rights levels for texts.
+    */
+    "textRightsLevels": [
+        {"name": "Public", "color": [128, 255, 128]},
+        {"name": "Private", "color": [255, 128, 128]}
+    ],
+    /*
+    "themes" is a list of themes that the user interface can be switched to.
+    Currently available themes are "oxlight", "oxmedium" and "oxdark". The
+    default theme can be set in user.ui.theme.
+    */
+    "themes": ["oxlight", "oxmedium", "oxdark"],
+    /*
+    "timelines" is a list of timeline types. Implemented types are "antialias",
+    "slitscan", "keyframes" and "audio".
+    */
+    "timelines": [
+        {"id": "antialias", "title": "Anti-Alias"},
+        {"id": "slitscan", "title": "Slit-Scan"},
+        {"id": "keyframes", "title": "Keyframes"},
+        {"id": "audio", "title": "Waveform"}
+    ],
+    /*
+    "totals" specifies which totals are displayed in the status bar at the
+    bottom of list views. Possible ids are "duration", "files", "items",
+    "pixels" and "size". Adding a capability limits the display of a specific
+    total to users of the corresponding user levels.
+    */
+    "totals": [
+        {"id": "items"},
+        {"id": "files", "capability": "canSeeMedia"},
+        {"id": "duration", "capability": "canSeeMedia"},
+        {"id": "size", "capability": "canSeeMedia"},
+        {"id": "pixels"}
+    ],
+    /*
+    If "tv" is set to true, then in TV mode, the site logo will be displayed in
+    the corner of the screen.
+    */
+    "tv": {
+        "showLogo": false
+    },
+    /*
+    The "user" object contains the default user settings. "ui" is the default
+    interface state for new users, and after selecting "Reset UI Settings" in
+    Preferences -> Advanced. This is the place to configure various defaults,
+    like the site-wide language and theme, the default list and item views, the
+    default set of filters, etc.
+    Please make sure that in case you rename or remove entries that are
+    referenced in "ui", you update them here as well.
+    */
+    "user": {
+        "level": "guest",
+        "ui": {
+            "annotationsCalendarSize": 128,
+            "annotationsHighlight": "none",
+            "annotationsMapSize": 128,
+            "annotationsRange": "all",
+            "annotationsSize": 256,
+            "annotationsSort": "position",
+            "calendarFind": "",
+            "calendarSelection": "",
+            "clipColumns": 2,
+            "clipSize": 416,
+            "collectionColumns": ["title", "id", "extension", "dimensions", "size", "description", "matches", "user", "created", "modified"],
+            "collectionColumnWidth": {},
+            "collectionSelection": [],
+            "collectionSort": [
+                {"key": "title", "operator": "+"},
+                {"key": "extension", "operator": "+"}
+            ],
+            "collectionView": "grid",
+            "collections": {},
+            "columns": {
+                "Colors": {
+                    "columns": ["title", "director", "language", "hue", "saturation", "brightness"],
+                    "columnWidth": {}
+                }
+            },
+            "document": "",
+            "documents": {},
+            "documentFiltersSize": 176,
+            "documentSize": 256,
+            "documentView": "view",
+            "documentsSelection": {},
+            "documentsSort": [{"key": "title", "operator": "+"}],
+            "documentsView": "grid",
+            "documentFilters": [
+                {"id": "author", "sort": [{"key": "items", "operator": "-"}]},
+                {"id": "place", "sort": [{"key": "items", "operator": "-"}]},
+                {"id": "date", "sort": [{"key": "name", "operator": "-"}]},
+                {"id": "publisher", "sort": [{"key": "items", "operator": "-"}]},
+                {"id": "language", "sort": [{"key": "items", "operator": "-"}]}
+            ],
+            "edit": "",
+            "edits": {},
+            "editSelection": [],
+            "editSort": [
+                {"key": "index", "operator": "+"},
+                {"key": "year", "operator": "+"},
+                {"key": "director", "operator": "+"},
+                {"key": "title", "operator": "+"},
+                {"key": "position", "operator": "+"},
+                {"key": "duration", "operator": "+"}
+            ],
+            "editView": "list",
+            "embedSize": 256,
+            "entitiesSelection": {},
+            "entitiesType": "",
+            "filters": [
+                {"id": "director", "sort": [{"key": "items", "operator": "-"}]},
+                {"id": "country", "sort": [{"key": "items", "operator": "-"}]},
+                {"id": "year", "sort": [{"key": "name", "operator": "-"}]},
+                {"id": "featuring", "sort": [{"key": "items", "operator": "-"}]},
+                {"id": "keywords", "sort": [{"key": "items", "operator": "-"}]}
+            ],
+            "filtersSize": 176,
+            "find": {"conditions": [], "operator": "&"},
+            "findDocuments": {"conditions": [], "operator": "&"},
+            "followPlayer": true,
+            "help": "",
+            "hidden": {
+                "collections": [],
+                "edits": [],
+                "lists": []
+            },
+            "icons": "posters",
+            "infoIconSize": 256,
+            "item": "",
+            "itemFind": "",
+            "itemSort": [{"key": "position", "operator": "+"}],
+            "itemView": "info",
+            "listColumns": ["title", "director", "year", "language", "duration"],
+            "listColumnWidth": {},
+            "listSelection": [],
+            "listSort": [{"key": "title", "operator": "+"}],
+            "listView": "grid",
+            "lists": {},
+            "locale": "en",
+            "mapFind": "",
+            "mapSelection": "",
+            "page": "",
+            "part": {
+                "api": "",
+                "document": "",
+                "entities": "",
+                "faq": "",
+                "help": "",
+                "news": "",
+                "preferences": "",
+                "tv": ""
+            },
+            "section": "items",
+            "sequenceMode": "shape",
+            "sequenceSort": [{"key": "director", "operator": "+"}],
+            "showAdvancedEmbedOptions": false,
+            "showAnnotations": true,
+            "showAnnotationsCalendar": true,
+            "showAnnotationsMap": true,
+            "showBrowser": true,
+            "showCalendarControls": false,
+            "showClips": true,
+            "showDocument": true,
+            "showDocumentFilters": false,
+            "showFilters": true,
+            "showIconBrowser": false,
+            "showInfo": true,
+            "showLayers": {
+                "keywords": true,
+                "privatenotes": true,
+                "publicnotes": true,
+                "subtitles": true
+            },
+            "showMapControls": false,
+            "showMapLabels": false,
+            "showFolder": {
+                "edits": {
+                    "personal": true,
+                    "favorite": true,
+                    "featured": true,
+                    "volumes": true
+                },
+                "items": {
+                    "personal": true,
+                    "favorite": true,
+                    "featured": true,
+                    "volumes": true
+                },
+                "documents": {
+                    "personal": true,
+                    "favorite": true,
+                    "featured": true
+                }
+            },
+            "showReflections": true,
+            "showSidebar": true,
+            "showSitePosters": false,
+            "showTimeline": true,
+            "sidebarSize": 256,
+            "text": "",
+            "texts": {},
+            "theme": "oxmedium",
+            "updateAdvancedFindResults": false,
+            "videoLoop": false,
+            "videoMuted": false,
+            "videoPoints": {},
+            "videoResolution": 240,
+            "videoScale": "fit",
+            "videoSize": "small",
+            "videoSubtitles": true,
+            "videoSubtitlesOffset": 0,
+            "videoTimeline": "antialias",
+            "videoView": "player",
+            "videoVolume": 1
+        },
+        "script": "",
+        "username": "",
+        "volumes": []
+    },
+    /*
+    "userLevels" is an ordered list of user classes. The first entry is for
+    unregistered visitors.
+    */
+    "userLevels": ["guest", "member", "staff", "admin"],
+    /*
+    "video" contains the video settings.
+        "formats": Supported video formats.
+            Should be ["webm", "mp4"] to support WebM and MP4,
+                      ["webm"] if only WebM is used or
+                      ["mp4"] for MP4 only.
+        "previewRatio": Aspect ratio used in the info panel in the bottom left
+            corner of the screen
+        "resolutions": List of video resolutions. Supported values are 96, 144,
+            240, 288, 360, 432, 480, 720 and 1080.
+    */
+    "video": {
+        "downloadFormat": "webm",
+        "formats": ["webm", "mp4"],
+        "previewRatio": 1.3333333333,
+        "resolutions": [240, 480]
+    }
+}
