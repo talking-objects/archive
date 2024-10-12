@@ -1,3 +1,7 @@
 [submodule "wiki"]
 	path = wiki
 	url = git@github.com:talking-objects/archive.wiki.git
+[submodule "pandora"]
+	path = pandora
+	url = git@github.com:talking-objects/pandora.git
+	branch = talkingobjects
