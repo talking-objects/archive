@@ -11,19 +11,54 @@ const globalFetcher = (bodyData) => {
     }
 }
 
+// 🔵 Annotations 
+export const getAllAnnotations = ({rangeToggle=false, range=[0, 6]}) => {
+  const bodyData = {
+      action: "findAnnotations",
+      data: {
+        keys: ['id', 'in', 'out', 'value', 'created', 'modified',
+        'duration', 'layer', 'item', 'videoRatio', 'languages',
+        'entity', 'event', 'place'],
+        sort: [{ key: "created", operator: "-" }],
+        ...(rangeToggle && {range: range})
+      //   query: { conditions: [], operator: "&" },
+     
+      },
+    };
+  const result = globalFetcher(bodyData);
+  return result;
+}
+// export const getAllAnnotationsCounts = () => {
+//   const bodyData = {
+//       action: "findAnnotations",
+//       data: {
+//         keys: ["id"],
+//         range: [0, 400]
+//       }
+//     };
+//   const result = globalFetcher(bodyData);
+//   return result;
+// }
+// 🟢 Clips 
 // get all clips
 export const getAllClips = () => {
     const bodyData = {
         action: "findClips",
         data: {
-          keys: ["position", "annotations", "id", "in", "out", "value"],
+          keys: ['id', 'in', 'out', 'position', 'created', 'modified', 'title',
+                 'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'durations', 'user'],
+          itemsQuery:{"conditions":[],"operator":"&"}
         //   query: { conditions: [], operator: "&" },
         //   sort: [{ key: "position", operator: "+" }],
         },
+       
       };
     const result = globalFetcher(bodyData);
     return result;
 }
+
+
+// 🔴 Video Items
 // get all videos list
 export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {
     const bodyData = {
@@ -33,9 +68,9 @@ export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {
           query: { 
             conditions: [],
             operator: "&" 
-        },
-        sort: [{ key: "created", operator: "-" }],
-        ...(rangeToggle && {range: range})
+          },
+          sort: [{ key: "created", operator: "-" }],
+          ...(rangeToggle && {range: range})
         },
       };
     const result = globalFetcher(bodyData);
