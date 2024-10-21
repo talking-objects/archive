@@ -1,3 +1,5 @@
+"use client"
+
 import ForestWrapper from "./components/ForestWrapper";
 
 const ForestPage = () => {

@@ -1,0 +1,1 @@
+export const BASE_URL = "https://talkingobjects.0x2620.org";
