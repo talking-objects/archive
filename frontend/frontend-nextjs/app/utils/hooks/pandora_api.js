@@ -25,8 +25,8 @@ export const getAllAnnotations = ({rangeToggle=false, range=[0, 6]}) => {
      
       },
     };
-  const result = globalFetcher(bodyData);
-  return result;
+  return globalFetcher(bodyData);
+  
 }
 // export const getAllAnnotationsCounts = () => {
 //   const bodyData = {
@@ -53,8 +53,8 @@ export const getAllClips = () => {
         },
        
       };
-    const result = globalFetcher(bodyData);
-    return result;
+    return globalFetcher(bodyData);
+   
 }
 
 
@@ -73,8 +73,8 @@ export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {
           ...(rangeToggle && {range: range})
         },
       };
-    const result = globalFetcher(bodyData);
-    return result;
+    return globalFetcher(bodyData);
+    
 }
 // get all videos list
 export const getAllVideosCounts = () => {
@@ -83,8 +83,8 @@ export const getAllVideosCounts = () => {
           
        
       };
-    const result = globalFetcher(bodyData);
-    return result;
+    return globalFetcher(bodyData);
+   
 }
 // get ein video
 export const getVideo = ({pId=""}) => {
@@ -98,8 +98,8 @@ export const getVideo = ({pId=""}) => {
       }
      },
   };
-  const result = globalFetcher(bodyData);
-  return result;
+  return globalFetcher(bodyData);
+  
 };
 
 
