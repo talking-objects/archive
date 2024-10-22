@@ -16,9 +16,8 @@ const VideoWrapper = () => {
     const [getVideoData, setVideoData] = useState(null);
     const {isLoading, data, error} = getVideo({pId:params.slug})
     useEffect(() => {
-        console.log(isLoading)
+ 
         if(!isLoading){
-            console.log(data)
             setVideoData(data.data.items[0])
         }
     },[data])

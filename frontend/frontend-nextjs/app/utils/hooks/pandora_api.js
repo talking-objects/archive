@@ -28,6 +28,24 @@ export const getAllAnnotations = ({rangeToggle=false, range=[0, 6]}) => {
   return globalFetcher(bodyData);
   
 }
+// the Annotaions of the selected video
+export const getAllItemAnnotations = ({itemId}) => {
+  const bodyData = {
+      action: "findAnnotations",
+      data: {
+        keys: ['id', 'in', 'out', 'value', 'created', 'modified',
+        'duration', 'layer', 'item', 'videoRatio', 'languages',
+        'entity', 'event', 'place'],
+        sort: [{ key: "created", operator: "-" }],
+        query: {
+          conditions: [{"key": "item", "value": `${itemId}`, "operator": "==" }]
+        }
+     
+      },
+    };
+  return globalFetcher(bodyData);
+  
+}
 // export const getAllAnnotationsCounts = () => {
 //   const bodyData = {
 //       action: "findAnnotations",
@@ -69,7 +87,7 @@ export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {
             conditions: [],
             operator: "&" 
           },
-          sort: [{ key: "created", operator: "-" }],
+          sort: [{ key: "duration", operator: "-" }],
           ...(rangeToggle && {range: range})
         },
       };
