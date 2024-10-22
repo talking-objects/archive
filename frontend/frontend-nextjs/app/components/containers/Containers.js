@@ -108,7 +108,7 @@ const createFakeAnnotations = ({duration}) => {
    return result
 }
 
-const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
+const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
    const svgRef = useRef(null)
 
@@ -128,11 +128,44 @@ const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annota
       }
    },[annotationData])
 
+   useEffect(() => {
+      const category = d3.select("#cateGroup")
+      const tag = d3.select("#tagGroup")
+      const ref = d3.select("#refGroup")
+      const narration = d3.select("#narrationGroup")
+     
+       // Category toggle
+           if (toggleShow.category) {
+            category.style("display", "block");
+          } else {
+            category.style("display", "none");
+          }
+       
+          // Tag toggle
+          if (toggleShow.tag) {
+            tag.style("display", "block");
+          } else {
+            tag.style("display", "none");
+          }
+       
+          // Reference toggle
+          if (toggleShow.reference) {
+            ref.style("display", "block");
+          } else {
+            ref.style("display", "none");
+          }
+       
+          // Narration toggle
+          if (toggleShow.narration) {
+            narration.style("display", "block");
+          } else {
+            narration.style("display", "none");
+          }
+   },[toggleShow])
    // Annotation Visualization using D3.js
    useEffect(() => {
       if(svgRef){
          if(getData){
-
             const onMouseEnter = () => {
                document.body.style.cursor = "pointer"
             }
@@ -162,6 +195,7 @@ const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annota
             // create category box
             svg
             .append("g")
+            .attr("id", "cateGroup")
             .selectAll("rect")
             .data(getData.categoryList)
             .join("rect")
@@ -189,6 +223,7 @@ const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annota
             // create tag box
             svg
             .append("g")
+            .attr("id", "tagGroup")
             .selectAll("rect")
             .data(getData.tagList)
             .join("rect")
@@ -214,6 +249,7 @@ const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annota
             // creat ref
             svg
             .append("g")
+            .attr("id", "refGroup")
             .selectAll("circle")
             .data(getData.refList)
             .join("circle")
@@ -235,6 +271,7 @@ const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annota
             // creat narration
             svg
             .append("g")
+            .attr("id", "narrationGroup")
             .selectAll("circle")
             .data(getData.narrationList)
             .join("circle")
@@ -258,6 +295,8 @@ const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annota
          }
       }
    },[getData])
+
+
    if(annotationLoading || !Boolean(getData)){
       return;
    }
@@ -274,7 +313,57 @@ export const VideoPlayerContainer = ({data}) => {
    const [playToggle, setPlayToggle] = useState(false)
    const {data:annotationData, isLoading:annotationLoading} = getAllItemAnnotations({itemId:data.id})
    const [currentTime, setCurrentTime] = useState(0)
-   
+
+   const [toggleShow, setToggleShow] = useState({
+      category: true,
+      tag: true,
+      reference: true,
+      narration: true
+   })
+
+  
+   const onToggleShow = (key) => {
+      setToggleShow((prev) => ({
+        ...prev,
+        [key]: !prev[key], 
+      }));
+    };
+
+   // video keyboard controller
+   useEffect(() => {
+      const onSpaceScroll = (event) => {
+         if (event.code === 'Space') {
+            event.preventDefault(); 
+          }
+        
+      }
+      const onSpaceBar = (event) => {
+         if (event.code === 'Space') {
+            event.preventDefault(); 
+            if(videoRef){
+               if(videoRef.current.paused){
+                  
+                  videoRef.current.play()
+                  setPlayToggle(true)
+               }else{
+                  videoRef.current.pause()
+                  setPlayToggle(false)
+               }
+               console.log(videoRef.current.paused)
+            }
+          }
+        
+      }
+
+      // event = keyup or keydown
+   document.addEventListener('keyup',onSpaceBar)
+   document.addEventListener('keydown',onSpaceScroll)
+
+   return () => {
+      document.removeEventListener("keyup", onSpaceBar)
+      document.removeEventListener("keydown", onSpaceScroll)
+   }
+   },[])
 
    const togglePlay = () => {
       if(videoRef){
@@ -326,9 +415,9 @@ export const VideoPlayerContainer = ({data}) => {
               Your browser does not support the video tag.
             </video>
             {/* video info */}
-            <div className="absolute top-0 left-0 z-[20] text-black px-2 py-1 bg-blue-400 text-4xl font-bold italic">{data.title}</div>
+            <div className={`absolute top-0 left-0 z-[20] text-black px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} bg-blue-400 text-4xl font-bold italic transition-all duration-1000`}>{data.title}</div>
             {/* Video Data Visualization */}
-            {videoRef && <VideoDataVisContainer setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
+            {videoRef && <VideoDataVisContainer toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
 
         </div>
         {/* video controller */}
@@ -356,7 +445,13 @@ export const VideoPlayerContainer = ({data}) => {
         </div>}
         {/* video navigation */}
         <div className="w-full h-[62px] bg-blue-400 flex items-center justify-between overflow-hidden">
-         <div className="px-4">Show:</div>
+         <div className="px-4 flex items-center gap-4">
+            <div>Show:</div>
+            <div onClick={() => onToggleShow("category")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.category ? "opacity-100" : "opacity-50"}`}>Categories</div>
+            <div onClick={() => onToggleShow("tag")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.tag ? "opacity-100" : "opacity-50"}`}>Tags</div>
+            <div onClick={() => onToggleShow("reference")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.reference ? "opacity-100" : "opacity-50"}`}>References</div>
+            <div onClick={() => onToggleShow("narration")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.narration ? "opacity-100" : "opacity-50"}`}>Narrations</div>
+         </div>
          <div className="px-4">View:</div>
          <div onClick={() => setToggleLegend(true)} className={`h-full aspect-square cursor-pointer select-none flex hover:bg-blue-200 ${toggleLegend ? "bg-blue-200" : "bg-none"} justify-center items-center text-black`}>
                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
