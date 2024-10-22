@@ -2,6 +2,7 @@ import { BASE_URL } from "@/app/utils/constant/etc"
 import { getAllAnnotations, getAllItemAnnotations } from "@/app/utils/hooks/pandora_api"
 import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3"
+import { formatTime } from "@/app/utils/hooks/etc"
 export const ContentContainer = ({children}) => {
     return (<div className="w-screen px-4 lg:px-4">
       <div className="w-full min-h-[100svh] h-full max-w-screen-2xl mx-auto flex flex-col">
@@ -107,7 +108,7 @@ const createFakeAnnotations = ({duration}) => {
    return result
 }
 
-const VideoDataVisContainer = ({duration, annotationData, annotationLoading, videoRef}) => {
+const VideoDataVisContainer = ({setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
    const svgRef = useRef(null)
 
@@ -142,6 +143,7 @@ const VideoDataVisContainer = ({duration, annotationData, annotationLoading, vid
                console.log(inVlaue)
                console.log(video)
                videoRef.current.currentTime = inVlaue
+               setCurrentTime(inVlaue)
             }
             
             const svg = d3.select(svgRef.current)
@@ -181,9 +183,7 @@ const VideoDataVisContainer = ({duration, annotationData, annotationLoading, vid
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
             .on("click", function(event, value){
-          
                onClick({inVlaue:value.in, video: videoRef})
-           
             })
           
             // create tag box
@@ -207,7 +207,9 @@ const VideoDataVisContainer = ({duration, annotationData, annotationLoading, vid
             .style("stroke-width", "0.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
-           
+            .on("click", function(event, value){
+               onClick({inVlaue:value.in, video: videoRef})
+            })
            
             // creat ref
             svg
@@ -227,6 +229,9 @@ const VideoDataVisContainer = ({duration, annotationData, annotationLoading, vid
             .style("stroke-width", "4.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("click", function(event, value){
+               onClick({inVlaue:value.in, video: videoRef})
+            })
             // creat narration
             svg
             .append("g")
@@ -245,6 +250,9 @@ const VideoDataVisContainer = ({duration, annotationData, annotationLoading, vid
             .style("stroke-width", "0.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("click", function(event, value){
+               onClick({inVlaue:value.in, video: videoRef})
+            })
            
 
          }
@@ -265,7 +273,7 @@ export const VideoPlayerContainer = ({data}) => {
    const videoRef = useRef(null)
    const [playToggle, setPlayToggle] = useState(false)
    const {data:annotationData, isLoading:annotationLoading} = getAllItemAnnotations({itemId:data.id})
-   
+   const [currentTime, setCurrentTime] = useState(0)
    
 
    const togglePlay = () => {
@@ -281,7 +289,10 @@ export const VideoPlayerContainer = ({data}) => {
          console.log(videoRef.current.paused)
       }
    }
-
+   const onClickProgressBar = (e) => {
+      videoRef.current.currentTime = e.target.value
+      setCurrentTime(e.target.value)
+   }
    // update video progress bar
    useEffect(() => {
       const videoElement = videoRef.current
@@ -289,12 +300,14 @@ export const VideoPlayerContainer = ({data}) => {
          const handleTimeUpdate = () => {
             const currentTime = videoElement?.currentTime
             // console.log(`currentTime: ${currentTime}`)
+            setCurrentTime(currentTime)
             if(videoElement.ended){
                // video ended
                // - update play icon
                // - update progress bar
                console.log("end")
                setPlayToggle(false)
+               setCurrentTime(0)
             }
            
          };
@@ -315,13 +328,12 @@ export const VideoPlayerContainer = ({data}) => {
             {/* video info */}
             <div className="absolute top-0 left-0 z-[20] text-black px-2 py-1 bg-blue-400 text-4xl font-bold italic">{data.title}</div>
             {/* Video Data Visualization */}
-            {videoRef && <VideoDataVisContainer videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
+            {videoRef && <VideoDataVisContainer setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
 
         </div>
         {/* video controller */}
-        {videoRef && <div className="w-full h-[40px] bg-black border-t border-white text-white px-4 flex justify-between items-center">
-         <div>
-            <div onClick={togglePlay} className="cursor-pointer">
+        {videoRef && <div className="w-full h-[40px] bg-black border-t border-white text-white flex justify-between items-center">
+            <div onClick={togglePlay} className="cursor-pointer px-2">
                {!playToggle && <div>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
@@ -333,7 +345,14 @@ export const VideoPlayerContainer = ({data}) => {
                   </svg>
                </div>}
             </div>
-         </div>
+            <div className="w-full px-2">
+               <div className="w-full h-1 rounded-full relative">
+                  <input  onChange={(e) => onClickProgressBar(e)} step={0.1} min={0} max={data.duration} defaultValue={0} type="range" className="w-full bg-red-400 range-custom" />
+                  <progress value={currentTime} max={data.duration} className="absolute bg-red-400 w-full h-full select-none pointer-events-none"></progress>
+               </div>
+            </div>
+            <div className="w-[140px] text-center text-xs">{formatTime(currentTime)} / {formatTime(data.duration)}</div>
+     
         </div>}
         {/* video navigation */}
         <div className="w-full h-[62px] bg-blue-400 flex items-center justify-between overflow-hidden">

@@ -9,6 +9,68 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.range-custom {
+  -webkit-appearance: none;
+  appearance: none; 
+  cursor: pointer;
+  outline: none;
+  border-radius: 0px;
+  height: 100%;
+  background: red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+}
+
+.range-custom::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none; 
+  cursor: pointer;
+  outline: none;
+  border-radius: 0px;
+  background: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* display: none; */
+}
+
+.range-custom::-moz-range-thumb {
+  /* display: none; */
+  -webkit-appearance: none;
+  appearance: none; 
+  cursor: pointer;
+  outline: none;
+  border-radius: 0px;
+  background: white;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+progress[value] {
+    /* Reset the default appearance */
+    -webkit-appearance: none;
+    appearance: none;
+
+}
+/* WebKit styles */
+progress[value]::-webkit-progress-bar {
+  background-color: rgb(255, 255, 255);
+
+}
+
+progress[value]::-webkit-progress-value {
+  background-color: #EC6735;
+}
+/* Firefox styles */
+progress[value]::-moz-progress-bar {
+  background-color: rgb(255, 255, 255);
+}
+
+
+
 /* @layer utilities {
   .text-balance {
     text-wrap: balance;
