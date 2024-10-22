@@ -1,42 +1,36 @@
 # EVA
 https://github.com/talking-objects/archive/tree/frontend
-- [TOA-Miro](https://miro.com/app/board/uXjVKzMakEM=/)
 
+# Ref
+- [TOA-Miro](https://miro.com/app/board/uXjVKzMakEM=/)
+- Design Sketch(Adobe XD)
+- [pandora](https://talkingobjects.0x2620.org/)
 
 # URL
-
 ### Home
-/ 
+- / 
 
 ### Video Page
-/video/<id> = Original Video 
+- /video = Original Videos
+- /video/:id = ein Original Video 
 
 ### Edited Video Page
-/edit/<id> = Edit Video
+- /edit/:id = Edit Video
 
 ### Clip Page
-/clip/<id> = ein Clip
+- /clip = Clips
+- /clip/:id = ein Clip
 
 ### Index
-/forest(Overview)
-    /place
-        /<id> 
-    /reference
-        /<id>
-    /event
-        /<id>
-    /annotation
-        /<id>
-
-
+- /forest(Overview) = item videos, clips, annotations, events, references, places
+    - /place/:id 
+    - /reference/:id
+    - /event/:id
+    - /annotation/:id
 
 ### Imprint
 
 ### About
-
-
-
-
 
 ### Search
 /search?name=

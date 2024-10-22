@@ -80,10 +80,26 @@ export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {
 export const getAllVideosCounts = () => {
     const bodyData = {
         action: "find",
-        
+          
        
       };
     const result = globalFetcher(bodyData);
     return result;
 }
+// get ein video
+export const getVideo = ({pId=""}) => {
+  // Get Item
+  const bodyData = {
+    action: "find",
+    data: { 
+      keys: ["id", "user", "duration", "posterFrame","modified", "created", "title"],
+      query: {
+        conditions: [{"key": "id", "value": `${pId}`, "operator": "==" }]
+      }
+     },
+  };
+  const result = globalFetcher(bodyData);
+  return result;
+};
+
 

@@ -1,13 +1,16 @@
 import { ContentContainer } from "@/app/components/containers/Containers";
 import { BASE_URL } from "@/app/utils/constant/etc";
 import { getAllAnnotations, getAllAnnotationsCounts, getAllClips, getAllVideos, getAllVideosCounts } from "@/app/utils/hooks/pandora_api";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const VideosContainer = ({data, isLoading, dataCount, isLoadingCount}) => {
+    const router = useRouter()
     const [getData, setData] = useState(null)
     const [getCount, setCount] = useState(null)
     useEffect(() => {
         if(!isLoading){
+            console.log(data.data)
             setData(data.data)
         }
     },[data])
@@ -16,6 +19,10 @@ const VideosContainer = ({data, isLoading, dataCount, isLoadingCount}) => {
             setCount(dataCount.data)
         }
     },[dataCount])
+
+    const onPush = (path) => {
+        router.push(path)
+    }
     return <div className="w-full py-4 h-fit">
         <div className="flex w-full gap-4 items-center text-2xl mb-4">
             <div>Videos</div>
@@ -25,7 +32,7 @@ const VideosContainer = ({data, isLoading, dataCount, isLoadingCount}) => {
         {(!isLoading && getData) && <div className="flex flex-col w-full gap-4">
             <div className="w-full grid grid-cols-3 gap-4">
             {getData.items.map((val, idx) => {
-                return <div  key={idx}  className="flex flex-col w-full cursor-pointer">
+                return <div key={idx} onClick={() => onPush(`/video/${val.id}`)} className="flex flex-col w-full cursor-pointer">
                         <div 
                         style={{backgroundImage: `url(${BASE_URL}/${val.id}/480p${val.posterFrame}.jpg)`}}
                         className="w-full aspect-video bg-neutral-200 rounded-lg overflow-hidden border-2 border-black bg-no-repeat bg-cover bg-center" />
@@ -33,7 +40,7 @@ const VideosContainer = ({data, isLoading, dataCount, isLoadingCount}) => {
                     </div>
             })}
             </div>
-            <div className="cursor-pointer text-emerald-400">See all</div>
+            <div onClick={() => onPush(`/video`)} className="cursor-pointer text-emerald-400">See all</div>
         </div>}
 
     </div>
@@ -41,13 +48,14 @@ const VideosContainer = ({data, isLoading, dataCount, isLoadingCount}) => {
 
 const AnnotationsContainer = ({data, isLoading}) => {
     const [getData, setData] = useState(null)
- 
+    
     useEffect(() => {
         if(!isLoading){
+            
             setData(data.data)
         }
     },[data])
-
+    
     return <div className="w-full py-4 h-fit">
         <div className="flex w-full gap-4 items-center text-2xl mb-4">
             <div>Annotations</div>
@@ -57,7 +65,7 @@ const AnnotationsContainer = ({data, isLoading}) => {
         {(!isLoading && getData) && <div className="flex flex-col w-full gap-4">
             <div className="w-full grid grid-cols-3 gap-4">
             {getData.items.map((val, idx) => {
-                return <div  key={idx}  className="flex aspect-video border-red-400 border-2 overflow-hidden rounded-xl w-full cursor-pointer gap-2">
+                return <div key={idx} className="flex aspect-video border-red-400 border-2 overflow-hidden rounded-xl w-full cursor-pointer gap-2">
                         <div className="bg-white px-2 w-full flex-1 flex flex-col gap-2 p-2 text-sm">
                             <div>Layer: {val.layer}</div>
                             <div>Value: {val.value}</div>
