@@ -60,8 +60,9 @@ const createFakeAnnotations = ({duration}) => {
    for(let i = 0; i < categoryCounts; i++){
       const randomIn = Math.floor(Math.random() * duration)
       const outValue = 300
-      const randomOut = randomIn + Math.floor(Math.random() * outValue) > duration ? duration : randomIn + Math.floor(Math.random() * outValue)
+      const randomOut = randomIn + Math.floor(Math.random() * outValue) >= duration ? duration : randomIn + Math.floor(Math.random() * outValue)
       const cate = {
+         type: "categoryLayer",
          category: CATEGORYSVALUE[Math.floor(Math.random() * CATEGORYSVALUE.length)],
          in: randomIn,
          out: randomOut
@@ -75,7 +76,7 @@ const createFakeAnnotations = ({duration}) => {
       const outValue = 30
       const randomOut = randomIn + outValue > duration ? duration : randomIn + outValue
       const tag = {
-        
+         type: "tagLayer",
          in: randomIn,
          out: randomOut
       };
@@ -86,6 +87,7 @@ const createFakeAnnotations = ({duration}) => {
    for(let i = 0; i < refCounts; i++){
       const randomIn = Math.floor(Math.random() * duration)
       const ref = {
+         type: "referenceLayer",
          in: randomIn,
      
       };
@@ -96,6 +98,7 @@ const createFakeAnnotations = ({duration}) => {
    for(let i = 0; i < narrationCounts; i++){
       const randomIn = Math.floor(Math.random() * duration)
       const narration = {
+         type: "narrationLayer",
          in: randomIn,
      
       };
@@ -106,6 +109,7 @@ const createFakeAnnotations = ({duration}) => {
    for(let i = 0; i < eventsCounts; i++){
       const randomIn = Math.floor(Math.random() * duration)
       const event = {
+         type: "eventLayer",
          in: randomIn,
      
       };
@@ -116,6 +120,7 @@ const createFakeAnnotations = ({duration}) => {
    for(let i = 0; i < placeCounts; i++){
       const randomIn = Math.floor(Math.random() * duration)
       const place = {
+         type: "placeLayer",
          in: randomIn,
      
       };
@@ -143,12 +148,12 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
          // setData(annotationData.data.items)
 
          const getDuration = duration
-         console.log(getDuration)
+      
          // 🔥 create fake data just for test 🔥
          // fake data
          let getFakeData = fakeData
          setData(getFakeData)
-     
+         console.log(fakeData)
        
       }
    },[annotationData])
@@ -248,7 +253,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .append("g")
             .attr("id", "cateGroup")
             .selectAll("rect")
-            .data(getData.categoryList)
+            .data(fakeData.categoryList.sort((a,b) => a.in - b.in))
             .join("rect")
             .attr("width", function(d){
                return `${scaleLinear(d.out - d.in)}px`
@@ -263,6 +268,8 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .attr("fill", function (d, i) {
                return `${d.category.color}`;
              })
+            // .style("mix-blend-mode", "multiply")
+            .attr("opacity", 1)
             .style("stroke", "black")
             .style("stroke-width", "0.5px")
             .on("mouseenter", onMouseEnter)
@@ -276,7 +283,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .append("g")
             .attr("id", "tagGroup")
             .selectAll("rect")
-            .data(getData.tagList)
+            .data(fakeData.tagList)
             .join("rect")
             .attr("width", function(d){
                return `${scaleLinear(d.out - d.in)}px`
@@ -302,7 +309,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .append("g")
             .attr("id", "refGroup")
             .selectAll("circle")
-            .data(getData.refList)
+            .data(fakeData.refList)
             .join("circle")
             .attr("r", ((annotationRowHeight)/3)/2)
             .attr("cx", function (d) {
@@ -324,7 +331,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .append("g")
             .attr("id", "narrationGroup")
             .selectAll("circle")
-            .data(getData.narrationList)
+            .data(fakeData.narrationList)
             .join("circle")
             .attr("r", ((annotationRowHeight)/3)/2)
             .attr("cx", function (d) {
@@ -347,7 +354,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .append("g")
             .attr("id", "eventGroup")
             .selectAll("rect")
-            .data(getData.eventList)
+            .data(fakeData.eventList)
             .join("rect")
             .attr("width", function(d){
                return `${annotationRowHeight/3}px`
@@ -372,7 +379,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .append("g")
             .attr("id", "placeGroup")
             .selectAll("circle")
-            .data(getData.placeList)
+            .data(fakeData.placeList)
             .join("circle")
             .attr("r", (((annotationRowHeight)/3)/2))
             // .attr("width", function(d){
@@ -410,13 +417,133 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
    </div>
 }
 
+export const OverViewBox = ({data}) => {
+   const CategoryBox = ({category}) => {
+      return <div style={{backgroundColor: category.category.color}} className="w-full text-4xl text-white italic px-2 py-1">{category.category.value}</div>
+   }
+
+   const TagBox = ({tag}) => {
+      return <div className="w-full flex"><div className="bg-[#3118E8] px-2 py-1 text-white text-xl">#{tag.type}</div></div>
+   }
+   const PlaceBox = ({place}) => {
+      return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#EC6735] border-4 text-white">
+         <div>{place.type}</div>
+         <div className="w-full h-full flex-1 border-white border flex justify-center items-center">Map</div>
+      </div>
+   }
+   const EventBox = ({event}) => {
+      return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#F1A73D] border-4 text-white">
+         <div>{event.type}</div>
+         <div className="w-full h-full flex-1 border-white border flex justify-center items-center">Event</div>
+      </div>
+   }
+
+   const NarrationBox = ({narration}) => {
+      return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black">
+         <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div>
+         <div>{narration.type}</div>
+      </div>
+   }
+   const ReferenceBox = ({reference}) => {
+      return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
+         <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div>
+         <div>{reference.type}</div>
+      </div>
+   }
+
+   switch (data.type) {
+      case "categoryLayer":
+         return <CategoryBox category={data} />
+      case "placeLayer":
+         return <PlaceBox place={data} />
+      case "tagLayer":
+         return <TagBox tag={data} />
+      case "referenceLayer":
+         return <ReferenceBox reference={data} />
+      case "eventLayer":
+         return <EventBox event={data} />
+      case "narrationLayer":
+         return <NarrationBox narration={data} />
+      default:
+         return <div>Error: Invalid Layer Type</div>;
+   }
+}
+
+export const OverViewContainer = ({videoRef,setCurrentTime, toggleShow, playToggle, fakeData}) => {
+   const contentRef = useRef(null)
+   const scrolltRef = useRef(null)
+   const progressRef = useRef(null)
+   const [allFakeData, setAllFakeData] = useState(null)
+   const onJumpTo = (inValue) => {
+      videoRef.current.currentTime = inValue
+      setCurrentTime(inValue)
+   }
+   useEffect(() => {
+      if(contentRef && scrolltRef && progressRef){
+         const contentDiv = contentRef.current;
+         const scrollDiv = scrolltRef.current;
+         const progressDiv = progressRef.current;
+
+         if(contentDiv && scrollDiv && progressDiv){
+            const scrollEvent = () => {
+               const scrollPx = scrollDiv.scrollTop;
+               const winHeightPx = scrollDiv.scrollHeight - scrollDiv.clientHeight;
+               const scrolled = `${(scrollPx / winHeightPx) * 100}%`;
+               progressDiv.style.height = scrolled
+            }
+            scrollDiv.addEventListener("scroll", scrollEvent)
+            return () => {
+               scrollDiv.removeEventListener("scroll", scrollEvent)
+            }
+         }
+      }
+     
+   },[])
+
+   useEffect(() => {
+      console.log(fakeData)
+      let allData = []
+      for(let i =0; i < Object.keys(fakeData).length; i++){
+         allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
+      }
+      allData = allData.sort((a,b) => a.in - b.in)
+      console.log(allData)
+      setAllFakeData(allData)
+     
+   },[])
+
+   
+   return <div className={`${(toggleShow.view === "overview" && playToggle) ? "translate-x-0" : "translate-x-full"} z-[40] flex absolute top-0 right-0 lg:w-[660px] h-full bg-white transition-all duration-1000`}>
+      <div ref={scrolltRef} className="w-full h-full overflow-scroll hide_scrollbar">
+         <div ref={contentRef} className="w-full h-fit bg-white py-2 px-4">
+               {allFakeData && <div className="flex flex-col gap-4">
+                  {
+                     allFakeData.map((v, idx) => {
+                        return <div key={idx} className="w-full h-fit flex gap-2 items-center">
+                           <OverViewBox data={v} />
+                           <div onClick={() => onJumpTo(v.in)} className="text-xs cursor-pointer hover:bg-black hover:text-white transition-all duration-150 rounded-md px-1 py-1">{formatTime(v.in)}</div>
+                        </div>
+                     })
+                  }
+                  </div>}
+         </div>
+      </div>
+      <div className="w-fit h-full bg-white py-2 flex">
+         {/* progress bar */}
+         <div className="w-1 h-full bg-neutral-100 rounded-full overflow-hidden mr-1">
+            <div ref={progressRef} className="w-full h-0 bg-black rounded-full"></div>
+         </div>
+      </div>
+   </div>
+}
+
 export const VideoPlayerContainer = ({data}) => {
    const [toggleLegend, setToggleLegend] = useState(false)
    const videoRef = useRef(null)
    const [playToggle, setPlayToggle] = useState(false)
    const {data:annotationData, isLoading:annotationLoading} = getAllItemAnnotations({itemId:data.id})
    const [currentTime, setCurrentTime] = useState(0)
-   const fakeData = createFakeAnnotations({duration:data.duration})
+   const [getFakeData, setFakeData] = useState(null)
    const [toggleShow, setToggleShow] = useState({
       category: true,
       tag: true,
@@ -428,7 +555,11 @@ export const VideoPlayerContainer = ({data}) => {
       view: "diagramatic",
      
    })
-
+   
+   useEffect(() => {
+      const fakeData = createFakeAnnotations({duration:data.duration})
+      setFakeData(fakeData)
+   },[])
   
    const onToggleShow = (key, view=false) => {
       if(!view){
@@ -456,7 +587,7 @@ export const VideoPlayerContainer = ({data}) => {
  
    useEffect(() => {
       console.log(data)   
-      console.log(fakeData)
+  
    },[])
 
    // video keyboard controller
@@ -540,7 +671,7 @@ export const VideoPlayerContainer = ({data}) => {
    return <div className="w-full h-[100svh] relative">
        <div className="w-full h-[100svh] overflow-hidden flex flex-col">
         <div className="w-full h-full flex flex-col overflow-hidden relative">
-            <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} w-full h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
+            <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
               <source type="video/mp4" />
               Your browser does not support the video tag.
             </video>
@@ -553,7 +684,7 @@ export const VideoPlayerContainer = ({data}) => {
                </div>
                <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic transition-all duration-1000`}>{data.title}</div>
                <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
-                  <div>Author: {data.user}</div>
+                  <div>Author: {Boolean(data.director) && Boolean(data.director.length > 0) && data.director.map((v) => `${v},`)} {data.user}</div>
                   <div>
                      <div>Created:</div>
                      <div>{data.created}</div>
@@ -565,15 +696,13 @@ export const VideoPlayerContainer = ({data}) => {
                </div>
             </div>
             {/* Video Data Visualization : Diagramatic View */}
-            {videoRef && <VideoDataVisContainer fakeData={fakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
+            {(videoRef && getFakeData) && <VideoDataVisContainer fakeData={getFakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
             {/* Video Data Visualization : Entangled View */}
             {videoRef && <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute top-0 right-0 w-[calc(100vw-76px-20px)] h-fit bg-red-400 transition-all duration-1000`}>
                   <div>entangled view</div>
                </div>}
             {/* Video Data Visualization : Overview View */}
-            {videoRef && <div className={`${(toggleShow.view === "overview" && playToggle) ? "translate-x-0" : "translate-x-full"} absolute top-0 right-0 w-[660px] h-full overflow-scroll bg-red-400 transition-all duration-1000`}>
-                  <div>overview view</div>
-               </div>}
+            {(videoRef && getFakeData) && <OverViewContainer videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getFakeData} />}
         </div>
         {/* video controller */}
         {videoRef && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">

@@ -9,6 +9,22 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@layer components {
+
+}
+.hide_scrollbar {
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll; 
+  overscroll-behavior-y: contain;
+}
+
+.hide_scrollbar::-webkit-scrollbar {
+  display: none; /* for Chrome, Safari, and Opera */
+  
+}
+
+
 .range-custom {
   -webkit-appearance: none;
   appearance: none; 
