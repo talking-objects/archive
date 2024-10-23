@@ -469,11 +469,12 @@ export const OverViewBox = ({data}) => {
    }
 }
 
-export const OverViewContainer = ({videoRef,setCurrentTime, toggleShow, playToggle, fakeData}) => {
+export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleShow, playToggle, fakeData}) => {
    const contentRef = useRef(null)
    const scrolltRef = useRef(null)
    const progressRef = useRef(null)
    const [allFakeData, setAllFakeData] = useState(null)
+   const [updateTime, setUpdateTime] = useState(currentTime)
    const onJumpTo = (inValue) => {
       videoRef.current.currentTime = inValue
       setCurrentTime(inValue)
@@ -512,7 +513,12 @@ export const OverViewContainer = ({videoRef,setCurrentTime, toggleShow, playTogg
      
    },[])
 
-   
+
+   useEffect(() => {
+    
+      setUpdateTime(currentTime)
+   },[currentTime])
+ 
    return <div className={`${(toggleShow.view === "overview" && playToggle) ? "translate-x-0" : "translate-x-full"} z-[40] flex absolute top-0 right-0 lg:w-[660px] h-full bg-white transition-all duration-1000`}>
       <div ref={scrolltRef} className="w-full h-full overflow-scroll hide_scrollbar">
          <div ref={contentRef} className="w-full h-fit bg-white py-2 px-4">
@@ -520,7 +526,10 @@ export const OverViewContainer = ({videoRef,setCurrentTime, toggleShow, playTogg
                   {
                      allFakeData.map((v, idx) => {
                         return <div key={idx} className="w-full h-fit flex gap-2 items-center">
-                           <OverViewBox data={v} />
+                           <div className="">
+                              <div className={`w-2 h-2 ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-emerald-400" : "bg-neutral-300"} rounded-full`}></div>
+                           </div>
+                           <OverViewBox  data={v} />
                            <div onClick={() => onJumpTo(v.in)} className="text-xs cursor-pointer hover:bg-black hover:text-white transition-all duration-150 rounded-md px-1 py-1">{formatTime(v.in)}</div>
                         </div>
                      })
@@ -702,7 +711,7 @@ export const VideoPlayerContainer = ({data}) => {
                   <div>entangled view</div>
                </div>}
             {/* Video Data Visualization : Overview View */}
-            {(videoRef && getFakeData) && <OverViewContainer videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getFakeData} />}
+            {(videoRef && getFakeData) && <OverViewContainer currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getFakeData} />}
         </div>
         {/* video controller */}
         {videoRef && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
