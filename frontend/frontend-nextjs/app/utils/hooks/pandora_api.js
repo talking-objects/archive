@@ -11,6 +11,8 @@ const globalFetcher = (bodyData) => {
     }
 }
 
+// 🟡 User
+
 // 🔵 Annotations 
 export const getAllAnnotations = ({rangeToggle=false, range=[0, 6]}) => {
   const bodyData = {
@@ -110,7 +112,7 @@ export const getVideo = ({pId=""}) => {
   const bodyData = {
     action: "find",
     data: { 
-      keys: ["id", "user", "duration", "posterFrame","modified", "created", "title"],
+      keys: ["id", "user", "duration", "posterFrame","modified","director", "created", "title"],
       query: {
         conditions: [{"key": "id", "value": `${pId}`, "operator": "==" }]
       }

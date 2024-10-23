@@ -23,6 +23,9 @@ const createFakeAnnotations = ({duration}) => {
    const tagCounts = Math.floor(Math.random() * 10)
    const refCounts = Math.floor(Math.random() * 10)
    const narrationCounts = Math.floor(Math.random() * 10)
+   const eventsCounts = Math.floor(Math.random() * 10)
+   const placeCounts = Math.floor(Math.random() * 10)
+
 
    // create Category
    let categoryList = [];
@@ -98,17 +101,39 @@ const createFakeAnnotations = ({duration}) => {
       };
       narrationList.push(narration)
    }
+   // create events
+   let eventList = [];
+   for(let i = 0; i < eventsCounts; i++){
+      const randomIn = Math.floor(Math.random() * duration)
+      const event = {
+         in: randomIn,
+     
+      };
+      eventList.push(event)
+   }
+   // create place
+   let placeList = [];
+   for(let i = 0; i < placeCounts; i++){
+      const randomIn = Math.floor(Math.random() * duration)
+      const place = {
+         in: randomIn,
+     
+      };
+      placeList.push(place)
+   }
 
    const result = {
       categoryList: categoryList,
       tagList: tagList,
       refList: refList,
-      narrationList: narrationList
+      narrationList: narrationList,
+      eventList: eventList,
+      placeList: placeList
    }
    return result
 }
 
-const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
+const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
    const svgRef = useRef(null)
 
@@ -121,9 +146,9 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
          console.log(getDuration)
          // 🔥 create fake data just for test 🔥
          // fake data
-         let fakeData = createFakeAnnotations({duration:getDuration})
-         setData(fakeData)
-         console.log(fakeData)
+         let getFakeData = fakeData
+         setData(getFakeData)
+     
        
       }
    },[annotationData])
@@ -133,9 +158,17 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
       const tag = d3.select("#tagGroup")
       const ref = d3.select("#refGroup")
       const narration = d3.select("#narrationGroup")
-     
-       // Category toggle
-           if (toggleShow.category) {
+      const event = d3.select("#eventGroup")
+      const place = d3.select("#placeGroup")
+      
+      console.log(toggleShow.view)
+      const svg = d3.select(svgRef.current)
+      if(toggleShow.view === "diagramatic"){
+        
+         svg.style("display", "block")
+
+         // Category toggle
+         if (toggleShow.category) {
             category.style("display", "block");
           } else {
             category.style("display", "none");
@@ -161,6 +194,24 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
           } else {
             narration.style("display", "none");
           }
+          // Event toggle
+          if (toggleShow.event) {
+            event.style("display", "block");
+          } else {
+            event.style("display", "none");
+          }
+          // Narration toggle
+          if (toggleShow.place) {
+            place.style("display", "block");
+          } else {
+            place.style("display", "none");
+          }
+      }else{
+       
+         svg.style("display", "none")
+      }
+
+       
    },[toggleShow])
    // Annotation Visualization using D3.js
    useEffect(() => {
@@ -191,7 +242,7 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
             }
 
             let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width]);
-
+            const annotationRowHeight = canvasSize.height/4
             // create category box
             svg
             .append("g")
@@ -202,12 +253,12 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
             .attr("width", function(d){
                return `${scaleLinear(d.out - d.in)}px`
             })
-            .attr("height", canvasSize.height/3)
+            .attr("height", annotationRowHeight)
             .attr("x", function (d) {
                return `${scaleLinear(d.in)}px`;
              })
             .attr("y", function (d, i) {
-               return `${canvasSize.height - canvasSize.height/3}px`;
+               return `${canvasSize.height - annotationRowHeight}px`;
              })
             .attr("fill", function (d, i) {
                return `${d.category.color}`;
@@ -230,12 +281,12 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
             .attr("width", function(d){
                return `${scaleLinear(d.out - d.in)}px`
             })
-            .attr("height", canvasSize.height/3)
+            .attr("height", annotationRowHeight)
             .attr("x", function (d) {
                return `${scaleLinear(d.in)}px`;
              })
             .attr("y", function (d, i) {
-               return `${canvasSize.height - ((canvasSize.height/3) * 2)}px`;
+               return `${canvasSize.height - ((annotationRowHeight) * 2)}px`;
              })
             .attr("fill","#3118E8")
             .style("stroke", "black")
@@ -253,12 +304,12 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
             .selectAll("circle")
             .data(getData.refList)
             .join("circle")
-            .attr("r", ((canvasSize.height/3)/3)/2)
+            .attr("r", ((annotationRowHeight)/3)/2)
             .attr("cx", function (d) {
-               return `${scaleLinear(d.in)}px`;
+               return `${scaleLinear(d.in) + (((annotationRowHeight)/3)/2)}px`;
              })
             .attr("cy", function (d, i) {
-               return `${canvasSize.height - ((canvasSize.height/3) * 2) - ((canvasSize.height/3)/3/2)}px`;
+               return `${canvasSize.height - ((annotationRowHeight) * 2) - ((annotationRowHeight)/3/2)}px`;
              })
             .attr("fill","#FFFFFF")
             .style("stroke", "#EC6735")
@@ -275,16 +326,68 @@ const VideoDataVisContainer = ({toggleShow, setCurrentTime, duration, annotation
             .selectAll("circle")
             .data(getData.narrationList)
             .join("circle")
-            .attr("r", ((canvasSize.height/3)/3)/2)
+            .attr("r", ((annotationRowHeight)/3)/2)
             .attr("cx", function (d) {
-               return `${scaleLinear(d.in)}px`;
+               return `${scaleLinear(d.in) + (((annotationRowHeight)/3)/2)}px`;
              })
             .attr("cy", function (d, i) {
-               return `${canvasSize.height - ((canvasSize.height/3) * 2) - (((canvasSize.height/3)/3/2) * 4)}px`;
+               return `${canvasSize.height - ((annotationRowHeight) * 2) - (((annotationRowHeight)/3/2) * 4)}px`;
              })
             .attr("fill","#8BA5F8")
             .style("stroke", "#000")
             .style("stroke-width", "0.5px")
+            .on("mouseenter", onMouseEnter)
+            .on("mouseleave", onMouseLeave)
+            .on("click", function(event, value){
+               onClick({inVlaue:value.in, video: videoRef})
+            })
+
+            // create event box
+            svg
+            .append("g")
+            .attr("id", "eventGroup")
+            .selectAll("rect")
+            .data(getData.eventList)
+            .join("rect")
+            .attr("width", function(d){
+               return `${annotationRowHeight/3}px`
+            })
+            .attr("height", annotationRowHeight/3)
+            .attr("x", function (d) {
+               return `${scaleLinear(d.in)}px`;
+             })
+            .attr("y", function (d, i) {
+               return `${canvasSize.height - ((annotationRowHeight) * 4 - annotationRowHeight/2)}px`;
+             })
+            .attr("fill","#3118E8")
+            .style("stroke", "#F1A73D")
+            .style("stroke-width", "4.5px")
+            .on("mouseenter", onMouseEnter)
+            .on("mouseleave", onMouseLeave)
+            .on("click", function(event, value){
+               onClick({inVlaue:value.in, video: videoRef})
+            })
+            // create place box
+            svg
+            .append("g")
+            .attr("id", "placeGroup")
+            .selectAll("circle")
+            .data(getData.placeList)
+            .join("circle")
+            .attr("r", (((annotationRowHeight)/3)/2))
+            // .attr("width", function(d){
+            //    return `${annotationRowHeight/3}px`
+            // })
+            // .attr("height", annotationRowHeight/3)
+            .attr("cx", function (d) {
+               return `${scaleLinear(d.in) + (((annotationRowHeight)/3)/2)}px`;
+             })
+            .attr("cy", function (d, i) {
+               return `${canvasSize.height - ((annotationRowHeight) * 4 - (((annotationRowHeight)/3)/2) - 2.25)}px`;
+             })
+            .attr("fill","#3118E8")
+            .style("stroke", "#EC6735")
+            .style("stroke-width", "4.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
             .on("click", function(event, value){
@@ -313,21 +416,48 @@ export const VideoPlayerContainer = ({data}) => {
    const [playToggle, setPlayToggle] = useState(false)
    const {data:annotationData, isLoading:annotationLoading} = getAllItemAnnotations({itemId:data.id})
    const [currentTime, setCurrentTime] = useState(0)
-
+   const fakeData = createFakeAnnotations({duration:data.duration})
    const [toggleShow, setToggleShow] = useState({
       category: true,
       tag: true,
       reference: true,
-      narration: true
+      narration: true,
+      data: true,
+      event: true,
+      place: true,
+      view: "diagramatic",
+     
    })
 
   
-   const onToggleShow = (key) => {
-      setToggleShow((prev) => ({
-        ...prev,
-        [key]: !prev[key], 
-      }));
+   const onToggleShow = (key, view=false) => {
+      if(!view){
+         setToggleShow((prev) => ({
+            ...prev,
+            [key]: !prev[key], 
+          }));
+      }else{
+         setToggleShow((prev) => ({
+            ...prev,
+            ["view"]: key, 
+          }));
+      }
+      
     };
+   const onToggleLegend = (value) => {
+      if(value){
+         window.scrollTo(0, 0)
+         document.body.style.overflow = "hidden"
+      }else{
+         document.body.style.overflow = "auto"
+      }
+      setToggleLegend(value)
+   }
+ 
+   useEffect(() => {
+      console.log(data)   
+      console.log(fakeData)
+   },[])
 
    // video keyboard controller
    useEffect(() => {
@@ -410,18 +540,43 @@ export const VideoPlayerContainer = ({data}) => {
    return <div className="w-full h-[100svh] relative">
        <div className="w-full h-[100svh] overflow-hidden flex flex-col">
         <div className="w-full h-full flex flex-col overflow-hidden relative">
-            <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className="w-full h-full bg-black" controls={false} aria-label="video player" preload="auto">
+            <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} w-full h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
               <source type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             {/* video info */}
-            <div className={`absolute top-0 left-0 z-[20] text-black px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} bg-blue-400 text-4xl font-bold italic transition-all duration-1000`}>{data.title}</div>
-            {/* Video Data Visualization */}
-            {videoRef && <VideoDataVisContainer toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
-
+            <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-fit flex flex-col gap-4`}>
+               <div onClick={togglePlay} className={`${playToggle ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-full pointer-events-none"} cursor-pointer w-[76px] absolute top-0 left-0 flex justify-center items-center aspect-square text-black bg-[#8BA5F8] transition-all duration-1000`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                     <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                  </svg>
+               </div>
+               <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic transition-all duration-1000`}>{data.title}</div>
+               <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
+                  <div>Author: {data.user}</div>
+                  <div>
+                     <div>Created:</div>
+                     <div>{data.created}</div>
+                  </div>
+                  <div>
+                     <div>Modified:</div>
+                     <div>{data.modified}</div>
+                  </div>
+               </div>
+            </div>
+            {/* Video Data Visualization : Diagramatic View */}
+            {videoRef && <VideoDataVisContainer fakeData={fakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
+            {/* Video Data Visualization : Entangled View */}
+            {videoRef && <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute top-0 right-0 w-[calc(100vw-76px-20px)] h-fit bg-red-400 transition-all duration-1000`}>
+                  <div>entangled view</div>
+               </div>}
+            {/* Video Data Visualization : Overview View */}
+            {videoRef && <div className={`${(toggleShow.view === "overview" && playToggle) ? "translate-x-0" : "translate-x-full"} absolute top-0 right-0 w-[660px] h-full overflow-scroll bg-red-400 transition-all duration-1000`}>
+                  <div>overview view</div>
+               </div>}
         </div>
         {/* video controller */}
-        {videoRef && <div className="w-full h-[40px] bg-black border-t border-white text-white flex justify-between items-center">
+        {videoRef && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
             <div onClick={togglePlay} className="cursor-pointer px-2">
                {!playToggle && <div>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -444,19 +599,32 @@ export const VideoPlayerContainer = ({data}) => {
      
         </div>}
         {/* video navigation */}
-        <div className="w-full h-[62px] bg-blue-400 flex items-center justify-between overflow-hidden">
+        <div className="w-full h-[62px] bg-[#8BA5F8] flex items-center justify-between overflow-hidden">
          <div className="px-4 flex items-center gap-4">
             <div>Show:</div>
-            <div onClick={() => onToggleShow("category")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.category ? "opacity-100" : "opacity-50"}`}>Categories</div>
-            <div onClick={() => onToggleShow("tag")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.tag ? "opacity-100" : "opacity-50"}`}>Tags</div>
-            <div onClick={() => onToggleShow("reference")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.reference ? "opacity-100" : "opacity-50"}`}>References</div>
-            <div onClick={() => onToggleShow("narration")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.narration ? "opacity-100" : "opacity-50"}`}>Narrations</div>
+            <div className="flex items-center gap-2 mr-4">
+               <div onClick={() => onToggleShow("category")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.category ? "opacity-100" : "opacity-50"}`}>Categories</div>
+               <div onClick={() => onToggleShow("tag")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.tag ? "opacity-100" : "opacity-50"}`}>Tags</div>
+               <div onClick={() => onToggleShow("reference")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.reference ? "opacity-100" : "opacity-50"}`}>References</div>
+               <div onClick={() => onToggleShow("narration")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.narration ? "opacity-100" : "opacity-50"}`}>Narrations</div>
+            </div>
+            <div className="flex items-center gap-2">
+               <div onClick={() => onToggleShow("data")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.data ? "opacity-100" : "opacity-50"}`}>Data</div>
+               <div onClick={() => onToggleShow("event")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.event ? "opacity-100" : "opacity-50"}`}>Events</div>
+               <div onClick={() => onToggleShow("place")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.place ? "opacity-100" : "opacity-50"}`}>Places</div>
+            </div>
+            
          </div>
-         <div className="px-4">View:</div>
-         <div onClick={() => setToggleLegend(true)} className={`h-full aspect-square cursor-pointer select-none flex hover:bg-blue-200 ${toggleLegend ? "bg-blue-200" : "bg-none"} justify-center items-center text-black`}>
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-               </svg>
+         <div className="px-4 flex items-center gap-4">
+            <div>View:</div>
+            <div onClick={() => onToggleShow("diagramatic", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.view === "diagramatic" ? "opacity-100" : "opacity-50"}`}>Diagramatic</div>
+            <div onClick={() => onToggleShow("entangled", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.view === "entangled" ? "opacity-100" : "opacity-50"}`}>Entangled</div>
+            <div onClick={() => onToggleShow("overview", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.view === "overview" ? "opacity-100" : "opacity-50"}`}>Overview</div>
+         </div>
+         <div onClick={() => onToggleLegend(true)} className={`h-full aspect-square cursor-pointer select-none flex bg-[#8BA5F8] hover:bg-opacity-30 hover:bg-white justify-center items-center text-black`}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
+               <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+            </svg>
          </div>
         </div>
       </div>
@@ -466,7 +634,7 @@ export const VideoPlayerContainer = ({data}) => {
             <div className="w-full max-w-screen-2xl mx-auto">
                <div className="flex w-full justify-between items-center">
                <div>Legend</div>
-               <div onClick={() => setToggleLegend(false)}>
+               <div onClick={() => onToggleLegend(false)}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                   </svg>
