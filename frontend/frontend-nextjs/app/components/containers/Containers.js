@@ -78,7 +78,8 @@ const createFakeAnnotations = ({duration}) => {
       const tag = {
          type: "tagLayer",
          in: randomIn,
-         out: randomOut
+         out: randomOut,
+         value: Array.from({length: Math.floor(Math.random() * 5) + 1}).map((v) => `tag${Math.floor(Math.random() * 10)}`)
       };
       tagList.push(tag)
    }
@@ -423,7 +424,13 @@ export const OverViewBox = ({data}) => {
    }
 
    const TagBox = ({tag}) => {
-      return <div className="w-full flex"><div className="bg-[#3118E8] px-2 py-1 text-white text-xl">#{tag.type}</div></div>
+      return <div className="w-full flex gap-2">
+         {
+            tag.value.map((val, idx) => {
+               return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-xl">#{val}</div>
+            })
+   }
+         </div>
    }
    const PlaceBox = ({place}) => {
       return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#EC6735] border-4 text-white">
@@ -468,17 +475,60 @@ export const OverViewBox = ({data}) => {
          return <div>Error: Invalid Layer Type</div>;
    }
 }
+const FilterBox = ({children, type, toggleShow}) => {
+   if(toggleShow.category && type === "categoryLayer"){
+      return <>{children}</>
+   }
+   if(!toggleShow.category && type === "categoryLayer"){
+      return <></>
+   }
+   if(toggleShow.tag && type === "tagLayer"){
+      return <>{children}</>
+   }
+   if(!toggleShow.tag && type === "tagLayer"){
+      return <></>
+   }
+   if(toggleShow.reference && type === "referenceLayer"){
+      return <>{children}</>
+   }
+   if(!toggleShow.reference && type === "referenceLayer"){
+      return <></>
+   }
+   if(toggleShow.narration && type === "narrationLayer"){
+      return <>{children}</>
+   }
+   if(!toggleShow.narration && type === "narrationLayer"){
+      return <></>
+   }
+   if(toggleShow.event && type === "eventLayer"){
+      return <>{children}</>
+   }
+   if(!toggleShow.event && type === "eventLayer"){
+      return <></>
+   }
+   if(toggleShow.place && type === "placeLayer"){
+      return <>{children}</>
+   }
+   if(!toggleShow.place && type === "placeLayer"){
+      return <></>
+   }
+   
+   return <>{children}</>
+}
 
 export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleShow, playToggle, fakeData}) => {
    const contentRef = useRef(null)
    const scrolltRef = useRef(null)
    const progressRef = useRef(null)
    const [allFakeData, setAllFakeData] = useState(null)
-   const [updateTime, setUpdateTime] = useState(currentTime)
+
    const onJumpTo = (inValue) => {
       videoRef.current.currentTime = inValue
       setCurrentTime(inValue)
    }
+
+
+   
    useEffect(() => {
       if(contentRef && scrolltRef && progressRef){
          const contentDiv = contentRef.current;
@@ -514,10 +564,7 @@ export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleS
    },[])
 
 
-   useEffect(() => {
-    
-      setUpdateTime(currentTime)
-   },[currentTime])
+ 
  
    return <div className={`${(toggleShow.view === "overview" && playToggle) ? "translate-x-0" : "translate-x-full"} z-[40] flex absolute top-0 right-0 lg:w-[660px] h-full bg-white transition-all duration-1000`}>
       <div ref={scrolltRef} className="w-full h-full overflow-scroll hide_scrollbar">
@@ -525,13 +572,23 @@ export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleS
                {allFakeData && <div className="flex flex-col gap-4">
                   {
                      allFakeData.map((v, idx) => {
-                        return <div key={idx} className="w-full h-fit flex gap-2 items-center">
-                           <div className="">
-                              <div className={`w-2 h-2 ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-emerald-400" : "bg-neutral-300"} rounded-full`}></div>
+                        return <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
+                           <div key={idx} className="w-full h-fit flex gap-2 items-center">
+                              <div className="">
+                                 <div className={`w-2 h-2 ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-emerald-400" : "bg-neutral-300"} rounded-full`}></div>
+                              </div>
+                              <OverViewBox  data={v} />
+                              <div onClick={() => onJumpTo(v.in)} className="text-xs flex flex-col cursor-pointer hover:bg-black justify-center items-center hover:text-white transition-all duration-150 rounded-md px-1 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
                            </div>
-                           <OverViewBox  data={v} />
-                           <div onClick={() => onJumpTo(v.in)} className="text-xs cursor-pointer hover:bg-black hover:text-white transition-all duration-150 rounded-md px-1 py-1">{formatTime(v.in)}</div>
-                        </div>
+                         </FilterBox>
+                        // return <div key={idx} className="w-full h-fit flex gap-2 items-center">
+                        //       <div className="">
+                        //          <div className={`w-2 h-2 ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-emerald-400" : "bg-neutral-300"} rounded-full`}></div>
+                        //       </div>
+                        //       <OverViewBox  data={v} />
+                        //       <div onClick={() => onJumpTo(v.in)} className="text-xs flex flex-col cursor-pointer hover:bg-black justify-center items-center hover:text-white transition-all duration-150 rounded-md px-1 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
+                        //    </div>
+                        
                      })
                   }
                   </div>}
@@ -768,7 +825,7 @@ export const VideoPlayerContainer = ({data}) => {
       </div>
       
       {/* video content */}
-       {toggleLegend && <div className="w-screen h-[100svh] bg-white bg-opacity-90 absolute top-0 left-0 z-[30] px-4 py-4">
+       {toggleLegend && <div className="w-screen h-[100svh] bg-white bg-opacity-90 absolute top-0 left-0 z-[50] px-4 py-4">
             <div className="w-full max-w-screen-2xl mx-auto">
                <div className="flex w-full justify-between items-center">
                <div>Legend</div>
