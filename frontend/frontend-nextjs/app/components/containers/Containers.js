@@ -516,6 +516,39 @@ const FilterBox = ({children, type, toggleShow}) => {
    return <>{children}</>
 }
 
+export const EntangledContainer = ({toggleShow, playToggle, currentTime, fakeData}) => {
+   const [allFakeData, setAllFakeData] = useState(null)
+   useEffect(() => {
+      console.log(fakeData)
+      let allData = []
+      for(let i =0; i < Object.keys(fakeData).length; i++){
+         allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
+      }
+      allData = allData.sort((a,b) => a.in - b.in)
+      console.log(allData)
+      setAllFakeData(allData)
+     
+   },[])
+
+
+   return <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute z-[40] top-0 right-0 w-[calc(100vw-76px-20px)] h-full bg-none transition-all duration-1000`}>
+   {
+      allFakeData && <div className="flex items-end flex-col gap-4 p-4">
+         {
+            allFakeData.map((v,idx) => {
+               return (
+                  <div key={idx} className={` ${(Math.floor(currentTime) >= Math.floor(v.in - 3) && (currentTime) <= Math.floor(v.out ? v.out + 3 : v.in + 5)) ? "flex items-center justify-center gap-2" : "hidden"} min-w-[380px]`}>
+                     <div className="bg-white text-xs flex px-2 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
+                     <OverViewBox data={v} />
+                  </div>
+               )
+            })
+         }
+      </div>
+   }
+</div>
+}
+
 export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleShow, playToggle, fakeData}) => {
    const contentRef = useRef(null)
    const scrolltRef = useRef(null)
@@ -764,9 +797,7 @@ export const VideoPlayerContainer = ({data}) => {
             {/* Video Data Visualization : Diagramatic View */}
             {(videoRef && getFakeData) && <VideoDataVisContainer fakeData={getFakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
             {/* Video Data Visualization : Entangled View */}
-            {videoRef && <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute top-0 right-0 w-[calc(100vw-76px-20px)] h-fit bg-red-400 transition-all duration-1000`}>
-                  <div>entangled view</div>
-               </div>}
+            {(videoRef && getFakeData) && <EntangledContainer toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} fakeData={getFakeData} />}
             {/* Video Data Visualization : Overview View */}
             {(videoRef && getFakeData) && <OverViewContainer currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getFakeData} />}
         </div>
