@@ -530,22 +530,29 @@ export const EntangledContainer = ({toggleShow, playToggle, currentTime, fakeDat
      
    },[])
 
+   const previewGap = 10
 
    return <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute z-[40] top-0 right-0 w-[calc(100vw-76px-20px)] h-full bg-none transition-all duration-1000`}>
+      <div className="w-full h-full overflow-scroll hide_scrollbar">
+      <div className="w-full h-fit bg-none py-2 px-4" >
    {
-      allFakeData && <div className="flex items-end flex-col gap-4 p-4">
+      allFakeData && <div className="flex items-end flex-col gap-2">
          {
             allFakeData.map((v,idx) => {
                return (
-                  <div key={idx} className={` ${(Math.floor(currentTime) >= Math.floor(v.in - 3) && (currentTime) <= Math.floor(v.out ? v.out + 3 : v.in + 5)) ? "flex items-center justify-center gap-2" : "hidden"} min-w-[380px]`}>
+                  <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
+                  <div key={idx} className={` ${(Math.floor(currentTime) >= Math.floor(v.in - previewGap) && (currentTime) <= Math.floor(v.out ? v.out + previewGap : v.in + 5 + previewGap)) ? "flex items-center justify-center gap-2" : "hidden"} min-w-[380px]`}>
                      <div className="bg-white text-xs flex px-2 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
                      <OverViewBox data={v} />
                   </div>
+                  </FilterBox>
                )
             })
          }
       </div>
    }
+   </div>
+   </div>
 </div>
 }
 
@@ -606,11 +613,11 @@ export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleS
                   {
                      allFakeData.map((v, idx) => {
                         return <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
-                           <div key={idx} className="w-full h-fit flex gap-2 items-center">
+                           <div className="w-full h-fit flex gap-2 items-center">
                               <div className="">
                                  <div className={`w-2 h-2 ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-emerald-400" : "bg-neutral-300"} rounded-full`}></div>
                               </div>
-                              <OverViewBox  data={v} />
+                              <OverViewBox data={v} />
                               <div onClick={() => onJumpTo(v.in)} className="text-xs flex flex-col cursor-pointer hover:bg-black justify-center items-center hover:text-white transition-all duration-150 rounded-md px-1 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
                            </div>
                          </FilterBox>
