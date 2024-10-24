@@ -862,7 +862,7 @@ export const VideoPlayerContainer = ({data}) => {
         </div>
       </div>
       
-      {/* video content */}
+      {/* video Legend */}
        {toggleLegend && <div className="w-screen h-[100svh] bg-white bg-opacity-90 absolute top-0 left-0 z-[50] px-4 py-4">
             <div className="w-full max-w-screen-2xl mx-auto">
                <div className="flex w-full justify-between items-center">
