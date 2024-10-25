@@ -33,7 +33,7 @@ const VideoWrapper = () => {
     useEffect(() => {
         if(videoContainerRef){
             const detectScroll = (e) => {
-                // console.log(window.scrollY, videoContainerRef.current.clientHeight)
+                // 
                 if((videoContainerRef.current.clientHeight/2) < window.scrollY){
                     setShowContentVideo(true)
                 }else{

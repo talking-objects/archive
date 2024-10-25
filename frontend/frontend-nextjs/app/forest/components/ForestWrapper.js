@@ -10,7 +10,7 @@ const VideosContainer = ({data, isLoading, dataCount, isLoadingCount}) => {
     const [getCount, setCount] = useState(null)
     useEffect(() => {
         if(!isLoading){
-            console.log(data.data)
+            
             setData(data.data)
         }
     },[data])
@@ -92,19 +92,19 @@ const ForestWrapper = () => {
     // const {data:dataAnnotationsCount, isLoading:isLoadingAnnotationsCount} = getAllAnnotationsCounts()
     // useEffect(() => {
     //     if(!isLoading && !isLoadingCount){
-    //         console.log(data)
-    //         console.log(dataCount)
+    //         
+    //         
     //     }
     // },[data, dataCount])
     useEffect(() => {
         if(!isLoadingClips){
-            console.log(dataClips)
+            
         }
     },[dataClips]) 
     useEffect(() => {
         if(!isLoadingAnnotations){
        
-            console.log(dataAnnotations)
+            
             const test = dataAnnotations.data.items
             const cate = {}
 
@@ -115,7 +115,7 @@ const ForestWrapper = () => {
                     cate[test[i].layer] = 1
                 }
             }
-            console.log(cate)
+            
           
         }
     },[dataAnnotations])

@@ -2,8 +2,9 @@ import { BASE_URL } from "@/app/utils/constant/etc"
 import { getAllAnnotations, getAllItemAnnotations } from "@/app/utils/hooks/pandora_api"
 import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3"
-import { formatTime } from "@/app/utils/hooks/etc"
+import { createFakeAnnotations, formatTime } from "@/app/utils/hooks/etc"
 import gsap from "gsap"
+import { LegendContainer, VideoNavigation } from "../elements/Elements"
 export const ContentContainer = ({children}) => {
     return (<div className="w-screen px-4 lg:px-4">
       <div className="w-full min-h-[100svh] h-full max-w-screen-2xl mx-auto flex flex-col">
@@ -18,127 +19,6 @@ export const MainContainer = ({children}) => {
    </div>
 }
 
-// 🔥create fake data
-const createFakeAnnotations = ({duration}) => {
-   const categoryCounts = Math.floor(Math.random() * 30)
-   const tagCounts = Math.floor(Math.random() * 10)
-   const refCounts = Math.floor(Math.random() * 10)
-   const narrationCounts = Math.floor(Math.random() * 10)
-   const eventsCounts = Math.floor(Math.random() * 10)
-   const placeCounts = Math.floor(Math.random() * 10)
-
-
-   // create Category
-   let categoryList = [];
-   const CATEGORYSVALUE = [
-      {
-         slug: "identity",
-         value: "Identity",
-         color: "#9E21E8"
-      },
-      {
-         slug: "knowledge",
-         value: "Knowledge",
-         color: "#8BA5F8"
-      },
-      {
-         slug: "artistic_reflections",
-         value: "Artistic Reflections",
-         color: "#691220"
-      },
-      {
-         slug: "restitution",
-         value: "Restitution",
-         color: "#EC6735"
-      },
-      {
-         slug: "memory",
-         value: "Memory and The Imaginary",
-         color: "#F1A73D"
-      },
-      
-   ]
-   for(let i = 0; i < categoryCounts; i++){
-      const randomIn = Math.floor(Math.random() * duration)
-      const outValue = 300
-      const randomOut = randomIn + Math.floor(Math.random() * outValue) >= duration ? duration : randomIn + Math.floor(Math.random() * outValue)
-      const cate = {
-         type: "categoryLayer",
-         category: CATEGORYSVALUE[Math.floor(Math.random() * CATEGORYSVALUE.length)],
-         in: randomIn,
-         out: randomOut
-      };
-      categoryList.push(cate)
-   }
-   // create tags
-   let tagList = [];
-   for(let i = 0; i < tagCounts; i++){
-      const randomIn = Math.floor(Math.random() * duration)
-      const outValue = 30
-      const randomOut = randomIn + outValue > duration ? duration : randomIn + outValue
-      const tag = {
-         type: "tagLayer",
-         in: randomIn,
-         out: randomOut,
-         value: Array.from({length: Math.floor(Math.random() * 5) + 1}).map((v) => `tag${Math.floor(Math.random() * 10)}`)
-      };
-      tagList.push(tag)
-   }
-   // create ref
-   let refList = [];
-   for(let i = 0; i < refCounts; i++){
-      const randomIn = Math.floor(Math.random() * duration)
-      const ref = {
-         type: "referenceLayer",
-         in: randomIn,
-     
-      };
-      refList.push(ref)
-   }
-   // create narration
-   let narrationList = [];
-   for(let i = 0; i < narrationCounts; i++){
-      const randomIn = Math.floor(Math.random() * duration)
-      const narration = {
-         type: "narrationLayer",
-         in: randomIn,
-     
-      };
-      narrationList.push(narration)
-   }
-   // create events
-   let eventList = [];
-   for(let i = 0; i < eventsCounts; i++){
-      const randomIn = Math.floor(Math.random() * duration)
-      const event = {
-         type: "eventLayer",
-         in: randomIn,
-     
-      };
-      eventList.push(event)
-   }
-   // create place
-   let placeList = [];
-   for(let i = 0; i < placeCounts; i++){
-      const randomIn = Math.floor(Math.random() * duration)
-      const place = {
-         type: "placeLayer",
-         in: randomIn,
-     
-      };
-      placeList.push(place)
-   }
-
-   const result = {
-      categoryList: categoryList,
-      tagList: tagList,
-      refList: refList,
-      narrationList: narrationList,
-      eventList: eventList,
-      placeList: placeList
-   }
-   return result
-}
 
 const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
@@ -157,7 +37,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
          // fake data
          let getFakeData = fakeData
          setData(getFakeData)
-         console.log(fakeData)
+         
        
       }
    },[annotationData])
@@ -170,7 +50,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
       const event = d3.select("#eventGroup")
       const place = d3.select("#placeGroup")
       
-      console.log(toggleShow.view)
+      
       const svg = d3.select(svgRef.current)
       if(toggleShow.view === "diagramatic"){
         
@@ -301,8 +181,8 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
                }
             }
             const onClick = ({inVlaue, video}) => {
-               console.log(inVlaue)
-               console.log(video)
+               
+               
                videoRef.current.currentTime = inVlaue
                setCurrentTime(inVlaue)
             }
@@ -607,13 +487,13 @@ const FilterBox = ({children, type, toggleShow}) => {
 export const EntangledContainer = ({toggleShow, playToggle, currentTime, fakeData}) => {
    const [allFakeData, setAllFakeData] = useState(null)
    useEffect(() => {
-      console.log(fakeData)
+      
       let allData = []
       for(let i =0; i < Object.keys(fakeData).length; i++){
          allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
       }
       allData = allData.sort((a,b) => a.in - b.in)
-      console.log(allData)
+      
       setAllFakeData(allData)
      
    },[])
@@ -680,13 +560,13 @@ export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleS
    },[])
 
    useEffect(() => {
-      console.log(fakeData)
+      
       let allData = []
       for(let i =0; i < Object.keys(fakeData).length; i++){
          allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
       }
       allData = allData.sort((a,b) => a.in - b.in)
-      console.log(allData)
+      
       setAllFakeData(allData)
      
    },[])
@@ -750,11 +630,6 @@ export const VideoPlayerContainer = ({data}) => {
      
    })
    
-   useEffect(() => {
-      const fakeData = createFakeAnnotations({duration:data.duration})
-      setFakeData(fakeData)
-   },[])
-  
    const onToggleShow = (key, view=false) => {
       if(!view){
          setToggleShow((prev) => ({
@@ -778,10 +653,28 @@ export const VideoPlayerContainer = ({data}) => {
       }
       setToggleLegend(value)
    }
- 
+
+   const togglePlay = () => {
+      if(videoRef){
+         if(videoRef.current.paused){
+            
+            videoRef.current.play()
+            setPlayToggle(true)
+         }else{
+            videoRef.current.pause()
+            setPlayToggle(false)
+         }
+         
+      }
+   }
+   const onClickProgressBar = (e) => {
+      videoRef.current.currentTime = e.target.value
+      setCurrentTime(e.target.value)
+   }
+
    useEffect(() => {
-      console.log(data)   
-  
+      const fakeData = createFakeAnnotations({duration:data.duration})
+      setFakeData(fakeData)
    },[])
 
    // video keyboard controller
@@ -804,10 +697,9 @@ export const VideoPlayerContainer = ({data}) => {
                   videoRef.current.pause()
                   setPlayToggle(false)
                }
-               console.log(videoRef.current.paused)
             }
           }
-          console.log(event.code)
+      
          // diagramatic
          if(event.which === 81){
             onToggleShow("diagramatic", true)
@@ -862,36 +754,19 @@ export const VideoPlayerContainer = ({data}) => {
    }
    },[])
 
-   const togglePlay = () => {
-      if(videoRef){
-         if(videoRef.current.paused){
-            
-            videoRef.current.play()
-            setPlayToggle(true)
-         }else{
-            videoRef.current.pause()
-            setPlayToggle(false)
-         }
-         console.log(videoRef.current.paused)
-      }
-   }
-   const onClickProgressBar = (e) => {
-      videoRef.current.currentTime = e.target.value
-      setCurrentTime(e.target.value)
-   }
    // update video progress bar
    useEffect(() => {
       const videoElement = videoRef.current
       if (playToggle && videoElement) {
          const handleTimeUpdate = () => {
             const currentTime = videoElement?.currentTime
-            // console.log(`currentTime: ${currentTime}`)
+            // 
             setCurrentTime(currentTime)
             if(videoElement.ended){
                // video ended
                // - update play icon
                // - update progress bar
-               console.log("end")
+               
                setPlayToggle(false)
                setCurrentTime(0)
             }
@@ -962,68 +837,150 @@ export const VideoPlayerContainer = ({data}) => {
      
         </div>}
         {/* video navigation */}
-        <div className="w-full h-[62px] bg-[#8BA5F8] flex items-center justify-between overflow-hidden">
-         <div className="px-4 flex items-center gap-4">
-            <div>Show:</div>
-            <div className="flex items-center gap-2 mr-4">
-               <div onClick={() => onToggleShow("category")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.category ? "opacity-100" : "opacity-50"}`}>Categories(1)</div>
-               <div onClick={() => onToggleShow("tag")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.tag ? "opacity-100" : "opacity-50"}`}>Tags(2)</div>
-               <div onClick={() => onToggleShow("reference")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.reference ? "opacity-100" : "opacity-50"}`}>References(3)</div>
-               <div onClick={() => onToggleShow("narration")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.narration ? "opacity-100" : "opacity-50"}`}>Narrations(4)</div>
-            </div>
-            <div className="flex items-center gap-2">
-               <div onClick={() => onToggleShow("data")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.data ? "opacity-100" : "opacity-50"}`}>Data(5)</div>
-               <div onClick={() => onToggleShow("event")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.event ? "opacity-100" : "opacity-50"}`}>Events(6)</div>
-               <div onClick={() => onToggleShow("place")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.place ? "opacity-100" : "opacity-50"}`}>Places(7)</div>
-            </div>
-            
-         </div>
-         <div className="px-4 flex items-center gap-4">
-            <div>View:</div>
-            <div onClick={() => onToggleShow("diagramatic", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "diagramatic" ? "opacity-100" : "opacity-50"}`}>Diagramatic(Q)</div>
-            <div onClick={() => onToggleShow("entangled", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "entangled" ? "opacity-100" : "opacity-50"}`}>Entangled(W)</div>
-            <div onClick={() => onToggleShow("overview", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "overview" ? "opacity-100" : "opacity-50"}`}>Overview(E)</div>
-         </div>
-         <div onClick={() => onToggleLegend(true)} className={`h-full aspect-square cursor-pointer select-none flex bg-[#8BA5F8] hover:bg-opacity-30 hover:bg-white justify-center items-center text-black`}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
-               <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-            </svg>
-         </div>
-        </div>
+        <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
       </div>
       
       {/* video Legend */}
-       {toggleLegend && <div className="w-screen h-[100svh] bg-white bg-opacity-90 absolute top-0 left-0 z-[50] px-4 py-4">
-            <div className="w-full max-w-screen-2xl mx-auto">
-               <div className="flex w-full justify-between items-center">
-               <div>Legend</div>
-               <div onClick={() => onToggleLegend(false)}>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                  </svg>
-               </div>
-               </div>
-            </div>
-       </div>}
+       {toggleLegend && <LegendContainer onToggleLegend={onToggleLegend} />}
    </div>
 }
 
 export const EditVideoPlayerContainer = ({data}) => {
+   
+   const [toggleLegend, setToggleLegend] = useState(false)
+   const [toggleShow, setToggleShow] = useState({
+      category: true,
+      tag: true,
+      reference: true,
+      narration: true,
+      data: true,
+      event: true,
+      place: true,
+      view: "diagramatic",
+     
+   })
+   const onToggleLegend = (value) => {
+      if(value){
+         window.scrollTo(0, 0)
+         document.body.style.overflow = "hidden"
+      }else{
+         document.body.style.overflow = "auto"
+      }
+      setToggleLegend(value)
+   }
+ 
+   const onToggleShow = (key, view=false) => {
+      if(!view){
+         setToggleShow((prev) => ({
+            ...prev,
+            [key]: !prev[key], 
+          }));
+      }else{
+         setToggleShow((prev) => ({
+            ...prev,
+            ["view"]: key, 
+          }));
+      }
+      
+    };
+
+     // video keyboard controller
+   useEffect(() => {
+      const onSpaceScroll = (event) => {
+         if (event.code === 'Space') {
+            event.preventDefault(); 
+          }
+        
+      }
+      const onKeyController = (event) => {
+         event.preventDefault(); 
+         if (event.code === 'Space') {
+            if(videoRef){
+               if(videoRef.current.paused){
+                  
+                  videoRef.current.play()
+                  setPlayToggle(true)
+               }else{
+                  videoRef.current.pause()
+                  setPlayToggle(false)
+               }
+            }
+          }
+      
+         // diagramatic
+         if(event.which === 81){
+            onToggleShow("diagramatic", true)
+         }
+         // entangled
+         if(event.which === 87){
+            onToggleShow("entangled", true)
+         }
+         // overview
+         if(event.which === 69){
+            onToggleShow("overview", true)
+         }
+
+         // show : categories
+         if(event.which === 49){
+            onToggleShow("category")
+         }
+         // show : tag
+         if(event.which === 50){
+            onToggleShow("tag")
+         }
+         // show : reference
+         if(event.which === 51){
+            onToggleShow("reference")
+         }
+         // show : narration
+         if(event.which === 52){
+            onToggleShow("narration")
+         }
+         // show : data
+         if(event.which === 53){
+            onToggleShow("data")
+         }
+         // show : event
+         if(event.which === 54){
+            onToggleShow("event")
+         }
+         // show: place
+         if(event.which === 55){
+            onToggleShow("place")
+         }
+        
+      }
+
+      // event = keyup or keydown
+   document.addEventListener('keyup',onKeyController)
+   document.addEventListener('keydown',onSpaceScroll)
+
+   return () => {
+      document.removeEventListener("keyup", onKeyController)
+      document.removeEventListener("keydown", onSpaceScroll)
+   }
+   },[])
    return (<div className="w-full h-[100svh] relative">
       <div className="w-full h-[100svh] overflow-hidden flex flex-col">
-         {/* Video */}
-         <div className="w-full h-full flex flex-col overflow-hidden relative"></div>
+         {/* Video Container */}
+         <div className="w-full h-full flex flex-col overflow-hidden relative">
+            {/* Video */}
+
+            {/* Video Info */}
+            {/* Video Data Visualization : Diagramatic View */}
+            {/* Video Data Visualization : Entangled View */}
+            {/* Video Data Visualization : Overview View */}
+         </div>
          {/* video controller */}
          <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
 
          </div>
          {/* video navigation */}
-         <div className="w-full h-[62px] bg-[#8BA5F8] flex items-center justify-between overflow-hidden">
-
-         </div>
+         <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
       </div>
      
-      {/* video Legend */}
+       {/* video Legend */}
+       {toggleLegend && <LegendContainer onToggleLegend={onToggleLegend} />}
    </div>
 
    )

@@ -31,7 +31,7 @@ const ClipsWrapper = () => {
         setLoading(false);
         setClips(clips.data);
       }
-      console.log(clips);
+      
     })();
   }, []);
 
