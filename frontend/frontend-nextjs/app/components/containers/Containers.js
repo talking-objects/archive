@@ -3,6 +3,7 @@ import { getAllAnnotations, getAllItemAnnotations } from "@/app/utils/hooks/pand
 import { useEffect, useRef, useState } from "react"
 import * as d3 from "d3"
 import { formatTime } from "@/app/utils/hooks/etc"
+import gsap from "gsap"
 export const ContentContainer = ({children}) => {
     return (<div className="w-screen px-4 lg:px-4">
       <div className="w-full min-h-[100svh] h-full max-w-screen-2xl mx-auto flex flex-col">
@@ -141,8 +142,10 @@ const createFakeAnnotations = ({duration}) => {
 
 const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
+   const wrapperRef = useRef(null)
    const svgRef = useRef(null)
-
+   const infoRef = useRef(null)
+   const [hoverData, setHoverData] = useState(null)
    // the data of annotations of this video
    useEffect(() => {
       if(!annotationLoading){
@@ -222,12 +225,80 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
    // Annotation Visualization using D3.js
    useEffect(() => {
       if(svgRef){
+         const infoBoxTopMargin = 20;
          if(getData){
-            const onMouseEnter = () => {
+            const onMouseEnter = (e,d) => {
                document.body.style.cursor = "pointer"
+               const mousePos = d3.pointer(e);
+               if(wrapperRef && infoRef){
+                  const wrapperHeight = wrapperRef.current.clientHeight;
+                  const wrapperWidth = wrapperRef.current.clientWidth;
+                  const infoBox = infoRef.current;
+                  const addHeight = wrapperHeight * (2/3);
+                  const infoBoxHeight = infoBox.clientHeight;
+                  const infoBoxWidth = infoBox.clientWidth;
+                  setHoverData(d)
+                  gsap.to(infoBox, {
+                     css: {opacity: 1},
+                     duration: 0.5
+                  })
+                  infoBox.style.top = `${addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin}px`
+
+
+                  let currentMouseX = mousePos[0] - infoBoxWidth/2
+                  if((mousePos[0] + infoBoxWidth/2) > wrapperWidth){
+                     currentMouseX = wrapperWidth - infoBoxWidth
+                  }
+                  if((mousePos[0] - infoBoxWidth/2) < 0){
+                     currentMouseX = 0
+                  }
+                  infoBox.style.left = `${currentMouseX}px`
+
+               }
+              
+            }
+            const onMouseMove = (e,d) => {
+               const mousePos = d3.pointer(e);
+               if(wrapperRef && infoRef){
+                  const wrapperHeight = wrapperRef.current.clientHeight;
+                  const wrapperWidth = wrapperRef.current.clientWidth;
+                  const infoBox = infoRef.current;
+                  const addHeight = wrapperHeight * (2/3);
+                  const infoBoxHeight = infoBox.clientHeight;
+                  const infoBoxWidth = infoBox.clientWidth;
+                  setHoverData(d)
+                  gsap.to(infoBox, {
+                     css: {opacity: 1},
+                     duration: 0.5
+                  })
+                  infoBox.style.top = `${addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin}px`
+
+
+                  let currentMouseX = mousePos[0] - infoBoxWidth/2
+                  if((mousePos[0] + infoBoxWidth/2) > wrapperWidth){
+                     currentMouseX = wrapperWidth - infoBoxWidth
+                  }
+                  if((mousePos[0] - infoBoxWidth/2) < 0){
+                     currentMouseX = 0
+                  }
+                  infoBox.style.left = `${currentMouseX}px`
+
+
+               }
+              
             }
             const onMouseLeave = () => {
                document.body.style.cursor = "auto"
+               if(infoRef){
+                  const infoBox = infoRef.current;
+                  gsap.killTweensOf(infoBox)
+                  setHoverData(null)
+                  gsap.to(infoBox, {
+                     css: {opacity: 0},
+                     duration: 0.3
+                  })
+                  // infoBox.style.display = "none"
+               }
             }
             const onClick = ({inVlaue, video}) => {
                console.log(inVlaue)
@@ -275,9 +346,11 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .style("stroke-width", "0.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("mousemove", onMouseMove)
             .on("click", function(event, value){
                onClick({inVlaue:value.in, video: videoRef})
             })
+          
           
             // create tag box
             svg
@@ -301,6 +374,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .style("stroke-width", "0.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("mousemove", onMouseMove)
             .on("click", function(event, value){
                onClick({inVlaue:value.in, video: videoRef})
             })
@@ -324,6 +398,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .style("stroke-width", "4.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("mousemove", onMouseMove)
             .on("click", function(event, value){
                onClick({inVlaue:value.in, video: videoRef})
             })
@@ -346,6 +421,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .style("stroke-width", "0.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("mousemove", onMouseMove)
             .on("click", function(event, value){
                onClick({inVlaue:value.in, video: videoRef})
             })
@@ -372,6 +448,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .style("stroke-width", "4.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("mousemove", onMouseMove)
             .on("click", function(event, value){
                onClick({inVlaue:value.in, video: videoRef})
             })
@@ -398,6 +475,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
             .style("stroke-width", "4.5px")
             .on("mouseenter", onMouseEnter)
             .on("mouseleave", onMouseLeave)
+            .on("mousemove", onMouseMove)
             .on("click", function(event, value){
                onClick({inVlaue:value.in, video: videoRef})
             })
@@ -411,10 +489,19 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
    if(annotationLoading || !Boolean(getData)){
       return;
    }
-   return <div className="absolute bottom-0 left-0 z-[20]  w-full h-1/3 lg:h-1/3">
-      <svg ref={svgRef}>
+   return <div ref={wrapperRef} className="absolute top-0 left-0 w-full h-full bg-none">
+         <div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none p-4 border-[#EC6735] border-2 rounded-lg top-0 right-0 z-[30] bg-white text-black border- w-[400px] h-[350px] shadow-md shadow-[#EC6735]">
+            {
+               hoverData && <div>
+                  <OverViewBox data={hoverData} />
+               </div>
+            }
+         </div>
+         <div className="absolute bottom-0 left-0 z-[20] w-full h-1/3 lg:h-1/3">
+            <svg ref={svgRef}>
 
-      </svg>
+            </svg>
+         </div>
    </div>
 }
 
