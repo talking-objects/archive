@@ -217,7 +217,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
           }
       }else{
        
-         svg.style("display", "none")
+         // svg.style("display", "none")
       }
 
        
@@ -808,44 +808,44 @@ export const VideoPlayerContainer = ({data}) => {
           }
           console.log(event.code)
          // diagramatic
-         if(event.code === "KeyZ"){
+         if(event.which === 81){
             onToggleShow("diagramatic", true)
          }
          // entangled
-         if(event.code === "KeyX"){
+         if(event.which === 87){
             onToggleShow("entangled", true)
          }
          // overview
-         if(event.code === "KeyC"){
+         if(event.which === 69){
             onToggleShow("overview", true)
          }
 
          // show : categories
-         if(event.code === "Digit1"){
+         if(event.which === 49){
             onToggleShow("category")
          }
          // show : tag
-         if(event.code === "Digit2"){
+         if(event.which === 50){
             onToggleShow("tag")
          }
          // show : reference
-         if(event.code === "Digit3"){
+         if(event.which === 51){
             onToggleShow("reference")
          }
          // show : narration
-         if(event.code === "Digit4"){
+         if(event.which === 52){
             onToggleShow("narration")
          }
          // show : data
-         if(event.code === "Digit5"){
+         if(event.which === 53){
             onToggleShow("data")
          }
          // show : event
-         if(event.code === "Digit6"){
+         if(event.which === 54){
             onToggleShow("event")
          }
          // show: place
-         if(event.code === "Digit7"){
+         if(event.which === 55){
             onToggleShow("place")
          }
         
@@ -979,9 +979,9 @@ export const VideoPlayerContainer = ({data}) => {
          </div>
          <div className="px-4 flex items-center gap-4">
             <div>View:</div>
-            <div onClick={() => onToggleShow("diagramatic", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "diagramatic" ? "opacity-100" : "opacity-50"}`}>Diagramatic(Z)</div>
-            <div onClick={() => onToggleShow("entangled", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "entangled" ? "opacity-100" : "opacity-50"}`}>Entangled(X)</div>
-            <div onClick={() => onToggleShow("overview", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "overview" ? "opacity-100" : "opacity-50"}`}>Overview(C)</div>
+            <div onClick={() => onToggleShow("diagramatic", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "diagramatic" ? "opacity-100" : "opacity-50"}`}>Diagramatic(Q)</div>
+            <div onClick={() => onToggleShow("entangled", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "entangled" ? "opacity-100" : "opacity-50"}`}>Entangled(W)</div>
+            <div onClick={() => onToggleShow("overview", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "overview" ? "opacity-100" : "opacity-50"}`}>Overview(E)</div>
          </div>
          <div onClick={() => onToggleLegend(true)} className={`h-full aspect-square cursor-pointer select-none flex bg-[#8BA5F8] hover:bg-opacity-30 hover:bg-white justify-center items-center text-black`}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
