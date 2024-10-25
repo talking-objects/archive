@@ -140,7 +140,7 @@ const createFakeAnnotations = ({duration}) => {
    return result
 }
 
-const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
+const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
    const wrapperRef = useRef(null)
    const svgRef = useRef(null)
@@ -497,7 +497,7 @@ const VideoDataVisContainer = ({fakeData, toggleShow, setCurrentTime, duration, 
                </div>
             }
          </div>
-         <div className="absolute bottom-0 left-0 z-[20] w-full h-1/3 lg:h-1/3">
+         <div className={`${(toggleShow.view === "diagramatic" && playToggle) ? "opacity-100 translate-y-0" :"opacity-0 translate-y-full" } absolute bottom-0 left-0 z-[20] w-full h-1/3 lg:h-1/3 transition-all duration-1000`}>
             <svg ref={svgRef}>
 
             </svg>
@@ -617,7 +617,7 @@ export const EntangledContainer = ({toggleShow, playToggle, currentTime, fakeDat
      
    },[])
 
-   const previewGap = 10
+   const previewGap = 60
 
    return <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute z-[40] top-0 right-0 w-[calc(100vw-76px-20px)] h-full bg-none transition-all duration-1000`}>
       <div className="w-full h-full overflow-scroll hide_scrollbar">
@@ -628,7 +628,7 @@ export const EntangledContainer = ({toggleShow, playToggle, currentTime, fakeDat
             allFakeData.map((v,idx) => {
                return (
                   <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
-                  <div key={idx} className={` ${(Math.floor(currentTime) >= Math.floor(v.in - previewGap) && (currentTime) <= Math.floor(v.out ? v.out + previewGap : v.in + 5 + previewGap)) ? "flex items-center justify-center gap-2" : "hidden"} min-w-[380px]`}>
+                  <div key={idx} className={` ${(Math.floor(currentTime) >= Math.floor(v.in - previewGap) && (currentTime) <= Math.floor(v.out ? v.out + previewGap : v.in + previewGap)) ? "flex items-center justify-center gap-2" : "hidden"} min-w-[380px]`}>
                      <div className="bg-white text-xs flex px-2 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
                      <OverViewBox data={v} />
                   </div>
@@ -791,9 +791,9 @@ export const VideoPlayerContainer = ({data}) => {
           }
         
       }
-      const onSpaceBar = (event) => {
+      const onKeyController = (event) => {
+         event.preventDefault(); 
          if (event.code === 'Space') {
-            event.preventDefault(); 
             if(videoRef){
                if(videoRef.current.paused){
                   
@@ -806,15 +806,57 @@ export const VideoPlayerContainer = ({data}) => {
                console.log(videoRef.current.paused)
             }
           }
+          console.log(event.code)
+         // diagramatic
+         if(event.code === "KeyZ"){
+            onToggleShow("diagramatic", true)
+         }
+         // entangled
+         if(event.code === "KeyX"){
+            onToggleShow("entangled", true)
+         }
+         // overview
+         if(event.code === "KeyC"){
+            onToggleShow("overview", true)
+         }
+
+         // show : categories
+         if(event.code === "Digit1"){
+            onToggleShow("category")
+         }
+         // show : tag
+         if(event.code === "Digit2"){
+            onToggleShow("tag")
+         }
+         // show : reference
+         if(event.code === "Digit3"){
+            onToggleShow("reference")
+         }
+         // show : narration
+         if(event.code === "Digit4"){
+            onToggleShow("narration")
+         }
+         // show : data
+         if(event.code === "Digit5"){
+            onToggleShow("data")
+         }
+         // show : event
+         if(event.code === "Digit6"){
+            onToggleShow("event")
+         }
+         // show: place
+         if(event.code === "Digit7"){
+            onToggleShow("place")
+         }
         
       }
 
       // event = keyup or keydown
-   document.addEventListener('keyup',onSpaceBar)
+   document.addEventListener('keyup',onKeyController)
    document.addEventListener('keydown',onSpaceScroll)
 
    return () => {
-      document.removeEventListener("keyup", onSpaceBar)
+      document.removeEventListener("keyup", onKeyController)
       document.removeEventListener("keydown", onSpaceScroll)
    }
    },[])
@@ -889,7 +931,7 @@ export const VideoPlayerContainer = ({data}) => {
                </div>
             </div>
             {/* Video Data Visualization : Diagramatic View */}
-            {(videoRef && getFakeData) && <VideoDataVisContainer fakeData={getFakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
+            {(videoRef && getFakeData) && <VideoDataVisContainer fakeData={getFakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
             {/* Video Data Visualization : Entangled View */}
             {(videoRef && getFakeData) && <EntangledContainer toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} fakeData={getFakeData} />}
             {/* Video Data Visualization : Overview View */}
@@ -923,23 +965,23 @@ export const VideoPlayerContainer = ({data}) => {
          <div className="px-4 flex items-center gap-4">
             <div>Show:</div>
             <div className="flex items-center gap-2 mr-4">
-               <div onClick={() => onToggleShow("category")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.category ? "opacity-100" : "opacity-50"}`}>Categories</div>
-               <div onClick={() => onToggleShow("tag")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.tag ? "opacity-100" : "opacity-50"}`}>Tags</div>
-               <div onClick={() => onToggleShow("reference")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.reference ? "opacity-100" : "opacity-50"}`}>References</div>
-               <div onClick={() => onToggleShow("narration")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.narration ? "opacity-100" : "opacity-50"}`}>Narrations</div>
+               <div onClick={() => onToggleShow("category")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.category ? "opacity-100" : "opacity-50"}`}>Categories(1)</div>
+               <div onClick={() => onToggleShow("tag")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.tag ? "opacity-100" : "opacity-50"}`}>Tags(2)</div>
+               <div onClick={() => onToggleShow("reference")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.reference ? "opacity-100" : "opacity-50"}`}>References(3)</div>
+               <div onClick={() => onToggleShow("narration")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.narration ? "opacity-100" : "opacity-50"}`}>Narrations(4)</div>
             </div>
             <div className="flex items-center gap-2">
-               <div onClick={() => onToggleShow("data")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.data ? "opacity-100" : "opacity-50"}`}>Data</div>
-               <div onClick={() => onToggleShow("event")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.event ? "opacity-100" : "opacity-50"}`}>Events</div>
-               <div onClick={() => onToggleShow("place")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.place ? "opacity-100" : "opacity-50"}`}>Places</div>
+               <div onClick={() => onToggleShow("data")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.data ? "opacity-100" : "opacity-50"}`}>Data(5)</div>
+               <div onClick={() => onToggleShow("event")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.event ? "opacity-100" : "opacity-50"}`}>Events(6)</div>
+               <div onClick={() => onToggleShow("place")} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.place ? "opacity-100" : "opacity-50"}`}>Places(7)</div>
             </div>
             
          </div>
          <div className="px-4 flex items-center gap-4">
             <div>View:</div>
-            <div onClick={() => onToggleShow("diagramatic", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.view === "diagramatic" ? "opacity-100" : "opacity-50"}`}>Diagramatic</div>
-            <div onClick={() => onToggleShow("entangled", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.view === "entangled" ? "opacity-100" : "opacity-50"}`}>Entangled</div>
-            <div onClick={() => onToggleShow("overview", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer ${toggleShow.view === "overview" ? "opacity-100" : "opacity-50"}`}>Overview</div>
+            <div onClick={() => onToggleShow("diagramatic", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "diagramatic" ? "opacity-100" : "opacity-50"}`}>Diagramatic(Z)</div>
+            <div onClick={() => onToggleShow("entangled", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "entangled" ? "opacity-100" : "opacity-50"}`}>Entangled(X)</div>
+            <div onClick={() => onToggleShow("overview", true)} className={`px-2 py-1 rounded-lg bg-white text-black select-none cursor-pointer text-sm ${toggleShow.view === "overview" ? "opacity-100" : "opacity-50"}`}>Overview(C)</div>
          </div>
          <div onClick={() => onToggleLegend(true)} className={`h-full aspect-square cursor-pointer select-none flex bg-[#8BA5F8] hover:bg-opacity-30 hover:bg-white justify-center items-center text-black`}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
