@@ -33,18 +33,23 @@ const VideoWrapper = () => {
     useEffect(() => {
         if(videoContainerRef){
             const detectScroll = (e) => {
-                // 
-                if((videoContainerRef.current.clientHeight/2) < window.scrollY){
-                    setShowContentVideo(true)
-                }else{
-                    setShowContentVideo(false)
+                if(videoContainerRef.current){
+                    if((videoContainerRef.current.clientHeight/2) < window.scrollY){
+                        setShowContentVideo(true)
+                    }else{
+                        setShowContentVideo(false)
+                    }
+                    
                 }
-            }
-            window.addEventListener("scroll", detectScroll)
-    
-            return () => {
-                window.removeEventListener("scroll", detectScroll)
-            }
+               
+                }
+
+                window.addEventListener("scroll", detectScroll)
+        
+                    return () => {
+                        window.removeEventListener("scroll", detectScroll)
+                    }
+               
         }
     },[])
    
