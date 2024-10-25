@@ -848,7 +848,9 @@ export const EditVideoPlayerContainer = ({data}) => {
    const [playToggle, setPlayToggle] = useState(false)
    const [toggleLegend, setToggleLegend] = useState(false)
    const [currentTime, setCurrentTime] = useState(0)
+   const currentTimeR = useRef(0)
    const [currentVideo, setCurrentVideo] = useState(null)
+   const [currentIndex, setCurrentIndex] = useState(null)
    const [toggleShow, setToggleShow] = useState({
       category: true,
       tag: true,
@@ -867,6 +869,8 @@ export const EditVideoPlayerContainer = ({data}) => {
       for(let i =0; i < data.length; i++){
          if(data[i].newIn <= currentTime && data[i].newOut >= currentTime){
             getCurrentVideo = data[i]
+            setCurrentIndex(i)
+            console.log(i)
             break;
          }
       }
@@ -874,6 +878,7 @@ export const EditVideoPlayerContainer = ({data}) => {
       if(getCurrentVideo){
          // videoRef.current.src = `${BASE_URL}/${getCurrentVideo.id}/480p1.mp4`
          videoRef.current.currentTime = getCurrentVideo.in
+         
          setCurrentVideo(getCurrentVideo)
    
          return getCurrentVideo
@@ -885,48 +890,91 @@ export const EditVideoPlayerContainer = ({data}) => {
    },[])
 
    // update video progress bar
-   useEffect(() => {
-      const videoElement = videoRef.current
-      if (playToggle && videoElement) {
-         const handleTimeUpdate = (e) => {
-     
-            const getCurrentTime = videoElement?.currentTime
-            console.log(currentVideo.out, getCurrentTime)
 
-            // videoRef.current.currentTime = getVideo.in + (e.target.value - getVideo.newIn)
-            if(getCurrentTime >= currentVideo.out){
-               findCurrentVideo(currentTime + (getCurrentTime - currentVideo.in))
-               
-               setPlayToggle(false)
-               videoElement.pause()
-                  console.log(currentTime + (getCurrentTime - currentVideo.in))
-               // console.log(currentTime + (getCurrentTime - currentVideo.in))
-               // const found = findCurrentVideo(6)
-               // console.log(found)
-            }else{
-               setCurrentTime(currentTime + (getCurrentTime - currentVideo.in))
-
-            }
-          
-          
-           
-         };
-         videoElement.ontimeupdate = handleTimeUpdate
-      
-         return () => {
-            videoElement.ontimeupdate = null
-         };
-      }
-   },[playToggle])
+      useEffect(() => {
+         const videoElement = videoRef.current;
+         let isUpdating = false; // 중복 방지 플래그 추가
+   
+         if (playToggle && videoElement) {
+            const handleTimeUpdate = (e) => {
+               if (isUpdating) return; // 이미 업데이트 중이라면 실행하지 않음
+   
+               const getCurrentTime = videoElement?.currentTime;
+   
+               if (Math.round(getCurrentTime) > currentVideo.out) {
+                  // 중복 실행 방지를 위해 플래그 설정
+                  isUpdating = true;
+                  
+                  // 다음 비디오로 전환
+                  videoElement.pause();
+                  setPlayToggle(false);
+                  console.log("next");
+                  console.log(currentIndex + 1);
+   
+                  const getNextVideo = data[currentIndex + 1];
+                  if (data[currentIndex + 1]) {
+                     setCurrentIndex((prev) => prev + 1);
+                     videoRef.current.currentTime = getNextVideo.in;
+                     setCurrentVideo(getNextVideo);
+                     setCurrentTime(getNextVideo.newIn);
+                  }else {
+                     const fristVideo = data[0];
+                     setCurrentIndex(0);
+                     videoRef.current.currentTime = fristVideo.in;
+                     setCurrentVideo(fristVideo);
+                     setCurrentTime(fristVideo.newIn);
+                  }
+   
+                  // 0.5초 후 플래그 해제
+                  setTimeout(() => {
+                     isUpdating = false;
+                     videoElement.play();
+                     setPlayToggle(true);
+                  }, 500);
+   
+               } else {
+                  // 현재 비디오 시간 업데이트
+                  setCurrentTime(currentVideo.newIn + (getCurrentTime - currentVideo.in));
+                  // currentTimeR.current = currentVideo.newIn + (getCurrentTime - currentVideo.in);
+               }
+            };
+   
+            videoElement.ontimeupdate = handleTimeUpdate;
+   
+            return () => {
+               videoElement.ontimeupdate = null;
+            };
+         }
+      }, [playToggle]);
+   
  
-   const onClickProgressBar = (e) => {
-      if(videoRef){
-         const getVideo = findCurrentVideo(e.target.value)
-         videoRef.current.currentTime = getVideo.in + (e.target.value - getVideo.newIn)
-         setCurrentTime(e.target.value)
-      }
+      const onClickProgressBar = (e) => {
+         if (videoRef.current) {
+            // 클릭한 위치의 진행 시간 계산
+            const targetTime = parseFloat(e.target.value);
+            const getVideo = findCurrentVideo(targetTime);
       
-   }
+            if (getVideo) {
+               // 비디오 일시 정지
+               videoRef.current.pause();
+               setPlayToggle(false);
+      
+               // 진행 바 위치에 맞는 시간으로 `currentTime` 설정
+               const newCurrentTime = getVideo.in + (targetTime - getVideo.newIn);
+               videoRef.current.currentTime = newCurrentTime;
+      
+               // 상태 업데이트
+               setCurrentTime(targetTime);
+               // currentTimeR.current = targetTime;
+      
+               // 비디오 재생
+               setTimeout(() => {
+                  videoRef.current.play();
+                  setPlayToggle(true);
+               }, 100); // 짧은 지연 후 재생
+            }
+         }
+      };
    const togglePlay = () => {
       if(videoRef){
          if(videoRef.current.paused){
@@ -1049,7 +1097,7 @@ export const EditVideoPlayerContainer = ({data}) => {
               Your browser does not support the video tag.
             </video>}
             {/* Video Info */}
-
+            
             {/* Video Data Visualization */}
             {/* - Diagramatic View */}
             {/* - Entangled View */}
