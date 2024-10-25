@@ -562,6 +562,7 @@ export const OverViewBox = ({data}) => {
          return <div>Error: Invalid Layer Type</div>;
    }
 }
+
 const FilterBox = ({children, type, toggleShow}) => {
    if(toggleShow.category && type === "categoryLayer"){
       return <>{children}</>
@@ -1005,5 +1006,26 @@ export const VideoPlayerContainer = ({data}) => {
             </div>
        </div>}
    </div>
+}
+
+export const EditVideoPlayerContainer = ({data}) => {
+   return (<div className="w-full h-[100svh] relative">
+      <div className="w-full h-[100svh] overflow-hidden flex flex-col">
+         {/* Video */}
+         <div className="w-full h-full flex flex-col overflow-hidden relative"></div>
+         {/* video controller */}
+         <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
+
+         </div>
+         {/* video navigation */}
+         <div className="w-full h-[62px] bg-[#8BA5F8] flex items-center justify-between overflow-hidden">
+
+         </div>
+      </div>
+     
+      {/* video Legend */}
+   </div>
+
+   )
 }
  
