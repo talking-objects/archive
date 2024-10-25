@@ -846,9 +846,9 @@ export const VideoPlayerContainer = ({data}) => {
 export const EditVideoPlayerContainer = ({data}) => {
    const videoRef = useRef(null)
    const [playToggle, setPlayToggle] = useState(false)
+   const [playToggleReal, setPlayToggleReal] = useState(false)
    const [toggleLegend, setToggleLegend] = useState(false)
    const [currentTime, setCurrentTime] = useState(0)
-   const currentTimeR = useRef(0)
    const [currentVideo, setCurrentVideo] = useState(null)
    const [currentIndex, setCurrentIndex] = useState(null)
    const [toggleShow, setToggleShow] = useState({
@@ -917,20 +917,33 @@ export const EditVideoPlayerContainer = ({data}) => {
                      videoRef.current.currentTime = getNextVideo.in;
                      setCurrentVideo(getNextVideo);
                      setCurrentTime(getNextVideo.newIn);
+
+                  // 0.5초 후 플래그 해제
+                  if(playToggleReal){
+                     setTimeout(() => {
+                        isUpdating = false;
+                        videoElement.play();
+                        setPlayToggle(true);
+                     }, 500);
+                  }
+                     
                   }else {
+                     setPlayToggleReal(false)
                      const fristVideo = data[0];
                      setCurrentIndex(0);
-                     videoRef.current.currentTime = fristVideo.in;
+                     
                      setCurrentVideo(fristVideo);
                      setCurrentTime(fristVideo.newIn);
+
+                     // 0.5초 후 플래그 해제
+                     setTimeout(() => {
+                        isUpdating = false;
+                        videoRef.current.currentTime = fristVideo.in;
+                        // videoElement.play();
+                        // setPlayToggle(true);
+                     }, 500);
                   }
    
-                  // 0.5초 후 플래그 해제
-                  setTimeout(() => {
-                     isUpdating = false;
-                     videoElement.play();
-                     setPlayToggle(true);
-                  }, 500);
    
                } else {
                   // 현재 비디오 시간 업데이트
@@ -956,22 +969,44 @@ export const EditVideoPlayerContainer = ({data}) => {
       
             if (getVideo) {
                // 비디오 일시 정지
-               videoRef.current.pause();
-               setPlayToggle(false);
+               if(playToggleReal){
+                  videoRef.current.pause();
+                  setPlayToggle(false);
+                  
+                  // 진행 바 위치에 맞는 시간으로 `currentTime` 설정
+                  const newCurrentTime = getVideo.in + (targetTime - getVideo.newIn);
+                  videoRef.current.currentTime = newCurrentTime;
+                  
+                  // 상태 업데이트
+                  setCurrentTime(targetTime);
+                  // currentTimeR.current = targetTime;
+                  
+                  // 비디오 재생
+                  setTimeout(() => {
+                     videoRef.current.play();
+                     setPlayToggle(true);
+                  }, 100); // 짧은 지연 후 재생
+               }else{
+                  videoRef.current.pause();
+                  setPlayToggle(false);
+                  
       
-               // 진행 바 위치에 맞는 시간으로 `currentTime` 설정
-               const newCurrentTime = getVideo.in + (targetTime - getVideo.newIn);
-               videoRef.current.currentTime = newCurrentTime;
-      
-               // 상태 업데이트
-               setCurrentTime(targetTime);
-               // currentTimeR.current = targetTime;
-      
-               // 비디오 재생
-               setTimeout(() => {
-                  videoRef.current.play();
-                  setPlayToggle(true);
-               }, 100); // 짧은 지연 후 재생
+                  // 진행 바 위치에 맞는 시간으로 `currentTime` 설정
+                  const newCurrentTime = getVideo.in + (targetTime - getVideo.newIn);
+                  videoRef.current.currentTime = newCurrentTime;
+                  
+                  // 상태 업데이트
+                  setCurrentTime(targetTime);
+                  // currentTimeR.current = targetTime;
+                  
+                  // 비디오 재생
+                  setTimeout(() => {
+                     // videoRef.current.play();
+                     // setPlayToggle(true);
+                   
+                  }, 100); // 짧은 지연 후 재생
+               }
+               
             }
          }
       };
@@ -1028,9 +1063,11 @@ export const EditVideoPlayerContainer = ({data}) => {
                   
                   videoRef.current.play()
                   setPlayToggle(true)
+                  setPlayToggleReal(true)
                }else{
                   videoRef.current.pause()
                   setPlayToggle(false)
+                  setPlayToggleReal(false)
                }
             }
           }
@@ -1092,12 +1129,23 @@ export const EditVideoPlayerContainer = ({data}) => {
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}
-            {<video ref={videoRef} src={`${BASE_URL}/${currentVideo && currentVideo.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
+            {<video ref={videoRef} src={`${BASE_URL}/${currentVideo && currentVideo.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && (playToggleReal)) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
               <source type="video/mp4" />
               Your browser does not support the video tag.
             </video>}
             {/* Video Info */}
-            
+            <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex pointer-events-none ${playToggleReal ? "opacity-0" : "opacity-100"} transition-all duration-1000`}>
+               {
+                  data.map((v, idx) => {
+                     return <div 
+                     key={idx} 
+                     style={{
+                        backgroundImage: `url(${BASE_URL}/${data[idx].id}/480p${data[idx].in}.jpg)`
+                     }}
+                     className="w-full h-full bg-red-400 bg-cover bg-center bg-no-repeat"></div>
+                  })
+               }
+            </div>
             {/* Video Data Visualization */}
             {/* - Diagramatic View */}
             {/* - Entangled View */}

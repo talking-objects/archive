@@ -88,7 +88,7 @@ export const getAllClipsOfSelectedVideo = ({itemId}) => {
       "sort":[{"key":"title","operator":"+"}],
       "clips":{
         "query":{"conditions":[],"operator":"&"},
-        "items": 9,
+        "items": 10,
         "keys":[],
         // "sort":[{"key":"in","operator":"-"}]
         }
