@@ -78,6 +78,27 @@ export const getAllClips = () => {
 }
 
 
+export const getAllClipsOfSelectedVideo = ({itemId}) => {
+  const bodyData = {
+    action: "find",
+    data:  {
+      "keys":["title","clips","duration","editable","id","modified","posterRatio","videoRatio","streams","director","year"],
+      "query":{"conditions":[{"key": "id", "value": `${itemId}`, "operator": "==" }],"operator":"&"},
+      // "range":[0,10],
+      "sort":[{"key":"title","operator":"+"}],
+      "clips":{
+        "query":{"conditions":[],"operator":"&"},
+        "items": 9,
+        "keys":[],
+        // "sort":[{"key":"in","operator":"-"}]
+        }
+      }
+   
+  };
+return globalFetcher(bodyData);
+}
+
+
 // 🔴 Video Items
 // get all videos list
 export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {

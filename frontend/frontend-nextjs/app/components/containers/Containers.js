@@ -657,7 +657,6 @@ export const VideoPlayerContainer = ({data}) => {
    const togglePlay = () => {
       if(videoRef){
          if(videoRef.current.paused){
-            
             videoRef.current.play()
             setPlayToggle(true)
          }else{
@@ -712,7 +711,6 @@ export const VideoPlayerContainer = ({data}) => {
          if(event.which === 69){
             onToggleShow("overview", true)
          }
-
          // show : categories
          if(event.which === 49){
             onToggleShow("category")
@@ -744,14 +742,14 @@ export const VideoPlayerContainer = ({data}) => {
         
       }
 
-      // event = keyup or keydown
-   document.addEventListener('keyup',onKeyController)
-   document.addEventListener('keydown',onSpaceScroll)
+      // event = keyup & keydown
+      document.addEventListener('keyup',onKeyController)
+      document.addEventListener('keydown',onSpaceScroll)
 
-   return () => {
-      document.removeEventListener("keyup", onKeyController)
-      document.removeEventListener("keydown", onSpaceScroll)
-   }
+      return () => {
+         document.removeEventListener("keyup", onKeyController)
+         document.removeEventListener("keydown", onSpaceScroll)
+      }
    },[])
 
    // update video progress bar
@@ -846,8 +844,11 @@ export const VideoPlayerContainer = ({data}) => {
 }
 
 export const EditVideoPlayerContainer = ({data}) => {
-   
+   const videoRef = useRef(null)
+   const [playToggle, setPlayToggle] = useState(false)
    const [toggleLegend, setToggleLegend] = useState(false)
+   const [currentTime, setCurrentTime] = useState(0)
+   const [currentVideo, setCurrentVideo] = useState(null)
    const [toggleShow, setToggleShow] = useState({
       category: true,
       tag: true,
@@ -859,6 +860,85 @@ export const EditVideoPlayerContainer = ({data}) => {
       view: "diagramatic",
      
    })
+   const findCurrentVideo = (currentTime) => {
+      console.log("currentTime:", currentTime)
+      let getCurrentVideo;
+
+      for(let i =0; i < data.length; i++){
+         if(data[i].newIn <= currentTime && data[i].newOut >= currentTime){
+            getCurrentVideo = data[i]
+            break;
+         }
+      }
+      console.log(getCurrentVideo)
+      if(getCurrentVideo){
+         // videoRef.current.src = `${BASE_URL}/${getCurrentVideo.id}/480p1.mp4`
+         videoRef.current.currentTime = getCurrentVideo.in
+         setCurrentVideo(getCurrentVideo)
+   
+         return getCurrentVideo
+      }
+    
+   }
+   useEffect(() => {
+      findCurrentVideo(currentTime)
+   },[])
+
+   // update video progress bar
+   useEffect(() => {
+      const videoElement = videoRef.current
+      if (playToggle && videoElement) {
+         const handleTimeUpdate = (e) => {
+     
+            const getCurrentTime = videoElement?.currentTime
+            console.log(currentVideo.out, getCurrentTime)
+
+            // videoRef.current.currentTime = getVideo.in + (e.target.value - getVideo.newIn)
+            if(getCurrentTime >= currentVideo.out){
+               findCurrentVideo(currentTime + (getCurrentTime - currentVideo.in))
+               
+               setPlayToggle(false)
+               videoElement.pause()
+                  console.log(currentTime + (getCurrentTime - currentVideo.in))
+               // console.log(currentTime + (getCurrentTime - currentVideo.in))
+               // const found = findCurrentVideo(6)
+               // console.log(found)
+            }else{
+               setCurrentTime(currentTime + (getCurrentTime - currentVideo.in))
+
+            }
+          
+          
+           
+         };
+         videoElement.ontimeupdate = handleTimeUpdate
+      
+         return () => {
+            videoElement.ontimeupdate = null
+         };
+      }
+   },[playToggle])
+ 
+   const onClickProgressBar = (e) => {
+      if(videoRef){
+         const getVideo = findCurrentVideo(e.target.value)
+         videoRef.current.currentTime = getVideo.in + (e.target.value - getVideo.newIn)
+         setCurrentTime(e.target.value)
+      }
+      
+   }
+   const togglePlay = () => {
+      if(videoRef){
+         if(videoRef.current.paused){
+            videoRef.current.play()
+            setPlayToggle(true)
+         }else{
+            videoRef.current.pause()
+            setPlayToggle(false)
+         }
+         
+      }
+   }
    const onToggleLegend = (value) => {
       if(value){
          window.scrollTo(0, 0)
@@ -919,7 +999,6 @@ export const EditVideoPlayerContainer = ({data}) => {
          if(event.which === 69){
             onToggleShow("overview", true)
          }
-
          // show : categories
          if(event.which === 49){
             onToggleShow("category")
@@ -951,30 +1030,53 @@ export const EditVideoPlayerContainer = ({data}) => {
         
       }
 
-      // event = keyup or keydown
-   document.addEventListener('keyup',onKeyController)
-   document.addEventListener('keydown',onSpaceScroll)
+      // event = keyup & keydown
+      document.addEventListener('keyup',onKeyController)
+      document.addEventListener('keydown',onSpaceScroll)
 
-   return () => {
-      document.removeEventListener("keyup", onKeyController)
-      document.removeEventListener("keydown", onSpaceScroll)
-   }
+      return () => {
+         document.removeEventListener("keyup", onKeyController)
+         document.removeEventListener("keydown", onSpaceScroll)
+      }
    },[])
    return (<div className="w-full h-[100svh] relative">
       <div className="w-full h-[100svh] overflow-hidden flex flex-col">
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}
-
+            {<video ref={videoRef} src={`${BASE_URL}/${currentVideo && currentVideo.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
+              <source type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>}
             {/* Video Info */}
-            {/* Video Data Visualization : Diagramatic View */}
-            {/* Video Data Visualization : Entangled View */}
-            {/* Video Data Visualization : Overview View */}
+
+            {/* Video Data Visualization */}
+            {/* - Diagramatic View */}
+            {/* - Entangled View */}
+            {/* - Overview View */}
          </div>
          {/* video controller */}
-         <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
-
-         </div>
+         {(videoRef && currentVideo) && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
+            <div onClick={togglePlay} className="cursor-pointer px-2">
+               {!playToggle && <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                  </svg>
+               </div>}
+               {playToggle && <div>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                  </svg>
+               </div>}
+            </div>
+            <div className="w-full px-2">
+               <div className="w-full h-1 rounded-full relative">
+                  <input  onChange={(e) => onClickProgressBar(e)} step={0.1} min={0} max={data.totalDuration} defaultValue={0} type="range" className="w-full bg-red-400 range-custom" />
+                  <progress value={currentTime} max={data.totalDuration} className="absolute bg-red-400 w-full h-full select-none pointer-events-none"></progress>
+               </div>
+            </div>
+            <div className="w-[140px] text-center text-xs">{formatTime(currentTime)} / {formatTime(data.totalDuration)}</div>
+         </div>}
          {/* video navigation */}
          <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
       </div>

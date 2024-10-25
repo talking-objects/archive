@@ -14,13 +14,13 @@ export function formatTime(seconds) {
 
 
 // 🔥create fake data
-export const createFakeAnnotations = ({duration}) => {
-    const categoryCounts = Math.floor(Math.random() * 30)
-    const tagCounts = Math.floor(Math.random() * 10)
-    const refCounts = Math.floor(Math.random() * 10)
-    const narrationCounts = Math.floor(Math.random() * 10)
-    const eventsCounts = Math.floor(Math.random() * 10)
-    const placeCounts = Math.floor(Math.random() * 10)
+export const createFakeAnnotations = ({duration, editVersion=false}) => {
+    const categoryCounts = Math.floor(Math.random() * (editVersion ? 5 : 30))
+    const tagCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
+    const refCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
+    const narrationCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
+    const eventsCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
+    const placeCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
  
  
     // create Category
