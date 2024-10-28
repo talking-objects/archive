@@ -119,6 +119,10 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
        const place = {
           type: "placeLayer",
           in: randomIn,
+          position: {
+            lat: 52.5200 + Math.floor((Math.random() - 0.5) * 10) ,
+            long: 13.4050 + Math.floor((Math.random() - 0.5) * 10) 
+          }
       
        };
        placeList.push(place)

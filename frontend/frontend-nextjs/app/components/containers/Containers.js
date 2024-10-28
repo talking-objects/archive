@@ -495,13 +495,13 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
       return;
    }
    return <div ref={wrapperRef} className="absolute top-0 left-0 w-full h-full bg-none">
-         {<div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none p-4 border-[#EC6735] border-2 rounded-lg top-0 right-0 z-[30] bg-white text-black w-[400px] h-[350px] shadow-md shadow-[#EC6735]">
+         <div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none border-[#EC6735] border-2 rounded-lg overflow-hidden top-0 right-0 z-[30] bg-white text-black w-[400px] h-[350px] shadow-md shadow-[#EC6735] flex">
             {
-               hoverData && <div>
+               hoverData && <div className="w-full h-full">
                   <OverViewBox data={hoverData} />
                </div>
             }
-         </div>}
+         </div>
          {<div ref={infoSourceRef} onMouseLeave={onMouseSourceLeave} className={`absolute opacity-0 pointer-events-none select-none top-0 right-0 z-[30] p-2 bg-white text-black w-[400px] h-[350px]`}>
             <div>Source: Title of the Original Video here lore ups dolor stat mukdasld edema.</div>
             <div onClick={onClickWatchVideo} className="border border-black rounded-lg px-2 py-1 cursor-pointer mt-2">Watch Video</div>
@@ -525,11 +525,12 @@ const TagBox = ({tag}) => {
 const PlaceBox = ({place}) => {
    useEffect(() => {
       console.log(place)
-   },[place])
-   const miniMap = useMemo(() => (<LeafletMap />))
-   return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#EC6735] border-4 text-white">
-      <div>{place.type}</div>
-      <div className="w-full h-full bg-red-400 flex-1 border-white border flex justify-center items-center relative">
+   },[])
+   const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} />), [place])
+
+   return <div className="w-full h-full min-h-[300px] flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
+      <div className="w-full p-2 bg-white">{place.type}</div>
+      <div className="flex-1 w-full h-full bg-red-400 border-white border flex justify-center items-center relative">
          {miniMap}
       </div>
    </div>
@@ -553,10 +554,11 @@ const ReferenceBox = ({reference}) => {
       <div>{reference.type}</div>
    </div>
 }
+const CategoryBox = ({category}) => {
+   return <div style={{backgroundColor: category.category.color}} className="w-full h-full text-4xl text-white italic px-2 py-1">{category.category.value}</div>
+}
 export const OverViewBox = ({data}) => {
-   const CategoryBox = ({category}) => {
-      return <div style={{backgroundColor: category.category.color}} className="w-full text-4xl text-white italic px-2 py-1">{category.category.value}</div>
-   }
+  
 
   
 
