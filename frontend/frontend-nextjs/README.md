@@ -9,70 +9,82 @@ https://github.com/talking-objects/archive/tree/frontend
 - Pandora ID & Passwrod -> .env.local
 
 
-# App Folder Structure (updated: 25.10.24)
+# Folder Structure (updated: 25.10.24)
 ```bash
-└── 📁app
-    └── 📁(home) # Home page
-        └── 📁components
-            └── HomeWrapper.js
-        └── page.js
-    └── 📁about # About page
-        └── 📁components
-            └── ImprintWrapper.js
-        └── page.js
-    └── 📁clip # Clips page
-        └── 📁[slug] # Clip page
+└── 📁frontend-nextjs
+    └── .env.local
+        └── .eslintrc.json
+        └── .gitignore
+        └── Dockerfile
+        └── jsconfig.json
+        └── next.config.mjs
+        └── package-lock.json
+        └── package.json
+        └── postcss.config.mjs
+        └── README.md
+        └── tailwind.config.js
+    └── 📁app
+        └── 📁(home) # Home page
             └── 📁components
-                └── ClipWrapper.js
+                └── HomeWrapper.js
             └── page.js
-        └── 📁components
-            └── ClipsWrapper.js
-        └── page.js
-    └── 📁components # Global Components
-        └── 📁containers
-            └── Containers.js
-        └── 📁elements
-            └── Elements.js
-    └── 📁edit # Edits Page
-        └── 📁[slug] # Edit Page
+        └── 📁about # About page
             └── 📁components
-                └── EditWrapper.js
+                └── ImprintWrapper.js
             └── page.js
-        └── page.js
-    └── 📁forest # Index Page
-        └── 📁[slug] # Index Children Page
-            └── 📁[id]
+        └── 📁clip # Clips page
+            └── 📁[slug] # Clip page
+                └── 📁components
+                    └── ClipWrapper.js
                 └── page.js
             └── 📁components
-                └── ForestEventWrapper.js
-                └── ForestPlaceWrapper.js
-                └── ForestRefWrapper.js
+                └── ClipsWrapper.js
             └── page.js
-        └── 📁components
-            └── ForestWrapper.js
-        └── page.js
-    └── 📁imprint # Imprint Page
-        └── 📁components
-            └── ImprintWrapper.js
-        └── page.js
-    └── 📁utils # Utils
-        └── 📁constant # Constant
-            └── etc.js
-        └── 📁hooks # my Hooks
-            └── etc.js # ETC
-            └── pandora_api.js # PANDORA API using SWR
-            └── toaFetch.js # PANDORA FETCH
-    └── 📁video # Videos Page
-        └── 📁[slug] # Video Page
+        └── 📁components # Global Components
+            └── 📁containers
+                └── Containers.js
+            └── 📁elements
+                └── Elements.js
+        └── 📁edit # Edits Page
+            └── 📁[slug] # Edit Page
+                └── 📁components
+                    └── EditWrapper.js
+                └── page.js
+            └── page.js
+        └── 📁forest # Index Page
+            └── 📁[slug] # Index Children Page
+                └── 📁[id]
+                    └── page.js
+                └── 📁components
+                    └── ForestEventWrapper.js
+                    └── ForestPlaceWrapper.js
+                    └── ForestRefWrapper.js
+                └── page.js
+            └── 📁components
+                └── ForestWrapper.js
+            └── page.js
+        └── 📁imprint # Imprint Page
+            └── 📁components
+                └── ImprintWrapper.js
+            └── page.js
+        └── 📁utils # Utils
+            └── 📁constant # Constant
+                └── etc.js
+            └── 📁hooks # my Hooks
+                └── etc.js # ETC
+                └── pandora_api.js # PANDORA API using SWR
+                └── toaFetch.js # PANDORA FETCH
+        └── 📁video # Videos Page
+            └── 📁[slug] # Video Page
+                └── 📁components
+                    └── VideoWrapper.js
+                └── page.js
             └── 📁components
                 └── VideoWrapper.js
             └── page.js
-        └── 📁components
-            └── VideoWrapper.js
-        └── page.js
-    └── favicon.ico
-    └── globals.css
-    └── layout.js
+        └── favicon.ico
+        └── globals.css
+        └── layout.js
 ```
 
 
