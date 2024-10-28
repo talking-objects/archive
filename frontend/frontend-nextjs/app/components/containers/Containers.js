@@ -5,6 +5,7 @@ import * as d3 from "d3"
 import { createFakeAnnotations, formatTime } from "@/app/utils/hooks/etc"
 import gsap from "gsap"
 import { LegendContainer, VideoNavigation } from "../elements/Elements"
+import { useRouter } from "next/navigation"
 export const ContentContainer = ({children}) => {
     return (<div className="w-screen px-4 lg:px-4">
       <div className="w-full min-h-[100svh] h-full max-w-screen-2xl mx-auto flex flex-col">
@@ -25,7 +26,10 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
    const wrapperRef = useRef(null)
    const svgRef = useRef(null)
    const infoRef = useRef(null)
+   const infoSourceRef = useRef(null)
    const [hoverData, setHoverData] = useState(null)
+   const [sourceHoverData, setSourceHoverData] = useState(null)
+   const router = useRouter()
    // the data of annotations of this video
    useEffect(() => {
       if(!annotationLoading){
@@ -129,11 +133,46 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
 
        
    },[toggleShow])
+
+   const onMouseSourceLeave = (e, d) => {
+      document.body.style.cursor = "auto"
+      if(wrapperRef && infoSourceRef){
+        
+         infoSourceRef.current.style.opacity = `${0}`
+         infoSourceRef.current.style.pointerEvents = `none`
+         setSourceHoverData("")
+      }
+   }
+
+   const onClickWatchVideo = () => {
+      router.push(`/video/${sourceHoverData}`)
+   }
    // Annotation Visualization using D3.js
    useEffect(() => {
       if(svgRef){
          const infoBoxTopMargin = 20;
          if(getData){
+            const onMouseSourceEnter = (e, d) => {
+               document.body.style.cursor = "auto"
+               
+            }
+            const onMouseSourceClick = (e, d) => {
+               document.body.style.cursor = "auto"
+               if(wrapperRef && infoSourceRef){
+                  console.log(d)
+                  setSourceHoverData(d.id)
+                  const bbox = e.target.getBoundingClientRect();
+                  let currentMouseX = bbox.left
+                  const boxWidth = svgRef.current.clientWidth/fakeData.length - 30
+                  infoSourceRef.current.style.width = `${boxWidth}px`
+                  infoSourceRef.current.style.height = `${boxWidth}px`
+                  infoSourceRef.current.style.opacity = `${1}`
+                  infoSourceRef.current.style.top = `${0}px`
+                  infoSourceRef.current.style.left = `${currentMouseX - boxWidth + 30}px`
+                  infoSourceRef.current.style.pointerEvents = `auto`
+               }
+            }
+            
             const onMouseEnter = (e,d) => {
                document.body.style.cursor = "pointer"
                const mousePos = d3.pointer(e);
@@ -224,15 +263,68 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
             .style("height", "100%")
             .style("background", "none")
 
+            
+
             const canvasSize = {
                width: svg.node().clientWidth,
-               height: svg.node().clientHeight,
+               height: svg.node().clientHeight/3,
             }
+            const globalGourp = svg.append("g")
+            globalGourp.attr("transform", `translate(0,${canvasSize.height * 2})`);
 
             let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width]);
             const annotationRowHeight = canvasSize.height/4
+
+            // edit video divider
+            if(edit){
+               const dividerGroup = svg.append("g")
+               dividerGroup.attr("transform", `translate(0,0)`);
+               dividerGroup
+               .append("g")
+               .attr("id", "divideGroupBar")
+               .selectAll("rect")
+               .data(fakeData)
+               .join("rect")
+               .attr("width", 1)
+               .attr("height", svg.node().clientHeight)
+               .attr("x", function (d) {
+                  return `${scaleLinear(d.newOut)}px`;
+                })
+               .attr("y", 0)
+               .attr("fill", "white")
+
+               dividerGroup
+               .append("g")
+               .attr("id", "divideGroupBox")
+               .selectAll("rect")
+               .data(fakeData)
+               .join("g")
+               .attr("transform", d => `translate(${scaleLinear(d.newOut) - 30}, 0)`)
+               .each(function(d) {
+                   const group = d3.select(this);
+       
+                   // Append rectangle for the box
+                   group.append("rect")
+                       .attr("width", 30)
+                       .attr("height", 30)
+                       .attr("fill", "white");
+       
+                   // Append the icon path inside each box
+                   group.append("path")
+                       .attr("d", "M19.5 19.5L4.5 4.5M4.5 4.5v11.25M4.5 4.5h11.25")
+                       .attr("stroke-linecap", "round")
+                       .attr("stroke-linejoin", "round")
+                       .attr("stroke-width", 1.5)
+                       .attr("stroke", "currentColor")
+                       .attr("fill", "none")
+                       .attr("transform", "translate(5, 5)"); // Adjust positioning as needed
+               })
+               .on("mouseenter", onMouseSourceEnter)
+               .on("click",onMouseSourceClick)
+            }
+
             // create category box
-            svg
+            globalGourp
             .append("g")
             .attr("id", "cateGroup")
             .selectAll("rect")
@@ -264,7 +356,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
           
           
             // create tag box
-            svg
+            globalGourp
             .append("g")
             .attr("id", "tagGroup")
             .selectAll("rect")
@@ -291,7 +383,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
             })
            
             // creat ref
-            svg
+            globalGourp
             .append("g")
             .attr("id", "refGroup")
             .selectAll("circle")
@@ -314,7 +406,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                onClick({inVlaue:value.in, video: videoRef})
             })
             // creat narration
-            svg
+            globalGourp
             .append("g")
             .attr("id", "narrationGroup")
             .selectAll("circle")
@@ -338,7 +430,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
             })
 
             // create event box
-            svg
+            globalGourp
             .append("g")
             .attr("id", "eventGroup")
             .selectAll("rect")
@@ -364,7 +456,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                onClick({inVlaue:value.in, video: videoRef})
             })
             // create place box
-            svg
+            globalGourp
             .append("g")
             .attr("id", "placeGroup")
             .selectAll("circle")
@@ -401,14 +493,18 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
       return;
    }
    return <div ref={wrapperRef} className="absolute top-0 left-0 w-full h-full bg-none">
-         <div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none p-4 border-[#EC6735] border-2 rounded-lg top-0 right-0 z-[30] bg-white text-black border- w-[400px] h-[350px] shadow-md shadow-[#EC6735]">
+         {<div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none p-4 border-[#EC6735] border-2 rounded-lg top-0 right-0 z-[30] bg-white text-black w-[400px] h-[350px] shadow-md shadow-[#EC6735]">
             {
                hoverData && <div>
                   <OverViewBox data={hoverData} />
                </div>
             }
-         </div>
-         <div className={`${(toggleShow.view === "diagramatic" && playToggle) ? "opacity-100 translate-y-0" :"opacity-0 translate-y-full" } absolute bottom-0 left-0 z-[20] w-full h-1/3 lg:h-1/3 transition-all duration-1000`}>
+         </div>}
+         {<div ref={infoSourceRef} onMouseLeave={onMouseSourceLeave} className={`absolute opacity-0 pointer-events-none select-none top-0 right-0 z-[30] p-2 bg-white text-black w-[400px] h-[350px]`}>
+            <div>Source: Title of the Original Video here lore ups dolor stat mukdasld edema.</div>
+            <div onClick={onClickWatchVideo} className="border border-black rounded-lg px-2 py-1 cursor-pointer mt-2">Watch Video</div>
+         </div>}
+         <div className={`${(toggleShow.view === "diagramatic" && playToggle) ? "opacity-100 translate-y-0" :"opacity-0 translate-y-full" } absolute bottom-0 left-0 z-[20] w-full h-full transition-all duration-1000`}>
             <svg ref={svgRef}>
 
             </svg>
