@@ -20,7 +20,7 @@ export const MainContainer = ({children}) => {
 }
 
 
-const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
+const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
    const wrapperRef = useRef(null)
    const svgRef = useRef(null)
@@ -32,11 +32,38 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
          // setData(annotationData.data.items)
 
          const getDuration = duration
-      
+         console.log()
          // 🔥 create fake data just for test 🔥
          // fake data
-         let getFakeData = fakeData
-         setData(getFakeData)
+         if(edit){
+            console.log("dd")
+            console.log(fakeData)
+            let allData = {
+               categoryList: [],
+               eventList : [],
+               narrationList : [],
+               placeList : [],
+               refList : [],
+               tagList: []
+            };
+            for(let i = 0; i < fakeData.length; i++){
+               const fAnnotations = fakeData[i].annotations;
+               for(let j =0; j < Object.keys(fAnnotations).length; j++){
+                
+                  const getAnno = fAnnotations[Object.keys(fAnnotations)[j]]
+                  allData[Object.keys(fAnnotations)[j]] = [...getAnno,...allData[Object.keys(fAnnotations)[j]]]
+                
+                  
+               }
+            }
+            console.log(allData)
+            setData(allData)
+         }else{
+            console.log(fakeData)
+            let getFakeData = fakeData
+            setData(getFakeData)
+         }
+        
          
        
       }
@@ -182,9 +209,13 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
             }
             const onClick = ({inVlaue, video}) => {
                
-               
-               videoRef.current.currentTime = inVlaue
-               setCurrentTime(inVlaue)
+               if(edit){
+                  onClickProgressBar(inVlaue, edit)
+               }else{
+
+                  videoRef.current.currentTime = inVlaue
+                  setCurrentTime(inVlaue)
+               }
             }
             
             const svg = d3.select(svgRef.current)
@@ -205,7 +236,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
             .append("g")
             .attr("id", "cateGroup")
             .selectAll("rect")
-            .data(fakeData.categoryList.sort((a,b) => a.in - b.in))
+            .data(getData.categoryList.sort((a,b) => a.in - b.in))
             .join("rect")
             .attr("width", function(d){
                return `${scaleLinear(d.out - d.in)}px`
@@ -237,7 +268,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
             .append("g")
             .attr("id", "tagGroup")
             .selectAll("rect")
-            .data(fakeData.tagList)
+            .data(getData.tagList)
             .join("rect")
             .attr("width", function(d){
                return `${scaleLinear(d.out - d.in)}px`
@@ -264,7 +295,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
             .append("g")
             .attr("id", "refGroup")
             .selectAll("circle")
-            .data(fakeData.refList)
+            .data(getData.refList)
             .join("circle")
             .attr("r", ((annotationRowHeight)/3)/2)
             .attr("cx", function (d) {
@@ -287,7 +318,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
             .append("g")
             .attr("id", "narrationGroup")
             .selectAll("circle")
-            .data(fakeData.narrationList)
+            .data(getData.narrationList)
             .join("circle")
             .attr("r", ((annotationRowHeight)/3)/2)
             .attr("cx", function (d) {
@@ -311,7 +342,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
             .append("g")
             .attr("id", "eventGroup")
             .selectAll("rect")
-            .data(fakeData.eventList)
+            .data(getData.eventList)
             .join("rect")
             .attr("width", function(d){
                return `${annotationRowHeight/3}px`
@@ -337,7 +368,7 @@ const VideoDataVisContainer = ({playToggle, fakeData, toggleShow, setCurrentTime
             .append("g")
             .attr("id", "placeGroup")
             .selectAll("circle")
-            .data(fakeData.placeList)
+            .data(getData.placeList)
             .join("circle")
             .attr("r", (((annotationRowHeight)/3)/2))
             // .attr("width", function(d){
@@ -484,21 +515,38 @@ const FilterBox = ({children, type, toggleShow}) => {
    return <>{children}</>
 }
 
-export const EntangledContainer = ({toggleShow, playToggle, currentTime, fakeData}) => {
+export const EntangledContainer = ({edit=false, toggleShow, playToggle, currentTime, fakeData}) => {
    const [allFakeData, setAllFakeData] = useState(null)
    useEffect(() => {
       
-      let allData = []
-      for(let i =0; i < Object.keys(fakeData).length; i++){
-         allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
+      if(!edit){
+         let allData = []
+         for(let i =0; i < Object.keys(fakeData).length; i++){
+            allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
+         }
+         allData = allData.sort((a,b) => a.in - b.in)
+
+         setAllFakeData(allData)
+      }else{
+         let allData = []
+         for(let i = 0; i < fakeData.length; i++){
+            const fAnnotations = fakeData[i].annotations;
+            for(let j =0; j < Object.keys(fAnnotations).length; j++){
+             
+               const getAnno = fAnnotations[Object.keys(fAnnotations)[j]]
+               allData = [...getAnno,...allData]
+               
+            }
+         }
+         console.log(allData)
+         allData = allData.sort((a,b) => a.in - b.in)
+         setAllFakeData(allData)
+
       }
-      allData = allData.sort((a,b) => a.in - b.in)
-      
-      setAllFakeData(allData)
      
    },[])
 
-   const previewGap = 60
+   const previewGap = edit ? 3 : 60
 
    return <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute z-[40] top-0 right-0 w-[calc(100vw-76px-20px)] h-full bg-none transition-all duration-1000`}>
       <div className="w-full h-full overflow-scroll hide_scrollbar">
@@ -524,15 +572,20 @@ export const EntangledContainer = ({toggleShow, playToggle, currentTime, fakeDat
 </div>
 }
 
-export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleShow, playToggle, fakeData}) => {
+export const OverViewContainer = ({onClickProgressBar, currentTime, videoRef,setCurrentTime, toggleShow, playToggle, fakeData, edit=false}) => {
    const contentRef = useRef(null)
    const scrolltRef = useRef(null)
    const progressRef = useRef(null)
    const [allFakeData, setAllFakeData] = useState(null)
 
    const onJumpTo = (inValue) => {
-      videoRef.current.currentTime = inValue
-      setCurrentTime(inValue)
+      if(edit){
+         onClickProgressBar(inValue, edit)
+      }else{
+         videoRef.current.currentTime = inValue
+         setCurrentTime(inValue)
+      }
+      
    }
 
 
@@ -560,14 +613,31 @@ export const OverViewContainer = ({currentTime, videoRef,setCurrentTime, toggleS
    },[])
 
    useEffect(() => {
-      
-      let allData = []
-      for(let i =0; i < Object.keys(fakeData).length; i++){
-         allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
+      console.log(fakeData)
+      if(!edit){
+         let allData = []
+         for(let i =0; i < Object.keys(fakeData).length; i++){
+            allData = [...fakeData[Object.keys(fakeData)[i]],...allData]
+         }
+         allData = allData.sort((a,b) => a.in - b.in)
+
+         setAllFakeData(allData)
+      }else{
+         let allData = []
+         for(let i = 0; i < fakeData.length; i++){
+            const fAnnotations = fakeData[i].annotations;
+            for(let j =0; j < Object.keys(fAnnotations).length; j++){
+             
+               const getAnno = fAnnotations[Object.keys(fAnnotations)[j]]
+               allData = [...getAnno,...allData]
+               
+            }
+         }
+         console.log(allData)
+         allData = allData.sort((a,b) => a.in - b.in)
+         setAllFakeData(allData)
+
       }
-      allData = allData.sort((a,b) => a.in - b.in)
-      
-      setAllFakeData(allData)
      
    },[])
 
@@ -843,7 +913,7 @@ export const VideoPlayerContainer = ({data}) => {
    </div>
 }
 
-export const EditVideoPlayerContainer = ({data}) => {
+export const EditVideoPlayerContainer = ({data, metaData}) => {
    const videoRef = useRef(null)
    const [playToggle, setPlayToggle] = useState(false)
    const [playToggleReal, setPlayToggleReal] = useState(false)
@@ -851,6 +921,7 @@ export const EditVideoPlayerContainer = ({data}) => {
    const [currentTime, setCurrentTime] = useState(0)
    const [currentVideo, setCurrentVideo] = useState(null)
    const [currentIndex, setCurrentIndex] = useState(null)
+   const {data:annotationData, isLoading:annotationLoading} = getAllItemAnnotations({itemId:data.id})
    const [toggleShow, setToggleShow] = useState({
       category: true,
       tag: true,
@@ -961,11 +1032,12 @@ export const EditVideoPlayerContainer = ({data}) => {
       }, [playToggle]);
    
  
-      const onClickProgressBar = (e) => {
+      const onClickProgressBar = (e, edit) => {
          if (videoRef.current) {
             // 클릭한 위치의 진행 시간 계산
-            const targetTime = parseFloat(e.target.value);
+            const targetTime = parseFloat(edit ? e : e.target.value);
             const getVideo = findCurrentVideo(targetTime);
+         
       
             if (getVideo) {
                // 비디오 일시 정지
@@ -1134,6 +1206,22 @@ export const EditVideoPlayerContainer = ({data}) => {
               Your browser does not support the video tag.
             </video>}
             {/* Video Info */}
+            {
+               <div className={`absolute z-[21] top-0 left-0 w-full h-full ${!playToggleReal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000 flex flex-col`}>
+                  <div className="w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic">{metaData.title}</div>
+                  <div className="bg-white text-black w-fit px-2 py-1 mt-4">
+                     <div>Author: {Boolean(metaData.director) && Boolean(metaData.director.length > 0) && metaData.director.map((v) => `${v},`)} {metaData.user}</div>
+                        <div className="flex items-center gap-2">
+                           <div>Created:</div>
+                           <div>{metaData.created}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                           <div>Modified:</div>
+                           <div>{metaData.modified}</div>
+                        </div>
+                     </div>
+               </div>
+               }
             <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex pointer-events-none ${playToggleReal ? "opacity-0" : "opacity-100"} transition-all duration-1000`}>
                {
                   data.map((v, idx) => {
@@ -1148,8 +1236,11 @@ export const EditVideoPlayerContainer = ({data}) => {
             </div>
             {/* Video Data Visualization */}
             {/* - Diagramatic View */}
+            {(videoRef && data) && <VideoDataVisContainer onClickProgressBar={onClickProgressBar} edit={true} fakeData={data} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggleReal} duration={data.totalDuration} annotationData={annotationData} annotationLoading={annotationLoading} />}
             {/* - Entangled View */}
+            {(videoRef && data) && <EntangledContainer edit={true} toggleShow={toggleShow} playToggle={playToggleReal} currentTime={currentTime} fakeData={data} />}
             {/* - Overview View */}
+            {(videoRef && data) && <OverViewContainer onClickProgressBar={onClickProgressBar} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggleReal} fakeData={data} edit={true} />}
          </div>
          {/* video controller */}
          {(videoRef && currentVideo) && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">

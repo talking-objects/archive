@@ -10,6 +10,7 @@ const EditWrapper = () => {
     const params = useParams();
     const {data, isLoading, error} = getAllClipsOfSelectedVideo({itemId: params.slug})
     const [editData, setEditData] = useState(null);
+    const [editMetaData, setEditMetaData] = useState(null);
     
     // 🤡 Fake Data
     // Create Random Data
@@ -17,7 +18,19 @@ const EditWrapper = () => {
     // create random annotation data for each clips => Clip
     useEffect(() => {
         if(!isLoading){
-            console.log(data)
+           
+            const metaData = {
+                title: "TestEdit_VIDEO_01",
+                year: data.data.items[0].year,
+                director: data.data.items[0].director,
+                modified: data.data.items[0].modified,
+                created: data.data.items[0].created,
+                user: data.data.items[0].user,
+
+            }
+          
+            setEditMetaData(metaData)
+
             let originalData = JSON.parse(JSON.stringify(data.data.items[0].clips))
          
             if(originalData.length > 0){
@@ -35,6 +48,24 @@ const EditWrapper = () => {
                     }
                     totalDuration += originalData[i].duration
                 }
+                for(let i = 0; i < originalData.length; i++){
+                    const fAnnotations = originalData[i].annotations;
+                    for(let j =0; j < Object.keys(fAnnotations).length; j++){
+                       fAnnotations[Object.keys(fAnnotations)[j]].map((v) => {
+                       
+                          v.originIn = originalData[i].in + v.in
+                          v.in = originalData[i].newIn + v.in
+                          if(v.out){
+                             v.out = originalData[i].newIn + v.out
+                             v.originOut = originalData[i].in + v.out
+                          }
+                          return v
+                       })
+                      
+                    }
+                 }
+
+                originalData.id = params.slug
                 originalData.totalDuration = totalDuration
                 console.log(originalData)
                 setEditData(originalData)
@@ -46,9 +77,9 @@ const EditWrapper = () => {
  
     return (
         (<MainContainer>
-            {(Boolean(editData)) && <>
+            {(Boolean(editData) && Boolean(editMetaData)) && <>
                 <div className="w-full h-[100svh] relative">
-                    <EditVideoPlayerContainer data={editData} />
+                    <EditVideoPlayerContainer data={editData} metaData={editMetaData} />
                 </div>
                
                 <ContentContainer>

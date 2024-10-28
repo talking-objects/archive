@@ -82,7 +82,7 @@ export const getAllClipsOfSelectedVideo = ({itemId}) => {
   const bodyData = {
     action: "find",
     data:  {
-      "keys":["title","clips","duration","editable","id","modified","posterRatio","videoRatio","streams","director","year"],
+      "keys":["user","title","clips","duration","editable","id","modified","posterRatio","videoRatio","streams","director","year", "created"],
       "query":{"conditions":[{"key": "id", "value": `${itemId}`, "operator": "==" }],"operator":"&"},
       // "range":[0,10],
       "sort":[{"key":"title","operator":"+"}],

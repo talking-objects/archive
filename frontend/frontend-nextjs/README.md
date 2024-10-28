@@ -9,7 +9,7 @@ https://github.com/talking-objects/archive/tree/frontend
 - Pandora ID & Passwrod -> .env.local
 
 
-# Folder Structure (updated: 25.10.24)
+# Folder Structure (updated: 28.10.24)
 ```bash
 └── 📁frontend-nextjs
     └── .env.local
