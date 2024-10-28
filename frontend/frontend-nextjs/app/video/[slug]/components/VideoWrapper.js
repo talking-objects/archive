@@ -1,6 +1,7 @@
 "use client"
 
 import { ContentContainer, MainContainer, VideoPlayerContainer } from "@/app/components/containers/Containers";
+import LeafletMap from "@/app/components/map/Map";
 import { BASE_URL } from "@/app/utils/constant/etc";
 import { getVideo } from "@/app/utils/hooks/pandora_api";
 import { toaFetchData } from "@/app/utils/hooks/toaFetch";
@@ -64,7 +65,9 @@ const VideoWrapper = () => {
                 <div className="w-full relative bg-neutral-200">
                     <div className={`sticky top-0 left-0 w-1/2 aspect-video bg-red-300 ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700`}></div>
                     <div className="w-full h-[200svh]">
-
+                        <div className="w-full h-[100svh]">
+                            {/* <LeafletMap /> */}
+                        </div>
                     </div>
                 </div>
             </ContentContainer>

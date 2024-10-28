@@ -8,10 +8,13 @@ https://github.com/talking-objects/archive/tree/frontend
 - [d3example](https://observablehq.com/explore)
 - Pandora ID & Passwrod -> .env.local
 
+# TODOS:
+- [ ] D3js Data Vis Resize Event
+- [ ] Testing the Dockerfile on my server
 
 # Folder Structure (updated: 28.10.24)
 ```bash
-└── 📁frontend-nextjs
+└── 📁frontend-nextjs 
     └── .env.local
         └── .eslintrc.json
         └── .gitignore
@@ -25,47 +28,33 @@ https://github.com/talking-objects/archive/tree/frontend
         └── tailwind.config.js
     └── 📁app
         └── 📁(home) # Home page
-            └── 📁components
-                └── HomeWrapper.js
+            └── 📁components # Home Component
             └── page.js
         └── 📁about # About page
-            └── 📁components
-                └── ImprintWrapper.js
+            └── 📁components # About Component
             └── page.js
         └── 📁clip # Clips page
             └── 📁[slug] # Clip page
-                └── 📁components
-                    └── ClipWrapper.js
+                └── 📁components # Clip Component
                 └── page.js
-            └── 📁components
-                └── ClipsWrapper.js
+            └── 📁components # Clips Component
             └── page.js
         └── 📁components # Global Components
-            └── 📁containers
-                └── Containers.js
-            └── 📁elements
-                └── Elements.js
         └── 📁edit # Edits Page
             └── 📁[slug] # Edit Page
-                └── 📁components
-                    └── EditWrapper.js
+                └── 📁components # Edit Component
                 └── page.js
             └── page.js
         └── 📁forest # Index Page
             └── 📁[slug] # Index Children Page
                 └── 📁[id]
                     └── page.js
-                └── 📁components
-                    └── ForestEventWrapper.js
-                    └── ForestPlaceWrapper.js
-                    └── ForestRefWrapper.js
+                └── 📁components # Index Children Component
                 └── page.js
-            └── 📁components
-                └── ForestWrapper.js
+            └── 📁components # Index Component
             └── page.js
         └── 📁imprint # Imprint Page
-            └── 📁components
-                └── ImprintWrapper.js
+            └── 📁components # Imporint Component
             └── page.js
         └── 📁utils # Utils
             └── 📁constant # Constant
@@ -77,10 +66,8 @@ https://github.com/talking-objects/archive/tree/frontend
         └── 📁video # Videos Page
             └── 📁[slug] # Video Page
                 └── 📁components
-                    └── VideoWrapper.js
                 └── page.js
             └── 📁components
-                └── VideoWrapper.js
             └── page.js
         └── favicon.ico
         └── globals.css

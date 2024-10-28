@@ -15,12 +15,12 @@ export function formatTime(seconds) {
 
 // 🔥create fake data
 export const createFakeAnnotations = ({duration, editVersion=false}) => {
-    const categoryCounts = Math.floor(Math.random() * (editVersion ? 5 : 30))
-    const tagCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
-    const refCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
-    const narrationCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
-    const eventsCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
-    const placeCounts = Math.floor(Math.random() * (editVersion ? 5 : 10))
+    const categoryCounts = Math.floor(Math.random() * (editVersion ? 3 : 30))
+    const tagCounts = Math.floor(Math.random() * (editVersion ? 2 : 10))
+    const refCounts = Math.floor(Math.random() * (editVersion ? 3 : 10))
+    const narrationCounts = Math.floor(Math.random() * (editVersion ? 2 : 10))
+    const eventsCounts = Math.floor(Math.random() * (editVersion ? 2 : 10))
+    const placeCounts = Math.floor(Math.random() * (editVersion ? 2 : 10))
  
  
     // create Category

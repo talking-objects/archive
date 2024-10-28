@@ -1,11 +1,14 @@
 import { BASE_URL } from "@/app/utils/constant/etc"
 import { getAllAnnotations, getAllItemAnnotations } from "@/app/utils/hooks/pandora_api"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import * as d3 from "d3"
 import { createFakeAnnotations, formatTime } from "@/app/utils/hooks/etc"
 import gsap from "gsap"
 import { LegendContainer, VideoNavigation } from "../elements/Elements"
 import { useRouter } from "next/navigation"
+import LeafletMap from "../map/Map"
+
+
 export const ContentContainer = ({children}) => {
     return (<div className="w-screen px-4 lg:px-4">
       <div className="w-full min-h-[100svh] h-full max-w-screen-2xl mx-auto flex flex-col">
@@ -291,7 +294,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                   return `${scaleLinear(d.newOut)}px`;
                 })
                .attr("y", 0)
-               .attr("fill", "white")
+               .attr("fill", "rgba(255, 255, 255, 0.5)")
 
                dividerGroup
                .append("g")
@@ -302,12 +305,11 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                .attr("transform", d => `translate(${scaleLinear(d.newOut) - 30}, 0)`)
                .each(function(d) {
                    const group = d3.select(this);
-       
                    // Append rectangle for the box
                    group.append("rect")
                        .attr("width", 30)
                        .attr("height", 30)
-                       .attr("fill", "white");
+                       .attr("fill", "rgba(255, 255, 255, 0.8)")
        
                    // Append the icon path inside each box
                    group.append("path")
@@ -511,46 +513,52 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
          </div>
    </div>
 }
+const TagBox = ({tag}) => {
+   return <div className="w-full flex gap-2">
+      {
+         tag.value.map((val, idx) => {
+            return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-xl">#{val}</div>
+         })
+}
+      </div>
+}
+const PlaceBox = ({place}) => {
+   useEffect(() => {
+      console.log(place)
+   },[place])
+   const miniMap = useMemo(() => (<LeafletMap />))
+   return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#EC6735] border-4 text-white">
+      <div>{place.type}</div>
+      <div className="w-full h-full bg-red-400 flex-1 border-white border flex justify-center items-center relative">
+         {miniMap}
+      </div>
+   </div>
+}
+const EventBox = ({event}) => {
+   return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#F1A73D] border-4 text-white">
+      <div>{event.type}</div>
+      <div className="w-full h-full flex-1 border-white border flex justify-center items-center">Event</div>
+   </div>
+}
 
+const NarrationBox = ({narration}) => {
+   return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black">
+      <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div>
+      <div>{narration.type}</div>
+   </div>
+}
+const ReferenceBox = ({reference}) => {
+   return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
+      <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div>
+      <div>{reference.type}</div>
+   </div>
+}
 export const OverViewBox = ({data}) => {
    const CategoryBox = ({category}) => {
       return <div style={{backgroundColor: category.category.color}} className="w-full text-4xl text-white italic px-2 py-1">{category.category.value}</div>
    }
 
-   const TagBox = ({tag}) => {
-      return <div className="w-full flex gap-2">
-         {
-            tag.value.map((val, idx) => {
-               return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-xl">#{val}</div>
-            })
-   }
-         </div>
-   }
-   const PlaceBox = ({place}) => {
-      return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#EC6735] border-4 text-white">
-         <div>{place.type}</div>
-         <div className="w-full h-full flex-1 border-white border flex justify-center items-center">Map</div>
-      </div>
-   }
-   const EventBox = ({event}) => {
-      return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#F1A73D] border-4 text-white">
-         <div>{event.type}</div>
-         <div className="w-full h-full flex-1 border-white border flex justify-center items-center">Event</div>
-      </div>
-   }
-
-   const NarrationBox = ({narration}) => {
-      return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black">
-         <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div>
-         <div>{narration.type}</div>
-      </div>
-   }
-   const ReferenceBox = ({reference}) => {
-      return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
-         <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div>
-         <div>{reference.type}</div>
-      </div>
-   }
+  
 
    switch (data.type) {
       case "categoryLayer":
@@ -951,7 +959,7 @@ export const VideoPlayerContainer = ({data}) => {
               Your browser does not support the video tag.
             </video>
             {/* video info */}
-            <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-fit flex flex-col gap-4`}>
+            <div className={`absolute top-0 left-0 z-[40] overflow-hidden w-full h-fit flex flex-col gap-4`}>
                <div onClick={togglePlay} className={`${playToggle ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-full pointer-events-none"} cursor-pointer w-[76px] absolute top-0 left-0 flex justify-center items-center aspect-square text-black bg-[#8BA5F8] transition-all duration-1000`}>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
@@ -1303,7 +1311,7 @@ export const EditVideoPlayerContainer = ({data, metaData}) => {
             </video>}
             {/* Video Info */}
             {
-               <div className={`absolute z-[21] top-0 left-0 w-full h-full ${!playToggleReal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000 flex flex-col`}>
+               <div className={`absolute z-[40] top-0 left-0 w-full h-full ${!playToggleReal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000 flex flex-col`}>
                   <div className="w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic">{metaData.title}</div>
                   <div className="bg-white text-black w-fit px-2 py-1 mt-4">
                      <div>Author: {Boolean(metaData.director) && Boolean(metaData.director.length > 0) && metaData.director.map((v) => `${v},`)} {metaData.user}</div>
