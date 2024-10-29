@@ -1,6 +1,37 @@
 import { icon } from "leaflet";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { useEffect } from "react";
+import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 
+
+function MapWithResize() {
+  const map = useMap();
+
+  useEffect(() => {
+      const handleResize = () => {
+          map.invalidateSize(); // Invalidate the size on window resize
+      };
+
+      window.addEventListener('resize', handleResize);
+
+      // Cleanup event listener on component unmount
+      return () => window.removeEventListener('resize', handleResize);
+  }, [map]);
+
+  return null;
+}
+function MapUpdate({center}) {
+  const map = useMap();
+
+  useEffect(() => {
+      const handleResize = () => {
+          map.invalidateSize(); // Invalidate the size on window resize
+      };
+      handleResize()
+     
+  }, [center]);
+
+  return null;
+}
 const LeafletMap = ({center=[52.5200,13.4050]}) => {
   const ICON = icon({
     iconUrl: "/map-marker.svg",
@@ -17,6 +48,7 @@ const LeafletMap = ({center=[52.5200,13.4050]}) => {
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
       </Marker>
+      <MapUpdate center={center} />
     </MapContainer>
   );
 };

@@ -254,7 +254,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                if(edit){
                   onClickProgressBar(inVlaue, edit)
                }else{
-
+                  console.log(typeof inVlaue, inVlaue)
                   videoRef.current.currentTime = inVlaue
                   setCurrentTime(inVlaue)
                }
@@ -524,7 +524,7 @@ const TagBox = ({tag}) => {
 }
 const PlaceBox = ({place}) => {
    useEffect(() => {
-      console.log(place)
+      console.log(place, "overview")
    },[])
    const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} />), [place])
 
@@ -559,6 +559,7 @@ const CategoryBox = ({category}) => {
 }
 export const OverViewBox = ({data}) => {
   
+
 
   
 
@@ -663,10 +664,11 @@ export const EntangledContainer = ({edit=false, toggleShow, playToggle, currentT
             allFakeData.map((v,idx) => {
                return (
                   <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
-                  <div key={idx} className={` ${(Math.floor(currentTime) >= Math.floor(v.in - previewGap) && (currentTime) <= Math.floor(v.out ? v.out + previewGap : v.in + previewGap)) ? "flex items-center justify-center gap-2" : "hidden"} min-w-[380px]`}>
-                     <div className="bg-white text-xs flex px-2 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
-                     <OverViewBox data={v} />
-                  </div>
+                     {/* Leaflet error */}
+                     {(Math.floor(currentTime) >= Math.floor(v.in - previewGap) && (currentTime) <= Math.floor(v.out ? v.out + previewGap : v.in + previewGap)) && <div className={`${"flex items-center justify-center gap-2"} min-w-[380px]`}>
+                        <div className="bg-white text-xs flex px-2 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
+                        <OverViewBox data={v} />
+                     </div>}
                   </FilterBox>
                )
             })
@@ -805,6 +807,8 @@ export const VideoPlayerContainer = ({data}) => {
       view: "diagramatic",
      
    })
+
+  
    
    const onToggleShow = (key, view=false) => {
       if(!view){
@@ -843,8 +847,11 @@ export const VideoPlayerContainer = ({data}) => {
       }
    }
    const onClickProgressBar = (e) => {
-      videoRef.current.currentTime = e.target.value
-      setCurrentTime(e.target.value)
+       
+         videoRef.current.currentTime = parseFloat(e.target.value)
+         setCurrentTime(e.target.value)
+     
+      
    }
 
    useEffect(() => {
@@ -855,7 +862,14 @@ export const VideoPlayerContainer = ({data}) => {
    // video keyboard controller
    useEffect(() => {
       const onSpaceScroll = (event) => {
+      
          if (event.code === 'Space') {
+            event.preventDefault(); 
+          }
+         if (event.code === 'ArrowDown') {
+            event.preventDefault(); 
+          }
+         if (event.code === 'ArrowLeft') {
             event.preventDefault(); 
           }
         
@@ -915,6 +929,20 @@ export const VideoPlayerContainer = ({data}) => {
          if(event.which === 55){
             onToggleShow("place")
          }
+         // // +10s
+         // if(event.key === "ArrowRight"){
+         //    event.preventDefault()
+         //    if (videoRef.current) {
+         //       // 비디오가 있을 때만 실행
+         //       videoRef.current.currentTime = Math.min(
+         //          videoRef.current.currentTime + 20,
+         //          videoRef.current.duration
+         //      );
+           
+         //       setCurrentTime(videoRef.current.currentTime);
+         //   }
+            
+         // }
         
       }
 
@@ -1123,7 +1151,7 @@ export const EditVideoPlayerContainer = ({data, metaData}) => {
    
    
                } else {
-                  // 현재 비디오 시간 업데이트
+                  // Update the video current time
                   setCurrentTime(currentVideo.newIn + (getCurrentTime - currentVideo.in));
                   // currentTimeR.current = currentVideo.newIn + (getCurrentTime - currentVideo.in);
                }
@@ -1146,34 +1174,34 @@ export const EditVideoPlayerContainer = ({data, metaData}) => {
          
       
             if (getVideo) {
-               // 비디오 일시 정지
+               // Pause the video
                if(playToggleReal){
                   videoRef.current.pause();
                   setPlayToggle(false);
                   
-                  // 진행 바 위치에 맞는 시간으로 `currentTime` 설정
+                  // Set currentTime based on the progress bar position
                   const newCurrentTime = getVideo.in + (targetTime - getVideo.newIn);
                   videoRef.current.currentTime = newCurrentTime;
                   
-                  // 상태 업데이트
+                  // Update the state
                   setCurrentTime(targetTime);
                   // currentTimeR.current = targetTime;
                   
-                  // 비디오 재생
+                  // Play the video
                   setTimeout(() => {
                      videoRef.current.play();
                      setPlayToggle(true);
-                  }, 100); // 짧은 지연 후 재생
+                  }, 100); // Resume playback after a short delay
                }else{
                   videoRef.current.pause();
                   setPlayToggle(false);
                   
       
-                  // 진행 바 위치에 맞는 시간으로 `currentTime` 설정
+                  // Set currentTime based on the progress bar position
                   const newCurrentTime = getVideo.in + (targetTime - getVideo.newIn);
                   videoRef.current.currentTime = newCurrentTime;
                   
-                  // 상태 업데이트
+                  // Update the state
                   setCurrentTime(targetTime);
                   // currentTimeR.current = targetTime;
                   
@@ -1182,7 +1210,7 @@ export const EditVideoPlayerContainer = ({data, metaData}) => {
                      // videoRef.current.play();
                      // setPlayToggle(true);
                    
-                  }, 100); // 짧은 지연 후 재생
+                  }, 100); // Resume playback after a short delay
                }
                
             }

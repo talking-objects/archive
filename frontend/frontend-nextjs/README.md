@@ -8,6 +8,13 @@ https://github.com/talking-objects/archive/tree/frontend
 - [d3example](https://observablehq.com/explore)
 - Pandora ID & Passwrod -> .env.local
 
+# Fragen
+- Edit Page Design Problem -> Items Limit
+- API-Leaflet Map
+- Index Page Categories
+- How to navigate from Index to Index/:children
+
+
 # TODOS:
 - [ ] D3js Data Vis Resize Event
 - [ ] Testing the Dockerfile on my server
