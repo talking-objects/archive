@@ -29,22 +29,24 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
    const wrapperRef = useRef(null)
    const svgRef = useRef(null)
    const infoRef = useRef(null)
+   const placeAndEventInfoRef = useRef(null)
    const infoSourceRef = useRef(null)
    const [hoverData, setHoverData] = useState(null)
    const [sourceHoverData, setSourceHoverData] = useState(null)
    const router = useRouter()
+
+   
    // the data of annotations of this video
    useEffect(() => {
       if(!annotationLoading){
          // setData(annotationData.data.items)
 
          const getDuration = duration
-         console.log()
+      
          // 🔥 create fake data just for test 🔥
          // fake data
          if(edit){
-            console.log("dd")
-            console.log(fakeData)
+           
             let allData = {
                categoryList: [],
                eventList : [],
@@ -66,7 +68,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
             console.log(allData)
             setData(allData)
          }else{
-            console.log(fakeData)
+         
             let getFakeData = fakeData
             setData(getFakeData)
          }
@@ -148,7 +150,8 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
    }
 
    const onClickWatchVideo = () => {
-      router.push(`/video/${sourceHoverData}`)
+      console.log(sourceHoverData)
+      router.push(`/clip/${sourceHoverData.id}?clipId=${sourceHoverData.orginId}`)
    }
    // Annotation Visualization using D3.js
    useEffect(() => {
@@ -163,7 +166,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                document.body.style.cursor = "auto"
                if(wrapperRef && infoSourceRef){
                   console.log(d)
-                  setSourceHoverData(d.id)
+                  setSourceHoverData(d)
                   const bbox = e.target.getBoundingClientRect();
                   let currentMouseX = bbox.left
                   const boxWidth = svgRef.current.clientWidth/fakeData.length - 30
@@ -179,64 +182,85 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
             const onMouseEnter = (e,d) => {
                document.body.style.cursor = "pointer"
                const mousePos = d3.pointer(e);
-               if(wrapperRef && infoRef){
-                  const wrapperHeight = wrapperRef.current.clientHeight;
-                  const wrapperWidth = wrapperRef.current.clientWidth;
-                  const infoBox = infoRef.current;
-                  const addHeight = wrapperHeight * (2/3);
-                  const infoBoxHeight = infoBox.clientHeight;
-                  const infoBoxWidth = infoBox.clientWidth;
-                  setHoverData(d)
-                  gsap.to(infoBox, {
-                     css: {opacity: 1},
-                     duration: 0.5
-                  })
-                  infoBox.style.top = `${addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin}px`
-
-
-                  let currentMouseX = mousePos[0] - infoBoxWidth/2
-                  if((mousePos[0] + infoBoxWidth/2) > wrapperWidth){
-                     currentMouseX = wrapperWidth - infoBoxWidth
+               
+               if(d.type === "placeLayer" || d.type === "eventLayer"){
+                  if(placeAndEventInfoRef){
+                     const pAERef = placeAndEventInfoRef.current;
+                     pAERef.style.opacity = "1"
+                     setHoverData(d)
                   }
-                  if((mousePos[0] - infoBoxWidth/2) < 0){
-                     currentMouseX = 0
+               }else{
+                  if(wrapperRef && infoRef){
+                     const wrapperHeight = wrapperRef.current.clientHeight;
+                     const wrapperWidth = wrapperRef.current.clientWidth;
+                     const infoBox = infoRef.current;
+                     const addHeight = wrapperHeight * (2/3);
+                     const infoBoxHeight = infoBox.clientHeight;
+                     const infoBoxWidth = infoBox.clientWidth;
+                     setHoverData(d)
+                     
+                     gsap.to(infoBox, {
+                        css: {opacity: 1},
+                        duration: 0.5
+                     })
+                     infoBox.style.top = `${addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin}px`
+   
+   
+                     let currentMouseX = mousePos[0] - infoBoxWidth/2
+                     if((mousePos[0] + infoBoxWidth/2) > wrapperWidth){
+                        currentMouseX = wrapperWidth - infoBoxWidth
+                     }
+                     if((mousePos[0] - infoBoxWidth/2) < 0){
+                        currentMouseX = 0
+                     }
+                     infoBox.style.left = `${currentMouseX}px`
+   
                   }
-                  infoBox.style.left = `${currentMouseX}px`
-
                }
+               
               
             }
             const onMouseMove = (e,d) => {
                const mousePos = d3.pointer(e);
-               if(wrapperRef && infoRef){
-                  const wrapperHeight = wrapperRef.current.clientHeight;
-                  const wrapperWidth = wrapperRef.current.clientWidth;
-                  const infoBox = infoRef.current;
-                  const addHeight = wrapperHeight * (2/3);
-                  const infoBoxHeight = infoBox.clientHeight;
-                  const infoBoxWidth = infoBox.clientWidth;
-                  setHoverData(d)
-                  gsap.to(infoBox, {
-                     css: {opacity: 1},
-                     duration: 0.5
-                  })
-                  infoBox.style.top = `${addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin}px`
 
-
-                  let currentMouseX = mousePos[0] - infoBoxWidth/2
-                  if((mousePos[0] + infoBoxWidth/2) > wrapperWidth){
-                     currentMouseX = wrapperWidth - infoBoxWidth
+               if(d.type === "placeLayer" || d.type === "eventLayer"){
+                  if(placeAndEventInfoRef){
+                     const pAERef = placeAndEventInfoRef.current;
+                     pAERef.style.opacity = "1"
+                     setHoverData(d)
                   }
-                  if((mousePos[0] - infoBoxWidth/2) < 0){
-                     currentMouseX = 0
+               }else{
+                  if(wrapperRef && infoRef){
+                     const wrapperHeight = wrapperRef.current.clientHeight;
+                     const wrapperWidth = wrapperRef.current.clientWidth;
+                     const infoBox = infoRef.current;
+                     const addHeight = wrapperHeight * (2/3);
+                     const infoBoxHeight = infoBox.clientHeight;
+                     const infoBoxWidth = infoBox.clientWidth;
+                     setHoverData(d)
+                     gsap.to(infoBox, {
+                        css: {opacity: 1},
+                        duration: 0.5
+                     })
+                     infoBox.style.top = `${addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin}px`
+   
+   
+                     let currentMouseX = mousePos[0] - infoBoxWidth/2
+                     if((mousePos[0] + infoBoxWidth/2) > wrapperWidth){
+                        currentMouseX = wrapperWidth - infoBoxWidth
+                     }
+                     if((mousePos[0] - infoBoxWidth/2) < 0){
+                        currentMouseX = 0
+                     }
+                     infoBox.style.left = `${currentMouseX}px`
+   
+   
                   }
-                  infoBox.style.left = `${currentMouseX}px`
-
-
                }
+               
               
             }
-            const onMouseLeave = () => {
+            const onMouseLeave = (e,d) => {
                document.body.style.cursor = "auto"
                if(infoRef){
                   const infoBox = infoRef.current;
@@ -248,6 +272,11 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                   })
                   // infoBox.style.display = "none"
                }
+               if(placeAndEventInfoRef){
+                  const pAERef = placeAndEventInfoRef.current;
+                  pAERef.style.opacity = "0"
+               }
+               
             }
             const onClick = ({inVlaue, video}) => {
                
@@ -490,18 +519,41 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
       }
    },[getData])
 
+   // const closePEInfo = () => {
+   //    if(placeAndEventInfoRef){
+   //       const pAERef = placeAndEventInfoRef.current;
+   //       pAERef.style.opacity = "0"
+   //    }
+   // }
 
    if(annotationLoading || !Boolean(getData)){
       return;
    }
    return <div ref={wrapperRef} className="absolute top-0 left-0 w-full h-full bg-none">
-         <div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none border-[#EC6735] border-2 rounded-lg overflow-hidden top-0 right-0 z-[30] bg-white text-black w-[400px] h-[350px] shadow-md shadow-[#EC6735] flex">
+         <div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none border-[#000000] border rounded-lg overflow-hidden top-0 right-0 z-[30] bg-white text-black w-[300px] h-[250px] flex p-1">
             {
                hoverData && <div className="w-full h-full">
                   <OverViewBox data={hoverData} />
                </div>
             }
          </div>
+         <div ref={placeAndEventInfoRef} className="absolute opacity-0 pointer-events-none select-none border-[#000000] border-1 rounded-lg overflow-hidden top-4 right-4 z-[30] border bg-white text-black w-[400px] h-[250px] flex">
+            {
+               hoverData && <div className="flex flex-col w-full h-full">
+                  {/* <div className="flex justify-end">
+                     <div onClick={closePEInfo} className="p-2 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                     </div>
+                  </div> */}
+                  <div className="w-full h-full">
+                     <OverViewBox data={hoverData} />
+                  </div>
+               </div>
+            }
+         </div>
+
          {<div ref={infoSourceRef} onMouseLeave={onMouseSourceLeave} className={`absolute opacity-0 pointer-events-none select-none top-0 right-0 z-[30] p-2 bg-white text-black w-[400px] h-[350px]`}>
             <div>Source: Title of the Original Video here lore ups dolor stat mukdasld edema.</div>
             <div onClick={onClickWatchVideo} className="border border-black rounded-lg px-2 py-1 cursor-pointer mt-2">Watch Video</div>
@@ -519,16 +571,14 @@ const TagBox = ({tag}) => {
          tag.value.map((val, idx) => {
             return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-xl">#{val}</div>
          })
-}
+      }
       </div>
 }
 const PlaceBox = ({place}) => {
-   useEffect(() => {
-      console.log(place, "overview")
-   },[])
+  
    const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} />), [place])
 
-   return <div className="w-full h-full min-h-[300px] flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
+   return <div className="w-full h-full min-h-[200px] flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
       <div className="w-full p-2 bg-white">{place.type}</div>
       <div className="flex-1 w-full h-full bg-red-400 border-white border flex justify-center items-center relative">
          {miniMap}
@@ -536,20 +586,20 @@ const PlaceBox = ({place}) => {
    </div>
 }
 const EventBox = ({event}) => {
-   return <div className="w-full min-h-72 h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#F1A73D] border-4 text-white">
+   return <div className="w-full min-h-[200px] h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#F1A73D] border-4 text-white">
       <div>{event.type}</div>
       <div className="w-full h-full flex-1 border-white border flex justify-center items-center">Event</div>
    </div>
 }
 
 const NarrationBox = ({narration}) => {
-   return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black">
+   return <div className="w-full min-h-[200px] h-full flex px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black">
       <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div>
       <div>{narration.type}</div>
    </div>
 }
 const ReferenceBox = ({reference}) => {
-   return <div className="w-full min-h-72 h-full flex px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
+   return <div className="w-full min-h-[200px] h-full flex px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
       <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div>
       <div>{reference.type}</div>
    </div>

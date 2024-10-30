@@ -77,6 +77,21 @@ export const getAllClips = () => {
    
 }
 
+export const getClip = ({originId}) => {
+  const bodyData = {
+    action: "findClips",
+    data: {
+      keys: ['id', 'in', 'out', 'position', 'created', 'modified', 'title',
+             'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'durations', 'user'],
+      itemsQuery:{"conditions":[],"operator":"&"},
+      query: { conditions: [{"key": "id", "value": `${originId}`, "operator": "==" }], operator: "&" },
+    //   sort: [{ key: "position", operator: "+" }],
+    },
+   
+  }
+  return globalFetcher(bodyData);
+}
+
 
 export const getAllClipsOfSelectedVideo = ({itemId}) => {
   const bodyData = {
