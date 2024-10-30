@@ -1,8 +1,9 @@
-import ClipsWrapper from "./components/ClipsWrapper";
+import { redirect } from "next/navigation";
 
 
 const ClipsPage = () => {
-    return <ClipsWrapper />
+    redirect("/forest")
+    // return <ClipsWrapper />
 }
 
 

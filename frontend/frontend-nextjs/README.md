@@ -90,18 +90,18 @@ https://github.com/talking-objects/archive/tree/frontend
 - / 
 
 ### Video Page
-- /video = Original Videos 
-- /video/:id = ein Original Video 🟢
+- /video = <!-- Redirect to /forest -->
+- /video/:id = <!-- ein Original Video 🟢 -->
 
 ### Edited Video Page
-- /edit/:id = Edit Video 🟡
+- /edit/:id <!-- Edit Video 🟡 -->
 
 ### Clip Page
-- /clip = Clips
-- /clip/:id = ein Clip
+- /clip <!-- Redirect to /forest -->
+- /clip/:id = <!-- ein Clip -->
 
 ### Index
-- /forest(Overview) = item videos, clips, annotations, events, references, places
+- /forest(Overview) <!-- item videos, clips, annotations, events, references, places -->
     - /place/:id 
     - /reference/:id
     - /event/:id

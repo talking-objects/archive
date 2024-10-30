@@ -1,9 +1,10 @@
 "use client"
 
-import VideosWrapper from "./components/VideoWrapper";
+import { redirect } from "next/navigation";
 
 const VideoPage = () => {
-    return <VideosWrapper />
+    redirect("/forest")
+    // return <VideosWrapper />
 }
 
 export default VideoPage;
