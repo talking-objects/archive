@@ -82,9 +82,10 @@ export const getClip = ({originId}) => {
     action: "findClips",
     data: {
       keys: ['id', 'in', 'out', 'position', 'created', 'modified', 'title',
-             'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'durations', 'user'],
+             'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'duration', 'user'],
       itemsQuery:{"conditions":[],"operator":"&"},
       query: { conditions: [{"key": "id", "value": `${originId}`, "operator": "==" }], operator: "&" },
+     
     //   sort: [{ key: "position", operator: "+" }],
     },
    

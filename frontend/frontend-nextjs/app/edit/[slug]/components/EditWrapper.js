@@ -36,7 +36,7 @@ const EditWrapper = () => {
             if(originalData.length > 0){
                 let totalDuration = 0;
                 for(let i = 0; i < originalData.length; i++){
-                    originalData[i].orginId = originalData[i].id
+                    originalData[i].originId = originalData[i].id
                     originalData[i].id = data.data.items[0].id
                     originalData[i].annotations = createFakeAnnotations({duration: (originalData[i].out - originalData[i].in), editVersion: true})
                     originalData[i].duration = originalData[i].out - originalData[i].in

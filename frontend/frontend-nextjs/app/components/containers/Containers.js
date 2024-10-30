@@ -24,7 +24,7 @@ export const MainContainer = ({children}) => {
 }
 
 
-const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
+const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false, playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
    const wrapperRef = useRef(null)
    const svgRef = useRef(null)
@@ -151,7 +151,7 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
 
    const onClickWatchVideo = () => {
       console.log(sourceHoverData)
-      router.push(`/clip/${sourceHoverData.id}?clipId=${sourceHoverData.orginId}`)
+      router.push(`/clip/${sourceHoverData.id}?clipId=${sourceHoverData.originId}&id=${sourceHoverData.id}`)
    }
    // Annotation Visualization using D3.js
    useEffect(() => {
@@ -283,9 +283,15 @@ const VideoDataVisContainer = ({onClickProgressBar, edit=false, playToggle, fake
                if(edit){
                   onClickProgressBar(inVlaue, edit)
                }else{
-                  console.log(typeof inVlaue, inVlaue)
-                  videoRef.current.currentTime = inVlaue
-                  setCurrentTime(inVlaue)
+                  if(!clip){
+                     console.log(typeof inVlaue, inVlaue)
+                     videoRef.current.currentTime = inVlaue
+                     setCurrentTime(inVlaue)
+                  }else{
+                     videoRef.current.currentTime = data.in + inVlaue
+                     setCurrentTime(inVlaue)
+                  }
+                  
                }
             }
             
@@ -672,7 +678,7 @@ const FilterBox = ({children, type, toggleShow}) => {
    return <>{children}</>
 }
 
-export const EntangledContainer = ({edit=false, toggleShow, playToggle, currentTime, fakeData}) => {
+export const EntangledContainer = ({clip=false, edit=false, toggleShow, playToggle, currentTime, fakeData}) => {
    const [allFakeData, setAllFakeData] = useState(null)
    useEffect(() => {
       
@@ -703,7 +709,7 @@ export const EntangledContainer = ({edit=false, toggleShow, playToggle, currentT
      
    },[])
 
-   const previewGap = edit ? 3 : 60
+   const previewGap = edit ? 3 : clip ? 3 :60
 
    return <div className={`${(toggleShow.view === "entangled" && playToggle) ? "opacity-100 translate-x-0" : "opacity-0 translate-x-full"} absolute z-[40] top-0 right-0 w-[calc(100vw-76px-20px)] h-full bg-none transition-all duration-1000`}>
       <div className="w-full h-full overflow-scroll hide_scrollbar">
@@ -730,7 +736,7 @@ export const EntangledContainer = ({edit=false, toggleShow, playToggle, currentT
 </div>
 }
 
-export const OverViewContainer = ({onClickProgressBar, currentTime, videoRef,setCurrentTime, toggleShow, playToggle, fakeData, edit=false}) => {
+export const OverViewContainer = ({data, clip=false, onClickProgressBar, currentTime, videoRef,setCurrentTime, toggleShow, playToggle, fakeData, edit=false}) => {
    const contentRef = useRef(null)
    const scrolltRef = useRef(null)
    const progressRef = useRef(null)
@@ -740,8 +746,14 @@ export const OverViewContainer = ({onClickProgressBar, currentTime, videoRef,set
       if(edit){
          onClickProgressBar(inValue, edit)
       }else{
-         videoRef.current.currentTime = inValue
-         setCurrentTime(inValue)
+         if(!clip){
+            videoRef.current.currentTime = inValue
+            setCurrentTime(inValue)
+         }else{
+            videoRef.current.currentTime = data.in + inValue
+            setCurrentTime(inValue)
+         }
+       
       }
       
    }
@@ -839,13 +851,14 @@ export const OverViewContainer = ({onClickProgressBar, currentTime, videoRef,set
    </div>
 }
 
-export const VideoPlayerContainer = ({data}) => {
+export const VideoPlayerContainer = ({data, clip=false}) => {
    const [toggleLegend, setToggleLegend] = useState(false)
    const videoRef = useRef(null)
    const [playToggle, setPlayToggle] = useState(false)
    const {data:annotationData, isLoading:annotationLoading} = getAllItemAnnotations({itemId:data.id})
    const [currentTime, setCurrentTime] = useState(0)
    const [getFakeData, setFakeData] = useState(null)
+   const route = useRouter()
    const [toggleShow, setToggleShow] = useState({
       category: true,
       tag: true,
@@ -897,15 +910,32 @@ export const VideoPlayerContainer = ({data}) => {
       }
    }
    const onClickProgressBar = (e) => {
-       
-         videoRef.current.currentTime = parseFloat(e.target.value)
-         setCurrentTime(e.target.value)
+
+      if(videoRef){
+         if(!clip){
+            videoRef.current.currentTime = parseFloat(e.target.value)
+            setCurrentTime(e.target.value)
+         }else{
+            console.log(parseFloat(e.target.value) + data.in)
+            videoRef.current.currentTime = parseFloat(e.target.value) + data.in
+            setCurrentTime(e.target.value)
+         }
+      }
+         
      
       
    }
 
    useEffect(() => {
-      const fakeData = createFakeAnnotations({duration:data.duration})
+      if(clip){
+         if(videoRef){
+            videoRef.current.currentTime = data.in
+         }
+      }
+   },[])
+
+   useEffect(() => {
+      const fakeData = createFakeAnnotations({duration:data.duration, editVersion: clip})
       setFakeData(fakeData)
    },[])
 
@@ -1011,17 +1041,32 @@ export const VideoPlayerContainer = ({data}) => {
       const videoElement = videoRef.current
       if (playToggle && videoElement) {
          const handleTimeUpdate = () => {
-            const currentTime = videoElement?.currentTime
-            // 
-            setCurrentTime(currentTime)
-            if(videoElement.ended){
-               // video ended
-               // - update play icon
-               // - update progress bar
-               
-               setPlayToggle(false)
-               setCurrentTime(0)
+            if(!clip){
+               const newCurrentTime = videoElement?.currentTime
+               // 
+               setCurrentTime(newCurrentTime)
+               if(videoElement.ended){
+                  // video ended
+                  // - update play icon
+                  // - update progress bar
+                  
+                  setPlayToggle(false)
+                  setCurrentTime(0)
+               }
             }
+            if(clip){
+               const newCurrentTime = videoElement?.currentTime
+               // console.log(currentTime - data.in)
+               setCurrentTime(newCurrentTime - data.in)
+               // end
+               if(Math.round(newCurrentTime) > data.out){
+                  videoElement.pause()
+                  videoElement.currentTime = data.in
+                  setCurrentTime(0)
+                  setPlayToggle(false)
+               }
+            }
+            
            
          };
          videoElement.ontimeupdate = handleTimeUpdate
@@ -1045,6 +1090,7 @@ export const VideoPlayerContainer = ({data}) => {
                      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                   </svg>
                </div>
+               {clip && <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-fit text-black px-2 py-1 bg-[#9E21E8] text-4xl font-bold italic transition-all duration-1000`}>Clip</div>}
                <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic transition-all duration-1000`}>{data.title}</div>
                <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                   <div>Author: {Boolean(data.director) && Boolean(data.director.length > 0) && data.director.map((v) => `${v},`)} {data.user}</div>
@@ -1057,13 +1103,19 @@ export const VideoPlayerContainer = ({data}) => {
                      <div>{data.modified}</div>
                   </div>
                </div>
+               {clip && <div onClick={() => route.push(`/video/${data.id}`)} className={`text-black bg-white w-fit px-2 py-2 cursor-pointer ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                     <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 19.5-15-15m0 0v11.25m0-11.25h11.25" />
+                  </svg>
+               </div>}
+               
             </div>
             {/* Video Data Visualization : Diagramatic View */}
-            {(videoRef && getFakeData) && <VideoDataVisContainer fakeData={getFakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
+            {(videoRef && getFakeData) && <VideoDataVisContainer data={data} clip={clip} fakeData={getFakeData} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
             {/* Video Data Visualization : Entangled View */}
-            {(videoRef && getFakeData) && <EntangledContainer toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} fakeData={getFakeData} />}
+            {(videoRef && getFakeData) && <EntangledContainer clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} fakeData={getFakeData} />}
             {/* Video Data Visualization : Overview View */}
-            {(videoRef && getFakeData) && <OverViewContainer currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getFakeData} />}
+            {(videoRef && getFakeData) && <OverViewContainer data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getFakeData} />}
         </div>
         {/* video controller */}
         {videoRef && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
@@ -1081,7 +1133,7 @@ export const VideoPlayerContainer = ({data}) => {
             </div>
             <div className="w-full px-2">
                <div className="w-full h-1 rounded-full relative">
-                  <input  onChange={(e) => onClickProgressBar(e)} step={0.1} min={0} max={data.duration} defaultValue={0} type="range" className="w-full bg-red-400 range-custom" />
+                  <input  onChange={(e) => onClickProgressBar(e)} step={clip? 0.01 :0.1} min={0} max={data.duration} defaultValue={0} type="range" className="w-full bg-red-400 range-custom" />
                   <progress value={currentTime} max={data.duration} className="absolute bg-red-400 w-full h-full select-none pointer-events-none"></progress>
                </div>
             </div>

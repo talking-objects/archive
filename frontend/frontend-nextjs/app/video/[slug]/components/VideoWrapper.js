@@ -22,6 +22,7 @@ const VideoWrapper = () => {
     useEffect(() => {
  
         if(!isLoading){
+            console.log(data.data.items[0])
             setVideoData(data.data.items[0])
         }
     },[data])
