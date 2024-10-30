@@ -34,6 +34,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
    const [hoverData, setHoverData] = useState(null)
    const [sourceHoverData, setSourceHoverData] = useState(null)
    const router = useRouter()
+   const svgContainerRef = useRef(null)
 
    
    // the data of annotations of this video
@@ -155,7 +156,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
    }
    // Annotation Visualization using D3.js
    useEffect(() => {
-      if(svgRef){
+      if(svgRef && svgContainerRef){
          const infoBoxTopMargin = 20;
          if(getData){
             const onMouseSourceEnter = (e, d) => {
@@ -296,10 +297,15 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
             }
             
             const svg = d3.select(svgRef.current)
-            svg
-            .style("width", "100%")
-            .style("height", "100%")
-            .style("background", "none")
+            // svg.attr("viewBox", `0 0 ${svgContainerRef.current.clientWidth} ${svgContainerRef.current.clientHeight}`)
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("preserveAspectRatio", "xMidYMid meet")
+            .attr("id", "mainSVG")
+            // svg
+            // .style("width", "100%")
+            // .style("height", "100%")
+            // .style("background", "none")
 
             
 
@@ -308,7 +314,14 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
                height: svg.node().clientHeight/3,
             }
             const globalGourp = svg.append("g")
-            globalGourp.attr("transform", `translate(0,${canvasSize.height * 2})`);
+            globalGourp
+            .attr("id", "mainG")
+            .attr("transform", `translate(0,${canvasSize.height * 2})`);
+
+          
+          
+
+
 
             let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width]);
             const annotationRowHeight = canvasSize.height/4
@@ -316,7 +329,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
             // edit video divider
             if(edit){
                const dividerGroup = svg.append("g")
-               dividerGroup.attr("transform", `translate(0,0)`);
+               dividerGroup.attr("transform", `translate(0,0)`)
                dividerGroup
                .append("g")
                .attr("id", "divideGroupBar")
@@ -523,7 +536,116 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
 
          }
       }
+    
    },[getData])
+
+   useEffect(() => {
+      const updateViewBox = () => {
+              
+         let svgContainer = document.querySelector("#svgContainer")
+     
+         const globalGroup = d3.select("#mainG")
+         const canvasSize = {
+            width: svgContainer.clientWidth,
+            height: svgContainer.clientHeight/3,
+         }
+         let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width]);
+         const annotationRowHeight = canvasSize.height/4
+
+
+         if(edit){
+            d3.select("#divideGroupBar").selectAll("rect")
+            .attr("width", 1)
+            .attr("height", svgContainer.clientHeight)
+            .attr("x", function (d) {
+               return `${scaleLinear(d.newOut)}px`;
+             })
+            .attr("y", 0)
+            
+            d3.select("#divideGroupBox").selectAll("g")
+            .attr("transform", d => `translate(${scaleLinear(d.newOut) - 30}, 0)`)
+         }
+
+
+         globalGroup.attr("transform", `translate(0,${(canvasSize.height) * 2})`);
+
+         // category Resize
+         globalGroup.select("#cateGroup").selectAll("rect")
+         .attr("width", function(d){
+            return `${scaleLinear(d.out - d.in)}px`
+         })
+         .attr("height", annotationRowHeight)
+         .attr("x", function (d) {
+            return `${scaleLinear(d.in)}px`;
+          })
+         .attr("y", function (d, i) {
+            return `${canvasSize.height - annotationRowHeight}px`;
+          })
+         .attr("fill", function (d, i) {
+            return `${d.category.color}`;
+          })
+
+         //  tag Reszie
+         globalGroup.select("#tagGroup").selectAll("rect")
+         .attr("width", function(d){
+            return `${scaleLinear(d.out - d.in)}px`
+         })
+         .attr("height", annotationRowHeight)
+         .attr("x", function (d) {
+            return `${scaleLinear(d.in)}px`;
+          })
+         .attr("y", function (d, i) {
+            return `${canvasSize.height - ((annotationRowHeight) * 2)}px`;
+          })
+
+         //  ref Resize
+         globalGroup.select("#refGroup").selectAll("circle")
+         .attr("r", ((annotationRowHeight)/3)/2)
+         .attr("cx", function (d) {
+            return `${scaleLinear(d.in) + (((annotationRowHeight)/3)/2)}px`;
+          })
+         .attr("cy", function (d, i) {
+            return `${canvasSize.height - ((annotationRowHeight) * 2) - ((annotationRowHeight)/3/2)}px`;
+          })
+         //  narration Resize
+         globalGroup.select("#narrationGroup").selectAll("circle")
+         .attr("r", ((annotationRowHeight)/3)/2)
+         .attr("cx", function (d) {
+            return `${scaleLinear(d.in) + (((annotationRowHeight)/3)/2)}px`;
+          })
+         .attr("cy", function (d, i) {
+            return `${canvasSize.height - ((annotationRowHeight) * 2) - (((annotationRowHeight)/3/2) * 4)}px`;
+          })
+
+         //  Event Resize
+         globalGroup.select("#eventGroup").selectAll("rect")
+         .attr("width", function(d){
+            return `${annotationRowHeight/3}px`
+         })
+         .attr("height", annotationRowHeight/3)
+         .attr("x", function (d) {
+            return `${scaleLinear(d.in)}px`;
+          })
+         .attr("y", function (d, i) {
+            return `${canvasSize.height - ((annotationRowHeight) * 4 - annotationRowHeight/2)}px`;
+          })
+         //  Place Resize
+         globalGroup.select("#placeGroup").selectAll("circle")
+         .attr("r", (((annotationRowHeight)/3)/2))
+         .attr("cx", function (d) {
+            return `${scaleLinear(d.in) + (((annotationRowHeight)/3)/2)}px`;
+          })
+         .attr("cy", function (d, i) {
+            return `${canvasSize.height - ((annotationRowHeight) * 4 - (((annotationRowHeight)/3)/2) - 2.25)}px`;
+          })
+
+     };
+     
+     // 리사이즈 이벤트에 함수 연결
+     window.addEventListener("resize", updateViewBox);
+     return () => window.removeEventListener("resize", updateViewBox);
+     
+   },[])
 
    // const closePEInfo = () => {
    //    if(placeAndEventInfoRef){
@@ -564,7 +686,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
             <div>Source: Title of the Original Video here lore ups dolor stat mukdasld edema.</div>
             <div onClick={onClickWatchVideo} className="border border-black rounded-lg px-2 py-1 cursor-pointer mt-2">Watch Video</div>
          </div>}
-         <div className={`${(toggleShow.view === "diagramatic" && playToggle) ? "opacity-100 translate-y-0" :"opacity-0 translate-y-full" } absolute bottom-0 left-0 z-[20] w-full h-full transition-all duration-1000`}>
+         <div ref={svgContainerRef} id={"svgContainer"} className={`${(toggleShow.view === "diagramatic" && playToggle) ? "opacity-100 translate-y-0" :"opacity-0 translate-y-full" } absolute bottom-0 left-0 z-[20] w-full h-full transition-all duration-1000`}>
             <svg ref={svgRef}>
 
             </svg>

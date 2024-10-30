@@ -16,8 +16,8 @@ https://github.com/talking-objects/archive/tree/frontend
 
 
 # TODOS:
-- [ ] PlaceBox + [turkjs](https://turfjs.org/)
 - [ ] D3js Data Vis Resize Event
+- [ ] PlaceBox + [turkjs](https://turfjs.org/)
 - [ ] Testing the Dockerfile on my server
 
 # Folder Structure (updated: 28.10.24)
@@ -90,15 +90,15 @@ https://github.com/talking-objects/archive/tree/frontend
 - / 
 
 ### Video Page
-- /video = <!-- Redirect to /forest -->
-- /video/:id = <!-- ein Original Video 🟢 -->
+- /video <code>Redirect to /forest</code> <!-- Redirect to /forest -->
+- /video/:id <code>ein Original Video</code>   <!-- ein Original Video 🟢 -->
 
 ### Edited Video Page
-- /edit/:id <!-- Edit Video 🟡 -->
+- /edit/:id <code>Edit Video</code>  <!-- Edit Video 🟡 -->
 
 ### Clip Page
-- /clip <!-- Redirect to /forest -->
-- /clip/:id = <!-- ein Clip -->
+- /clip <code>Redirect to /forest</code>  <!-- Redirect to /forest -->
+- /clip/:id <code>ein Clip</code>  <!-- ein Clip -->
 
 ### Index
 - /forest(Overview) <!-- item videos, clips, annotations, events, references, places -->
