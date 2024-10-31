@@ -46,44 +46,69 @@ const VideosContainer = ({data, isLoading, dataCount, isLoadingCount}) => {
     </div>
 }
 
+const RawIcon = () => {
+    return  <div className="w-8 h-8 bg-white flex justify-center items-center">
+        <div className="w-2/3 aspect-square bg-black rounded-full flex justify-center items-center text-white text-xs font-medium">R</div>
+        </div>
+}
+const ClipIcon = () => {
+    return  <div className="w-8 h-8 bg-white flex justify-center items-center">
+        <div className="w-2/3 aspect-square bg-black rounded-full flex justify-center items-center text-white text-xs font-medium">C</div>
+        </div>
+}
+
+
+const ForestContentsContainer = ({isLoading=true, allData}) => {
+    
+    return <div className="w-full py-4 h-fit">
+        {isLoading && <div className="w-full rounded-lg bg-[#8BA5F8] h-[450px] animate-pulse"></div>}
+        {(!isLoading) && <div className="w-full grid grid-cols-4 gap-4">
+            {allData && allData.map((val, idx) => {
+                return <div key={idx} onClick={() => onPush(`/video/${val.id}`)} className="flex w-full cursor-pointer">
+                            <div className="w-8 flex flex-col h-full">
+                                {val.type === "R" && <RawIcon />}
+                                {val.type === "C" && <ClipIcon />}
+                            </div>
+                        <div className="w-full h-full">
+                            <div style={{backgroundImage: `url(${BASE_URL}/${val.id}/480p${val.posterFrame}.jpg)`}} className="w-full aspect-video bg-neutral-200 rounded-md overflow-hidden bg-no-repeat bg-cover bg-center" />
+                            <div className="w-fit text-xs mt-2 font-semibold italic">{val.title}</div>
+                        </div>
+                   
+                      
+                    </div>
+            })}
+            </div>}
+    </div>
+}
+
 
 const ForestWrapper = () => {
     const [pagination, setPagination] = useState(1)
-    const {data:dataCount, isLoading:isLoadingCount} = getAllVideosCounts();
+    // const {data:dataCount, isLoading:isLoadingCount} = getAllVideosCounts();
     const {data, isLoading} = getAllVideos({pagination: pagination});
-
-    const {data:dataAnnotations, isLoading:isLoadingAnnotations} = getAllAnnotations({rangeToggle:true, range: [0, 12]})
+    const [allData, setAlldata] = useState([])
     const {data:dataClips, isLoading:isLoadingClips} = getAllClips({pagination: pagination})
-
+    // const {data:dataAnnotations, isLoading:isLoadingAnnotations} = getAllAnnotations({rangeToggle:true, range: [0, 12]})
     useEffect(() => {
-        if(!isLoadingClips){
-            console.log(dataClips)
-        }
-    },[dataClips]) 
-    useEffect(() => {
-        if(!isLoadingAnnotations){
-       
+        if(!isLoading && !isLoadingClips){
             
-            const test = dataAnnotations.data.items
-            const cate = {}
-
-            for(let i = 0; i < test.length; i++){
-                if(cate[test[i].layer]){
-                    cate[test[i].layer] += 1;
-                }else{
-                    cate[test[i].layer] = 1
-                }
-            }
-            
-          
+            data.data.items.map((v) => {
+                v.type = "R"
+                return v
+            })
+            dataClips.data.items.map((v) => {
+                v.type = "C"
+                return v
+            })
+            setAlldata([...allData,...[...data.data.items, ...dataClips.data.items].sort(() => Math.random() - 0.5)])
         }
-    },[dataAnnotations])
+    },[data, dataClips])
     return <>
         <div className="w-full h-full flex flex-col items-center">
             <div className="w-full h-fit py-4 flex justify-center items-center text-7xl font-medium">Our Archive</div>
-            <div className="w-full py-4 bg-blue-400">nav</div>
             <ContentContainer>
-                <VideosContainer data={data} isLoading={isLoading} dataCount={dataCount} isLoadingCount={isLoadingCount} />
+                <ForestContentsContainer isLoading={(isLoading || isLoadingClips)} allData={allData} />
+                {/* <VideosContainer data={data} isLoading={isLoading} dataCount={dataCount} isLoadingCount={isLoadingCount} /> */}
                 {/* <AnnotationsContainer data={dataAnnotations} isLoading={isLoadingAnnotations} /> */}
             </ContentContainer>
             <div onClick={() => setPagination((prev) => prev + 1)} className="py-4 cursor-pointer">Load More</div>

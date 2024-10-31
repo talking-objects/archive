@@ -129,6 +129,7 @@ export const getAllVideos = ({pagination=1}={}) => {
             operator: "&" 
           },
           sort: [{ key: "duration", operator: "-" }],
+          // range: [0, pagination * AMOUNT_OF_PAGINATION]
           range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION]
         },
       };
