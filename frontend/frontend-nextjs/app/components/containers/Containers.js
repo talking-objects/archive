@@ -152,7 +152,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
    }
 
    const onClickWatchVideo = () => {
-      console.log(sourceHoverData)
+      
       router.push(`/clip/${sourceHoverData.id}?clipId=${sourceHoverData.originId}&id=${sourceHoverData.id}`)
    }
    // Annotation Visualization using D3.js

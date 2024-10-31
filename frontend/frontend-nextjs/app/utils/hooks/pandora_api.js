@@ -1,7 +1,7 @@
 const { default: useSWR } = require("swr")
 const { toaFetchData } = require("./toaFetch")
 
-const AMOUNT_OF_PAGINATION = 10
+const AMOUNT_OF_PAGINATION = 13
 const globalFetcher = (bodyData) => {
     const {data, isLoading, error} = useSWR({bodyData:bodyData}, toaFetchData)
     return {
@@ -22,7 +22,10 @@ export const getAllAnnotations = ({pagination}={}) => {
         'duration', 'layer', 'item', 'videoRatio', 'languages',
         'entity', 'event', 'place'],
         sort: [{ key: "created", operator: "-" }],
-        range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION]
+        range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION],
+        // query: {
+        //   conditions: [{"key": "duration", "value": 10000, "operator": ">" }]
+        // }
       //   query: { conditions: [], operator: "&" },
      
       },
@@ -66,8 +69,11 @@ export const getAllClips = ({pagination=1}={}) => {
         action: "findClips",
         data: {
           keys: ['id', 'in', 'out', 'position', 'created', 'modified', 'title',
-                 'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'durations', 'user'],
-          range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION]
+                 'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'duration', 'user'],
+          range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION],
+          query: {
+            conditions: [{"key": "duration", "value": 0, "operator": ">" }]
+          }
           // itemsQuery:{"conditions":[],"operator":"&"},
           // range: [0.6]
         //   query: { conditions: [], operator: "&" },

@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const AnnotationIcon = ({layer}) => {
-    
-
     return <div className="w-8 h-8 bg-white flex justify-center items-center">
         {layer === "categoryList" && <div className="w-2/3 aspect-square grid grid-cols-2 text-white text-xs font-medium ">
             <div style={{backgroundColor: `${COLORS.c6}`}} className="w-full h-full"></div>
@@ -15,7 +13,7 @@ const AnnotationIcon = ({layer}) => {
             <div style={{backgroundColor: `${COLORS.c3}`}} className="w-full h-full"></div>
         </div>}
         {layer === "eventList" && <div style={{backgroundColor: `${COLORS.c6}`, borderColor: `${COLORS.c5}`}} className="w-2/3 aspect-square flex justify-center items-center border-[3px] text-white text-xs font-medium"></div>}
-        {layer === "tagList" && <div style={{backgroundColor: `${COLORS.c6}`}} className="w-2/3 aspect-square border-black flex justify-center items-center text-white text-xs font-medium"></div>}
+        {layer === "tagList" && <div style={{backgroundColor: `${COLORS.c6}`}} className="w-2/3 aspect-square border border-black flex justify-center items-center text-white text-xs font-medium"></div>}
         {layer === "placeList" && <div style={{backgroundColor: `${COLORS.c6}`, borderColor: `${COLORS.c4}`}} className="w-2/3 aspect-square border-[3px] rounded-full flex justify-center items-center text-white text-xs font-medium"></div>}
         {layer === "refList" && <div style={{backgroundColor: `${COLORS.c0}`, borderColor: `${COLORS.c4}`}} className="w-2/3 aspect-square border-[3px] rounded-full flex justify-center items-center text-white text-xs font-medium"></div>}
         {layer === "narrationList" && <div style={{backgroundColor: `${COLORS.c2}`}} className="w-2/3 aspect-square border border-black flex justify-center items-center text-white text-xs font-medium"></div>}
@@ -50,7 +48,11 @@ const ForestContentsImageBox = ({val}) => {
             setPostFrame(val.in)
         }
     },[])
-    return <div style={{backgroundImage: `url(${BASE_URL}/${getId}/480p${getPostFrame}.jpg)`}} className="w-full aspect-video bg-neutral-200 rounded-md overflow-hidden bg-no-repeat bg-cover bg-center" />
+    return <div 
+    style={{backgroundImage: `url(${BASE_URL}/${getId}/480p${getPostFrame}.jpg)`}} 
+    className="w-full aspect-video bg-neutral-200 rounded-md overflow-hidden bg-no-repeat bg-cover bg-center flex justify-center items-center">
+        {val.layer === "placeList" && <div className="bg-white text-black">Place</div>}
+    </div>
 }
 
 const ForestContentsContainer = ({isLoading=true, allData}) => {
@@ -99,6 +101,7 @@ const ForestWrapper = () => {
     useEffect(() => {
         if(!isLoading && !isLoadingClips && !isLoadingAnnotations){
             console.log(dataAnnotations.data.items)
+           
             const layerList = [
                 "categoryList",
                 "eventList",
@@ -115,18 +118,20 @@ const ForestWrapper = () => {
                 v.type = "C"
                 return v
             })
-            // 🤡FakeData
+            
             dataAnnotations.data.items.map((v) => {
                 v.type = "A"
-                v.layer = layerList[Math.floor(Math.random() * layerList.length)]
+                v.layer = layerList[Math.floor(Math.random() * layerList.length)] //Fake Data
                 return v
             })
             setAlldata([...allData,...[...data.data.items, ...dataClips.data.items, ...dataAnnotations.data.items].sort(() => Math.random() - 0.5)])
         }
     },[data, dataClips, dataAnnotations])
+    
     return <>
         <div className="w-full h-full flex flex-col items-center">
             <div className="w-full h-fit py-4 flex justify-center items-center text-7xl font-medium">Our Archive</div>
+            <div className="w-full h-[100svh] bg-black"></div>
                 <ContentContainer>
                     <ForestContentsContainer isLoading={(isLoading || isLoadingClips || isLoadingAnnotations)} allData={allData} />
               
