@@ -1,7 +1,7 @@
 const { default: useSWR } = require("swr")
 const { toaFetchData } = require("./toaFetch")
 
-
+const AMOUNT_OF_PAGINATION = 10
 const globalFetcher = (bodyData) => {
     const {data, isLoading, error} = useSWR({bodyData:bodyData}, toaFetchData)
     return {
@@ -61,13 +61,15 @@ export const getAllItemAnnotations = ({itemId}) => {
 // }
 // 🟢 Clips 
 // get all clips
-export const getAllClips = () => {
+export const getAllClips = ({pagination=1}={}) => {
     const bodyData = {
         action: "findClips",
         data: {
           keys: ['id', 'in', 'out', 'position', 'created', 'modified', 'title',
                  'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'durations', 'user'],
-          itemsQuery:{"conditions":[],"operator":"&"}
+          range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION]
+          // itemsQuery:{"conditions":[],"operator":"&"},
+          // range: [0.6]
         //   query: { conditions: [], operator: "&" },
         //   sort: [{ key: "position", operator: "+" }],
         },
@@ -117,7 +119,7 @@ return globalFetcher(bodyData);
 
 // 🔴 Video Items
 // get all videos list
-export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {
+export const getAllVideos = ({pagination=1}={}) => {
     const bodyData = {
         action: "find",
         data: {
@@ -127,7 +129,7 @@ export const getAllVideos = ({rangeToggle=false, range=[0, 6]}) => {
             operator: "&" 
           },
           sort: [{ key: "duration", operator: "-" }],
-          ...(rangeToggle && {range: range})
+          range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION]
         },
       };
     return globalFetcher(bodyData);
