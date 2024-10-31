@@ -16,7 +16,7 @@ https://github.com/talking-objects/archive/tree/frontend
 
 
 # TODOS:
-- [ ] D3js Data Vis Resize Event
+- [x] D3js Data Vis Resize Event
 - [ ] PlaceBox + [turkjs](https://turfjs.org/)
 - [ ] Testing the Dockerfile on my server
 

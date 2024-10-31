@@ -41,7 +41,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
    useEffect(() => {
       if(!annotationLoading){
          // setData(annotationData.data.items)
-
+       
          const getDuration = duration
       
          // 🔥 create fake data just for test 🔥
@@ -66,14 +66,15 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
                   
                }
             }
-            console.log(allData)
+         
             setData(allData)
+       
          }else{
          
             let getFakeData = fakeData
             setData(getFakeData)
+           
          }
-        
          
        
       }
@@ -275,6 +276,8 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
                }
                if(placeAndEventInfoRef){
                   const pAERef = placeAndEventInfoRef.current;
+                  setHoverData(null)
+                 
                   pAERef.style.opacity = "0"
                }
                
@@ -661,7 +664,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
          <div ref={infoRef} className="absolute opacity-0 pointer-events-none select-none border-[#000000] border rounded-lg overflow-hidden top-0 right-0 z-[30] bg-white text-black w-[300px] h-[250px] flex p-1">
             {
                hoverData && <div className="w-full h-full">
-                  <OverViewBox data={hoverData} />
+                  <OverViewBox data={hoverData} fakeData={getData}  />
                </div>
             }
          </div>
@@ -676,7 +679,7 @@ const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false
                      </div>
                   </div> */}
                   <div className="w-full h-full">
-                     <OverViewBox data={hoverData} />
+                     <OverViewBox data={hoverData} fakeData={getData} />
                   </div>
                </div>
             }
@@ -702,9 +705,9 @@ const TagBox = ({tag}) => {
       }
       </div>
 }
-const PlaceBox = ({place}) => {
-  
-   const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} />), [place])
+const PlaceBox = ({place, allPlaces}) => {
+
+   const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} allPlaces={allPlaces} />), [allPlaces, place])
 
    return <div className="w-full h-full min-h-[200px] flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
       <div className="w-full p-2 bg-white">{place.type}</div>
@@ -735,17 +738,17 @@ const ReferenceBox = ({reference}) => {
 const CategoryBox = ({category}) => {
    return <div style={{backgroundColor: category.category.color}} className="w-full h-full text-4xl text-white italic px-2 py-1">{category.category.value}</div>
 }
-export const OverViewBox = ({data}) => {
+export const OverViewBox = ({data, fakeData=false}) => {
   
 
-
+  
   
 
    switch (data.type) {
       case "categoryLayer":
          return <CategoryBox category={data} />
       case "placeLayer":
-         return <PlaceBox place={data} />
+         return <PlaceBox place={data} allPlaces={fakeData.placeList} />
       case "tagLayer":
          return <TagBox tag={data} />
       case "referenceLayer":
@@ -802,8 +805,31 @@ const FilterBox = ({children, type, toggleShow}) => {
 
 export const EntangledContainer = ({clip=false, edit=false, toggleShow, playToggle, currentTime, fakeData}) => {
    const [allFakeData, setAllFakeData] = useState(null)
+   const [getData, setData] = useState(null)
    useEffect(() => {
-      
+      if(!edit){
+         setData(fakeData)
+      }else{
+         let allData = {
+            categoryList: [],
+            eventList : [],
+            narrationList : [],
+            placeList : [],
+            refList : [],
+            tagList: []
+         };
+         for(let i = 0; i < fakeData.length; i++){
+            const fAnnotations = fakeData[i].annotations;
+            for(let j =0; j < Object.keys(fAnnotations).length; j++){
+             
+               const getAnno = fAnnotations[Object.keys(fAnnotations)[j]]
+               allData[Object.keys(fAnnotations)[j]] = [...getAnno,...allData[Object.keys(fAnnotations)[j]]]
+             
+               
+            }
+         }
+         setData(allData)
+      }
       if(!edit){
          let allData = []
          for(let i =0; i < Object.keys(fakeData).length; i++){
@@ -845,7 +871,7 @@ export const EntangledContainer = ({clip=false, edit=false, toggleShow, playTogg
                      {/* Leaflet error */}
                      {(Math.floor(currentTime) >= Math.floor(v.in - previewGap) && (currentTime) <= Math.floor(v.out ? v.out + previewGap : v.in + previewGap)) && <div className={`${"flex items-center justify-center gap-2"} min-w-[380px]`}>
                         <div className="bg-white text-xs flex px-2 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
-                        <OverViewBox data={v} />
+                        <OverViewBox data={v} fakeData={getData} />
                      </div>}
                   </FilterBox>
                )
@@ -863,7 +889,7 @@ export const OverViewContainer = ({data, clip=false, onClickProgressBar, current
    const scrolltRef = useRef(null)
    const progressRef = useRef(null)
    const [allFakeData, setAllFakeData] = useState(null)
-
+   const [getData, setData] = useState(null)
    const onJumpTo = (inValue) => {
       if(edit){
          onClickProgressBar(inValue, edit)
@@ -905,7 +931,29 @@ export const OverViewContainer = ({data, clip=false, onClickProgressBar, current
    },[])
 
    useEffect(() => {
-      console.log(fakeData)
+      if(!edit){
+         setData(fakeData)
+      }else{
+         let allData = {
+            categoryList: [],
+            eventList : [],
+            narrationList : [],
+            placeList : [],
+            refList : [],
+            tagList: []
+         };
+         for(let i = 0; i < fakeData.length; i++){
+            const fAnnotations = fakeData[i].annotations;
+            for(let j =0; j < Object.keys(fAnnotations).length; j++){
+             
+               const getAnno = fAnnotations[Object.keys(fAnnotations)[j]]
+               allData[Object.keys(fAnnotations)[j]] = [...getAnno,...allData[Object.keys(fAnnotations)[j]]]
+             
+               
+            }
+         }
+         setData(allData)
+      }
       if(!edit){
          let allData = []
          for(let i =0; i < Object.keys(fakeData).length; i++){
@@ -947,7 +995,7 @@ export const OverViewContainer = ({data, clip=false, onClickProgressBar, current
                               <div className="">
                                  <div className={`w-2 h-2 ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-emerald-400" : "bg-neutral-300"} rounded-full`}></div>
                               </div>
-                              <OverViewBox data={v} />
+                              <OverViewBox data={v} fakeData={getData} />
                               <div onClick={() => onJumpTo(v.in)} className="text-xs flex flex-col cursor-pointer hover:bg-black justify-center items-center hover:text-white transition-all duration-150 rounded-md px-1 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
                            </div>
                          </FilterBox>
@@ -992,7 +1040,7 @@ export const VideoPlayerContainer = ({data, clip=false}) => {
       view: "diagramatic",
      
    })
-
+ 
   
    
    const onToggleShow = (key, view=false) => {
@@ -1058,6 +1106,7 @@ export const VideoPlayerContainer = ({data, clip=false}) => {
 
    useEffect(() => {
       const fakeData = createFakeAnnotations({duration:data.duration, editVersion: clip})
+    
       setFakeData(fakeData)
    },[])
 

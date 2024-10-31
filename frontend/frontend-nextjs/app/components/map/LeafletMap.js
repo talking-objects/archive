@@ -1,7 +1,7 @@
 import { icon } from "leaflet";
-import { useEffect } from "react";
-import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
-
+import { useEffect, useRef } from "react";
+import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
+import * as L from "leaflet"
 
 function MapWithResize() {
   const map = useMap();
@@ -19,7 +19,7 @@ function MapWithResize() {
 
   return null;
 }
-function MapUpdate({center}) {
+function MapUpdate({center, allPlaces}) {
   const map = useMap();
 
   useEffect(() => {
@@ -30,25 +30,72 @@ function MapUpdate({center}) {
      
   }, [center]);
 
+  useEffect(() => {
+
+    if(allPlaces){
+      const positions = allPlaces.map((v) => {
+        return [v.position.lat, v.position.long]
+      })
+      const bounds = L.latLngBounds(positions);
+      map.fitBounds(bounds)
+
+    }
+   
+  },[allPlaces])
+
   return null;
 }
-const LeafletMap = ({center=[52.5200,13.4050]}) => {
+
+
+const CustomMarker = ({ICON, ICON2, center, v}) => {
+  const markerRef = useRef(null)
+  const isCenterMarker = center[0] === v.position.lat && center[1] === v.position.long;
+  useEffect(() => {
+    if (markerRef.current) {
+      // Set zIndexOffset: higher value for the marker with ICON2
+      markerRef.current.setZIndexOffset(isCenterMarker ? 1000 : 0);
+    }
+  }, [isCenterMarker]);
+ 
+  return (
+        <Marker ref={markerRef} icon={(center[0] === v.position.lat && center[1] === v.position.long) ? ICON2 :ICON} position={[v.position.lat, v.position.long]}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+  )
+}
+const LeafletMap = ({center=[52.5200,13.4050], allPlaces}) => {
   const ICON = icon({
     iconUrl: "/map-marker.svg",
     iconSize: [32, 32],
   })
+
+  const ICON2 = icon({
+    iconUrl: "/marker-19.svg",
+    iconSize: [32, 32],
+  })
+
+
+ 
   return (
     <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} attributionControl={false} zoom={10} zoomControl={false} scrollWheelZoom={false} dragging={false}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <Marker icon={ICON} position={center}>
+      {/* <Marker icon={ICON} position={center}>
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
         </Popup>
-      </Marker>
-      <MapUpdate center={center} />
+      </Marker> */}
+      {
+        allPlaces && allPlaces.map((v, idx) => {
+        
+          return <CustomMarker key={idx} v={v} center={center} ICON={ICON} ICON2={ICON2} />
+        })
+      }
+      <MapUpdate center={center} allPlaces={allPlaces} />
     </MapContainer>
   );
 };
