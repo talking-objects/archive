@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 
 
 const InfoLable = ({children}) => {
-    return <div className="group-hover:flex hidden absolute top-0 left-[32px] bg-neutral-800 px-1 py-1 border-[0.5px] border-neutral-300 text-white rounded-md w-fit text-xs whitespace-nowrap">{children}</div>
+    return <div className="group-hover:opacity-100 group-hover:left-[28px] flex opacity-0 absolute top-0 left-[16px] bg-neutral-800 px-1 py-1 border-[0.5px] border-neutral-300 text-white rounded-md w-fit text-xs whitespace-nowrap pointer-events-none select-none transition-all duration-150">{children}</div>
 }
 const AnnotationIcon = ({layer}) => {
     const getLayerName = (layer) => {
@@ -98,7 +98,7 @@ const ForestContentsContainer = ({isLoading=true, allData}) => {
     
     return <div className="w-full py-4 h-fit">
         {isLoading && <div className="w-full rounded-lg bg-[#fff] h-[450px] animate-pulse"></div>}
-        {(!isLoading) && <div className="w-full grid grid-cols-4 gap-4">
+        {(!isLoading) && <div className="w-full grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {allData && allData.map((val, idx) => {
                 return <div key={idx} className="flex w-full">
                             <div className="w-8 flex flex-col h-full">
