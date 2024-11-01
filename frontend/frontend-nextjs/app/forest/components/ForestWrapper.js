@@ -143,11 +143,12 @@ const ForestWrapper = () => {
                 "tagList",
             ]
             data.data.items.map((v) => {
+                const randomIn = Math.floor(Math.random() * v.duration/2);
                 v.type = "R"
                 v.videoId = v.id
                 v.duration = v.duration
-                v.in = 0;
-                v.out = 10 // v.duration
+                v.in = randomIn;
+                v.out = (randomIn + 10 > v.duration) ? v.duration : randomIn + 10 // v.duration
                 return v
             })
             dataClips.data.items.map((v) => {
@@ -172,7 +173,7 @@ const ForestWrapper = () => {
         const previewDataList = JSON.parse(JSON.stringify(allData));
         const filteredDataList = [];
         let index = 0;
-        while(filteredDataList.length < 3 && index < 20){
+        while(filteredDataList.length < 10 && index < 20){
             
            
             if(previewDataList[index]?.out - previewDataList[index]?.in > 0){
@@ -184,15 +185,15 @@ const ForestWrapper = () => {
         const newData = filteredDataList.map((value) => {
             const newItem = {
                 videoId: value.videoId,
-                ...(value.in ? {in: value.in} : {in: 0}),
-                ...(value.out ? {out: value.out} : {out: value.duration}),
-                ...(value.duration && {duration: value.duration})
+                ...(String(value.in) && {in: value.in} ),
+                ...(String(value.out) && {out: value.out}),
+                ...(String(value.duration) && {duration: value.duration})
             }
             return newItem
         })
         newData.map((value, index) => {
             value.newIn = newData[index - 1] ? newData[index - 1].newOut : 0
-            value.newOut = newData[index - 1] ? newData[index].newIn + newData[index].out : newData[index].out
+            value.newOut = newData[index - 1] ? newData[index].newIn + (newData[index].out - newData[index].in) : (newData[index].out - newData[index].in )
             return value;
         })
 

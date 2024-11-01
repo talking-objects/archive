@@ -1690,22 +1690,9 @@ export const ForestPlayerContainer = ({data, metaData}) => {
    const [currentTime, setCurrentTime] = useState(0)
    const [currentIndex, setCurrentIndex] = useState(0)
 
-   const findCurrentVideo = (data) => {
-     const getCurrentVideoIndex = data.findIndex((v) => {
-         if(v.newIn <= currentTime && v.newOut >= currentTime){
-            return v;
-         }
-     });
-     if(videoRef){
-      setCurrentIndex(getCurrentVideoIndex)
-      videoRef.current.currentTime = data[getCurrentVideoIndex].in
-     }
-    
 
-   }
-   useEffect(() => {
-      findCurrentVideo(data)
-   },[])
+
+ 
 
    // change Current Time and Next Video
    useEffect(() => {
@@ -1716,9 +1703,9 @@ export const ForestPlayerContainer = ({data, metaData}) => {
          const handleTimeUpdate = (e) => {
             if (isUpdating) return; // 이미 업데이트 중이라면 실행하지 않음
 
-            const getCurrentTime = videoElement?.currentTime;
+            const getCurrentTime = videoElement?.currentTime - data[currentIndex].in;
 
-            if (Math.round(getCurrentTime) > data[currentIndex].out) {
+            if (Math.round(getCurrentTime) > (data[currentIndex].out - data[currentIndex].in)) {
                // 중복 실행 방지를 위해 플래그 설정
                isUpdating = true;
                
@@ -1730,41 +1717,40 @@ export const ForestPlayerContainer = ({data, metaData}) => {
 
                const getNextVideo = data[currentIndex + 1];
                if (data[currentIndex + 1]) {
+                  videoRef.current.src = `${BASE_URL}/${data[currentIndex + 1].videoId}/480p1.mp4`
+                  videoRef.current.currentTime = getNextVideo.in
                   setCurrentIndex((prev) => prev + 1);
-                  videoRef.current.currentTime = getNextVideo.in;
+                  // videoRef.current.currentTime = getNextVideo.in;
                   setCurrentTime(getNextVideo.newIn);
 
-               // 0.5초 후 플래그 해제
+                  // 0.5초 후 플래그 해제
+                  if(playToggle){
+                     setTimeout(() => {
+                        isUpdating = false;
+                        videoElement.play();
+                        setPlayToggle(true);
+                     }, 500);
+                  }
+                  
+               }else{
+                  videoRef.current.src = `${BASE_URL}/${data[0].videoId}/480p1.mp4`
+                  videoRef.current.currentTime = data[0].in
+                  setCurrentIndex(0);
+                  setCurrentTime(0);
+                      // 0.5초 후 플래그 해제
                if(playToggle){
                   setTimeout(() => {
                      isUpdating = false;
-                     videoElement.play();
-                     setPlayToggle(true);
-                  }, 500);
-               }
-                  
-               }else {
-         
-                  const fristVideo = data[0];
-                  setCurrentIndex(0);
-                  setCurrentTime(fristVideo.newIn);
-
-                  // 0.5초 후 플래그 해제
-                  setTimeout(() => {
-                     isUpdating = false;
-                     videoRef.current.currentTime = fristVideo.in;
-                     videoElement.pause();
                      setPlayToggle(false);
-                  
                   }, 500);
                }
-
+               }
 
             } else {
                // Update the video current time
-            
-               setCurrentTime(data[currentIndex].newIn + (getCurrentTime - data[currentIndex].in));
-               // currentTimeR.current = currentVideo.newIn + (getCurrentTime - currentVideo.in);
+               const newCurrentTime = videoElement?.currentTime - data[currentIndex].in
+               setCurrentTime(data[currentIndex].newIn + (newCurrentTime));
+           
             }
          };
 
@@ -1814,15 +1800,25 @@ export const ForestPlayerContainer = ({data, metaData}) => {
          document.removeEventListener("keydown", onSpaceScroll)
       }
    },[])
-
+   const findCurrentVideo = (data) => {
+      if(videoRef){
+         videoRef.current.src = `${BASE_URL}/${data[currentIndex].videoId}/480p1.mp4`
+         videoRef.current.currentTime = data[currentIndex].in
+      }
+    }
+    useEffect(() => {
+   
+          findCurrentVideo(data)
+       
+    },[])
    
    return (<div className="w-full h-[calc(100svh-66px)] relative">
       <div className="w-full h-[calc(100svh-66px)] overflow-hidden flex flex-col">
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}
-            <div>{currentTime}</div>
-            {<video ref={videoRef} src={`${BASE_URL}/${data[currentIndex].videoId}/480p1.mp4`} className={`w-full h-full bg-black transition-all duration-1000`} controls={true} aria-label="video player" preload="auto">
+            <div> | {`currentTime: ${currentTime}`} |{playToggle ? "true" : "false"} | {`currentIndex: ${currentIndex}`} {`currentIn: ${data[currentIndex].in}`}</div>
+            {<video ref={videoRef} className={`w-full h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
               <source type="video/mp4" />
               Your browser does not support the video tag.
             </video>}
