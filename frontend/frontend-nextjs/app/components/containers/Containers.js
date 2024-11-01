@@ -1687,6 +1687,7 @@ export const EditVideoPlayerContainer = ({data, metaData}) => {
 export const ForestPlayerContainer = ({data, metaData}) => {
    const videoRef = useRef(null)
    const [playToggle, setPlayToggle] = useState(false)
+   const [playToggleReal, setPlayToggleReal] = useState(false)
    const [currentTime, setCurrentTime] = useState(0)
    const [currentIndex, setCurrentIndex] = useState(0)
 
@@ -1742,6 +1743,7 @@ export const ForestPlayerContainer = ({data, metaData}) => {
                   setTimeout(() => {
                      isUpdating = false;
                      setPlayToggle(false);
+                     setPlayToggleReal(false)
                   }, 500);
                }
                }
@@ -1779,10 +1781,12 @@ export const ForestPlayerContainer = ({data, metaData}) => {
                   
                   videoRef.current.play()
                   setPlayToggle(true)
+                  setPlayToggleReal(true)
            
                }else{
                   videoRef.current.pause()
                   setPlayToggle(false)
+                  setPlayToggleReal(false)
       
                }
             }
@@ -1800,6 +1804,21 @@ export const ForestPlayerContainer = ({data, metaData}) => {
          document.removeEventListener("keydown", onSpaceScroll)
       }
    },[])
+
+   const onPlay = (toggle) => {
+      if(videoRef){
+         if(toggle){
+            
+            videoRef.current.play()
+            setPlayToggle(true)
+            setPlayToggleReal(true)
+         }else{
+            videoRef.current.pause()
+            setPlayToggle(false)
+            setPlayToggleReal(false)
+         }
+      }
+   }
    const findCurrentVideo = (data) => {
       if(videoRef){
          videoRef.current.src = `${BASE_URL}/${data[currentIndex].videoId}/480p1.mp4`
@@ -1812,18 +1831,44 @@ export const ForestPlayerContainer = ({data, metaData}) => {
        
     },[])
    
-   return (<div className="w-full h-[calc(100svh-66px)] relative">
-      <div className="w-full h-[calc(100svh-66px)] overflow-hidden flex flex-col">
+   return (<div className="w-full h-[calc(100svh-96px)] relative">
+      <div className="w-full h-[calc(100svh-96px)] overflow-hidden flex flex-col">
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}
-            <div> | {`currentTime: ${currentTime}`} |{playToggle ? "true" : "false"} | {`currentIndex: ${currentIndex}`} {`currentIn: ${data[currentIndex].in}`}</div>
+            <div  className={` bg-opacity-0 ${playToggleReal ? "flex" : "hidden"} absolute top-0 left-0 w-full h-full bg-black z-40 transition-all duration-500 justify-end items-end py-4 px-4`}>
+               <div onClick={() => onPlay(false)} className="w-fit h-9 border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="size-7">
+                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
+                  </svg>
+                  Pause Preview
+               </div>
+            </div>
             {<video ref={videoRef} className={`w-full h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
               <source type="video/mp4" />
               Your browser does not support the video tag.
             </video>}
             {/* Video Info */}
-          
+            <div onClick={() => onPlay(true)} className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex ${playToggleReal ? "opacity-0 pointer-events-none cursor-auto" : "opacity-100 pointer-events-auto cursor-pointer"} transition-all duration-1000`}>
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <div className="w-32 h-32 border border-white rounded-full flex justify-center items-center text-white">
+                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="size-14">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                     </svg>
+
+                  </div>
+               </div>
+               {
+                  data.map((v, idx) => {
+                     return <div 
+                     key={idx} 
+                     style={{
+                        backgroundImage: `url(${BASE_URL}/${data[idx].videoId}/480p${data[idx].in}.jpg)`
+                     }}
+                     className="w-full h-full bg-white bg-cover bg-center bg-no-repeat"></div>
+                  })
+               }
+            </div>
            
          
          </div>

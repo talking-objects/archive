@@ -8,7 +8,10 @@ import { useEffect, useState } from "react";
 const InfoLable = ({children}) => {
     return <div className="group-hover:opacity-100 group-hover:left-[28px] flex opacity-0 absolute top-0 left-[16px] bg-neutral-800 px-1 py-1 border-[0.5px] border-neutral-300 text-white rounded-md w-fit text-xs whitespace-nowrap pointer-events-none select-none transition-all duration-150">{children}</div>
 }
-const AnnotationIcon = ({layer}) => {
+const AnnotationIcon = ({val,layer}) => {
+    useEffect(() => {
+        console.log(val)
+    },[])
     const getLayerName = (layer) => {
         if(layer === "eventList"){
             return "Event layer"
@@ -31,15 +34,12 @@ const AnnotationIcon = ({layer}) => {
         return "Error say to DainDev"
     }
     return <div className="w-8 h-8 bg-white flex justify-center items-center cursor-help group relative">
-         <InfoLable><span>{getLayerName(layer)}</span></InfoLable>
-        {layer === "categoryList" && <div className="w-2/3 aspect-square grid grid-cols-2 text-white text-xs font-medium ">
-            <div style={{backgroundColor: `${COLORS.c6}`}} className="w-full h-full"></div>
-            <div style={{backgroundColor: `${COLORS.c5}`}} className="w-full h-full"></div>
-            <div style={{backgroundColor: `${COLORS.c4}`}} className="w-full h-full"></div>
-            <div style={{backgroundColor: `${COLORS.c3}`}} className="w-full h-full"></div>
-        </div>}
+         <InfoLable><span>{getLayerName(layer)}{layer === "categoryList" && `-${val.category.value}`}</span></InfoLable>
+        {layer === "categoryList" && <div style={{backgroundColor: `${val.category.color}`}} className="w-2/3 aspect-square border border-black flex justify-center items-center text-white text-xs font-medium"></div>}
         {layer === "eventList" && <div style={{backgroundColor: `${COLORS.c6}`, borderColor: `${COLORS.c5}`}} className="w-2/3 aspect-square flex justify-center items-center border-[3px] text-white text-xs font-medium"></div>}
-        {layer === "tagList" && <div style={{backgroundColor: `${COLORS.c6}`}} className="w-2/3 aspect-square border border-black flex justify-center items-center text-white text-xs font-medium"></div>}
+        {layer === "tagList" && <div  className="w-2/3 aspect-square flex justify-center items-center text-white text-xs font-medium">
+            <div style={{backgroundColor: `${COLORS.c6}`}} className="w-1/4 h-full border border-black"></div>
+        </div>}
         {layer === "placeList" && <div style={{backgroundColor: `${COLORS.c6}`, borderColor: `${COLORS.c4}`}} className="w-2/3 aspect-square border-[3px] rounded-full flex justify-center items-center text-white text-xs font-medium"></div>}
         {layer === "refList" && <div style={{backgroundColor: `${COLORS.c0}`, borderColor: `${COLORS.c4}`}} className="w-2/3 aspect-square border-[3px] rounded-full flex justify-center items-center text-white text-xs font-medium"></div>}
         {layer === "narrationList" && <div style={{backgroundColor: `${COLORS.c2}`}} className="w-2/3 aspect-square border border-black flex justify-center items-center text-white text-xs font-medium"></div>}
@@ -104,7 +104,7 @@ const ForestContentsContainer = ({isLoading=true, allData}) => {
                             <div className="w-8 flex flex-col h-full">
                                 {val.type === "R" && <RawIcon />}
                                 {(val.type === "C" || val.type === "A" )&& <ClipIcon />}
-                                {val.type === "A" && <AnnotationIcon layer={val.layer} />}
+                                {val.type === "A" && <AnnotationIcon val={val} layer={val.layer} />}
                             </div>
                         <div onClick={() => onPush(val)} className="w-full h-full cursor-pointer">
                             <ForestContentsImageBox val={val} />
@@ -128,6 +128,7 @@ const ForestWrapper = () => {
     const {data:dataAnnotations, isLoading:isLoadingAnnotations} = getAllAnnotations({pagination: pagination})
 
     const [previewVideoData, setPreviewVideoData] = useState(null)
+    const maxDurationValue = 10
     useEffect(() => {
         if(!isLoading && !isLoadingClips && !isLoadingAnnotations){
             console.log(data.data.items)
@@ -142,26 +143,63 @@ const ForestWrapper = () => {
                 "refList",
                 "tagList",
             ]
+            const categoryList = [
+                {
+                   slug: "identity",
+                   value: "Identity",
+                   color: "#9E21E8"
+                },
+                {
+                   slug: "knowledge",
+                   value: "Knowledge",
+                   color: "#8BA5F8"
+                },
+                {
+                   slug: "artistic_reflections",
+                   value: "Artistic Reflections",
+                   color: "#691220"
+                },
+                {
+                   slug: "restitution",
+                   value: "Restitution",
+                   color: "#EC6735"
+                },
+                {
+                   slug: "memory",
+                   value: "Memory and The Imaginary",
+                   color: "#F1A73D"
+                },
+                
+             ]
             data.data.items.map((v) => {
                 const randomIn = Math.floor(Math.random() * v.duration/2);
                 v.type = "R"
                 v.videoId = v.id
                 v.duration = v.duration
                 v.in = randomIn;
-                v.out = (randomIn + 10 > v.duration) ? v.duration : randomIn + 10 // v.duration
+                v.out = (randomIn + maxDurationValue > v.duration) ? v.duration : randomIn + maxDurationValue // v.duration
                 return v
             })
             dataClips.data.items.map((v) => {
                 const id = v.id.split("/")[0]
+                const maxDuration = (v.out - v.in) > maxDurationValue ? v.in + maxDurationValue : v.out;
                 v.type = "C"
                 v.videoId = id
+                v.out = maxDuration
                 return v
             })
             
             dataAnnotations.data.items.map((v) => {
+                const randomIndex = Math.floor(Math.random() * layerList.length)
+                const maxDuration = (v.out - v.in) > maxDurationValue ? v.in + maxDurationValue : v.out;
                 v.type = "A"
-                v.layer = layerList[Math.floor(Math.random() * layerList.length)] //Fake Data
+                v.layer = layerList[randomIndex] //Fake Data
                 v.videoId = v.item
+                v.out = maxDuration
+
+                if(layerList[randomIndex] === "categoryList" ){
+                    v.category = categoryList[Math.floor(Math.random() * categoryList.length)]
+                }
                 return v
             })
             setAlldata([...allData,...[...data.data.items, ...dataClips.data.items, ...dataAnnotations.data.items].sort(() => Math.random() - 0.5)])
