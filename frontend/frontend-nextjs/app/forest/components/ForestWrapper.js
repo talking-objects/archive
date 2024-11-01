@@ -1,4 +1,4 @@
-import { ContentContainer } from "@/app/components/containers/Containers";
+import { ContentContainer, ForestPlayerContainer } from "@/app/components/containers/Containers";
 import { BASE_URL, COLORS } from "@/app/utils/constant/etc";
 import { getAllAnnotations, getAllAnnotationsCounts, getAllClips, getAllVideos, getAllVideosCounts } from "@/app/utils/hooks/pandora_api";
 import { useRouter } from "next/navigation";
@@ -122,12 +122,16 @@ const ForestContentsContainer = ({isLoading=true, allData}) => {
 const ForestWrapper = () => {
     const [pagination, setPagination] = useState(1)
     // const {data:dataCount, isLoading:isLoadingCount} = getAllVideosCounts();
-    const {data, isLoading} = getAllVideos({pagination: pagination});
     const [allData, setAlldata] = useState([])
+    const {data, isLoading} = getAllVideos({pagination: pagination});
     const {data:dataClips, isLoading:isLoadingClips} = getAllClips({pagination: pagination})
     const {data:dataAnnotations, isLoading:isLoadingAnnotations} = getAllAnnotations({pagination: pagination})
+
+    const [previewVideoData, setPreviewVideoData] = useState(null)
     useEffect(() => {
         if(!isLoading && !isLoadingClips && !isLoadingAnnotations){
+            console.log(data.data.items)
+            console.log(dataClips.data.items)
             console.log(dataAnnotations.data.items)
            
             const layerList = [
@@ -140,26 +144,70 @@ const ForestWrapper = () => {
             ]
             data.data.items.map((v) => {
                 v.type = "R"
+                v.videoId = v.id
+                v.duration = v.duration
+                v.in = 0;
+                v.out = v.duration
                 return v
             })
             dataClips.data.items.map((v) => {
+                const id = v.id.split("/")[0]
                 v.type = "C"
+                v.videoId = id
                 return v
             })
             
             dataAnnotations.data.items.map((v) => {
                 v.type = "A"
                 v.layer = layerList[Math.floor(Math.random() * layerList.length)] //Fake Data
+                v.videoId = v.item
                 return v
             })
             setAlldata([...allData,...[...data.data.items, ...dataClips.data.items, ...dataAnnotations.data.items].sort(() => Math.random() - 0.5)])
         }
     },[data, dataClips, dataAnnotations])
+
+
+    useEffect(() => {
+        const previewDataList = JSON.parse(JSON.stringify(allData));
+        const filteredDataList = [];
+        let index = 0;
+        while(filteredDataList.length < 10 && index < 20){
+            
+           
+            if(previewDataList[index]?.out - previewDataList[index]?.in > 0){
+                filteredDataList.push(previewDataList[index])
+            }
+            index += 1
+        }
+
+        const newData = filteredDataList.map((value) => {
+            const newItem = {
+                videoId: value.videoId,
+                ...(value.in ? {in: value.in} : {in: 0}),
+                ...(value.out ? {out: value.out} : {out: value.duration}),
+                ...(value.duration && {duration: value.duration})
+            }
+            return newItem
+        })
+        newData.map((value, index) => {
+            value.newIn = newData[index - 1] ? newData[index - 1].newOut : 0
+            value.newOut = newData[index - 1] ? newData[index].newIn + newData[index].out : newData[index].duration
+            return value;
+        })
+
+        setPreviewVideoData(newData)
+        console.log("Preview Data",newData)
+
+
+
+    },[allData])
     
     return <>
         <div className="w-full h-full flex flex-col items-center relative">
             <div className="w-full h-fit py-4 flex justify-center items-center text-7xl font-medium">Our Archive</div>
-            <div className="w-full h-[100svh] bg-black"></div>
+            {/* Forest Video Player */}
+            {(previewVideoData && previewVideoData.length > 0) && <ForestPlayerContainer data={previewVideoData} />}
             <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-0 left-0 z-[30]"></div>
                 <ContentContainer>
                     <ForestContentsContainer isLoading={(isLoading || isLoadingClips || isLoadingAnnotations)} allData={allData} />

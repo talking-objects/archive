@@ -1682,3 +1682,54 @@ export const EditVideoPlayerContainer = ({data, metaData}) => {
    )
 }
  
+
+
+export const ForestPlayerContainer = ({data, metaData}) => {
+   const videoRef = useRef(null)
+   const [playToggle, setPlayToggle] = useState(false)
+   const [currentTime, setCurrentTime] = useState(0)
+   const [currentIndex, setCurrentIndex] = useState(0)
+
+   const findCurrentVideo = (data) => {
+     const getCurrentVideoIndex = data.findIndex((v) => {
+         if(v.newIn <= currentTime && v.newOut >= currentTime){
+            return v;
+         }
+     });
+     setCurrentIndex(getCurrentVideoIndex)
+
+   }
+   useEffect(() => {
+      findCurrentVideo(data)
+   },[])
+  
+  
+
+   
+   return (<div className="w-full h-[calc(100svh-66px)] relative">
+      <div className="w-full h-[calc(100svh-66px)] overflow-hidden flex flex-col">
+         {/* Video Container */}
+         <div className="w-full h-full flex flex-col overflow-hidden relative">
+            {/* Video */}
+            {<video ref={videoRef} src={`${BASE_URL}/${data[currentIndex].videoId}/480p1.mp4`} className={`w-full h-full bg-black transition-all duration-1000`} controls={true} aria-label="video player" preload="auto">
+              <source type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>}
+            {/* Video Info */}
+          
+           
+         
+         </div>
+         {/* video controller */}
+        
+         {/* video navigation */}
+      
+      </div>
+     
+       {/* video Legend */}
+       
+   </div>
+
+   )
+}
+ 
