@@ -1696,14 +1696,124 @@ export const ForestPlayerContainer = ({data, metaData}) => {
             return v;
          }
      });
-     setCurrentIndex(getCurrentVideoIndex)
+     if(videoRef){
+      setCurrentIndex(getCurrentVideoIndex)
+      videoRef.current.currentTime = data[getCurrentVideoIndex].in
+     }
+    
 
    }
    useEffect(() => {
       findCurrentVideo(data)
    },[])
+
+   // change Current Time and Next Video
+   useEffect(() => {
+      const videoElement = videoRef.current;
+      let isUpdating = false; // 중복 방지 플래그 추가
+
+      if (playToggle && videoElement) {
+         const handleTimeUpdate = (e) => {
+            if (isUpdating) return; // 이미 업데이트 중이라면 실행하지 않음
+
+            const getCurrentTime = videoElement?.currentTime;
+
+            if (Math.round(getCurrentTime) > data[currentIndex].out) {
+               // 중복 실행 방지를 위해 플래그 설정
+               isUpdating = true;
+               
+               // 다음 비디오로 전환
+               videoElement.pause();
+               setPlayToggle(false);
+               
+               console.log("next");
+
+               const getNextVideo = data[currentIndex + 1];
+               if (data[currentIndex + 1]) {
+                  setCurrentIndex((prev) => prev + 1);
+                  videoRef.current.currentTime = getNextVideo.in;
+                  setCurrentTime(getNextVideo.newIn);
+
+               // 0.5초 후 플래그 해제
+               if(playToggle){
+                  setTimeout(() => {
+                     isUpdating = false;
+                     videoElement.play();
+                     setPlayToggle(true);
+                  }, 500);
+               }
+                  
+               }else {
+         
+                  const fristVideo = data[0];
+                  setCurrentIndex(0);
+                  setCurrentTime(fristVideo.newIn);
+
+                  // 0.5초 후 플래그 해제
+                  setTimeout(() => {
+                     isUpdating = false;
+                     videoRef.current.currentTime = fristVideo.in;
+                     videoElement.pause();
+                     setPlayToggle(false);
+                  
+                  }, 500);
+               }
+
+
+            } else {
+               // Update the video current time
+            
+               setCurrentTime(data[currentIndex].newIn + (getCurrentTime - data[currentIndex].in));
+               // currentTimeR.current = currentVideo.newIn + (getCurrentTime - currentVideo.in);
+            }
+         };
+
+         videoElement.ontimeupdate = handleTimeUpdate;
+
+         return () => {
+            videoElement.ontimeupdate = null;
+         };
+
+      }
+   },[playToggle])
   
-  
+    // video keyboard controller
+    useEffect(() => {
+      const onSpaceScroll = (event) => {
+         if (event.code === 'Space') {
+            event.preventDefault(); 
+          }
+        
+      }
+      const onKeyController = (event) => {
+         event.preventDefault(); 
+         if (event.code === 'Space') {
+            if(videoRef){
+               if(videoRef.current.paused){
+                  
+                  videoRef.current.play()
+                  setPlayToggle(true)
+           
+               }else{
+                  videoRef.current.pause()
+                  setPlayToggle(false)
+      
+               }
+            }
+          }
+      
+     
+      }
+
+      // event = keyup & keydown
+      document.addEventListener('keyup',onKeyController)
+      document.addEventListener('keydown',onSpaceScroll)
+
+      return () => {
+         document.removeEventListener("keyup", onKeyController)
+         document.removeEventListener("keydown", onSpaceScroll)
+      }
+   },[])
 
    
    return (<div className="w-full h-[calc(100svh-66px)] relative">
@@ -1711,6 +1821,7 @@ export const ForestPlayerContainer = ({data, metaData}) => {
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}
+            <div>{currentTime}</div>
             {<video ref={videoRef} src={`${BASE_URL}/${data[currentIndex].videoId}/480p1.mp4`} className={`w-full h-full bg-black transition-all duration-1000`} controls={true} aria-label="video player" preload="auto">
               <source type="video/mp4" />
               Your browser does not support the video tag.
