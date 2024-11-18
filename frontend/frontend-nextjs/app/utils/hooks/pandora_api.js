@@ -158,7 +158,7 @@ export const getVideo = ({pId=""}) => {
   const bodyData = {
     action: "find",
     data: { 
-      keys: ["id", "user", "duration", "posterFrame","modified","director", "created", "title"],
+      keys: ["language", "country","summary","id", "user", "duration", "posterFrame","modified","director", "created", "title"],
       query: {
         conditions: [{"key": "id", "value": `${pId}`, "operator": "==" }]
       }
