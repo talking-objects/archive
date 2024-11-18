@@ -1,8 +1,10 @@
 "use client"
 
 import { ContentContainer, MainContainer, VideoPlayerContainer } from "@/app/components/containers/Containers";
+import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import LeafletMap from "@/app/components/map/Map";
 import { BASE_URL } from "@/app/utils/constant/etc";
+import { createFakeAnnotations } from "@/app/utils/hooks/etc";
 import { getVideo } from "@/app/utils/hooks/pandora_api";
 import { toaFetchData } from "@/app/utils/hooks/toaFetch";
 import { useParams } from "next/navigation";
@@ -23,6 +25,7 @@ const VideoWrapper = () => {
  
         if(!isLoading){
             console.log(data.data.items[0])
+            data.data.items[0].nAnnotations = createFakeAnnotations({duration:data.data.items[0].duration, editVersion: false})
             setVideoData(data.data.items[0])
         }
     },[data])
@@ -59,7 +62,8 @@ const VideoWrapper = () => {
     return (<MainContainer>
         {(!isLoading && getVideoData) && <>
             <div ref={videoContainerRef} className="w-full h-[100svh] relative">
-                <VideoPlayerContainer data={getVideoData} />
+                {/* <VideoPlayerContainer data={getVideoData} /> */}
+                <VideoPlayerCon data={getVideoData} />
             </div>
            
             <ContentContainer>

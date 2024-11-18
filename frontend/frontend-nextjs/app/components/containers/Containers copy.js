@@ -24,7 +24,7 @@ export const MainContainer = ({children}) => {
 }
 
 
-export const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false, playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
+const VideoDataVisContainer = ({data, onClickProgressBar, edit=false, clip=false, playToggle, fakeData, toggleShow, setCurrentTime, duration, annotationData, annotationLoading, videoRef}) => {
    const [getData, setData] = useState(null)
    const wrapperRef = useRef(null)
    const svgRef = useRef(null)

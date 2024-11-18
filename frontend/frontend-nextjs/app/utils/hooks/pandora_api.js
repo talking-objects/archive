@@ -1,7 +1,7 @@
 const { default: useSWR } = require("swr")
 const { toaFetchData } = require("./toaFetch")
 
-const AMOUNT_OF_PAGINATION = 13
+const AMOUNT_OF_PAGINATION = 12
 const globalFetcher = (bodyData) => {
     const {data, isLoading, error} = useSWR({bodyData:bodyData}, toaFetchData)
     return {
@@ -73,11 +73,11 @@ export const getAllClips = ({pagination=1}={}) => {
           range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION],
           query: {
             conditions: [{"key": "duration", "value": 0, "operator": ">" }]
-          }
+          },
           // itemsQuery:{"conditions":[],"operator":"&"},
           // range: [0.6]
         //   query: { conditions: [], operator: "&" },
-        //   sort: [{ key: "position", operator: "+" }],
+          sort: [{ key: "duration", operator: "+" }],
         },
        
       };
