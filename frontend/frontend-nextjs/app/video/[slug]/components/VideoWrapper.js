@@ -82,8 +82,8 @@ const VideoWrapper = () => {
             <ContentContainer>
                 <div className="w-full relative bg-white">
                     {/* Small Video */}
-                    <div className={`sticky top-[0] mt-[40px] left-0 w-1/2 aspect-video bg-red-300 ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700 z-[30]`}>
-                    
+                    <div className={`sticky top-[0] mt-[40px] left-0 w-1/2 py-4 px-4 bg-white ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700 z-[30]`}>
+                        <div className="aspect-video bg-green-300"></div>
                     </div>
                     <div ref={contentsDummyRef} className="w-full bg-emerald-600"></div>
                     <div ref={contentsRef} className="w-full absolute top-[40px] left-0 bg-blue-400 flex flex-col gap-10">
@@ -118,6 +118,15 @@ const VideoWrapper = () => {
                         </ContentBox>}
                          {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <ContentBox>
                             <div className="text-2xl">Place</div>
+                            <div className="w-full aspect-video relative bg-black overflow-hidden">
+                                <LeafletMap allPlaces={getVideoData.nAnnotations.placeList} />
+                            </div>
+                         </ContentBox>}
+                         {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox>
+                            <div className="text-2xl">Event</div>
+                         </ContentBox>}
+                         {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <ContentBox>
+                            <div className="text-2xl">categoryList</div>
                          </ContentBox>}
                     </div>
                 </div>

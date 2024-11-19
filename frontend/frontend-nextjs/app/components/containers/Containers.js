@@ -706,7 +706,7 @@ const TagBox = ({tag}) => {
       </div>
 }
 const PlaceBox = ({place, allPlaces}) => {
-
+   
    const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} allPlaces={allPlaces} />), [allPlaces, place])
 
    return <div className="w-full h-full min-h-[200px] flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
