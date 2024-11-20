@@ -9,13 +9,6 @@ import { useRouter } from "next/navigation"
 import LeafletMap from "../map/Map"
 
 
-export const ContentContainer = ({children}) => {
-    return (<div className="w-screen px-4 lg:px-4">
-      <div className="w-full min-h-[100svh] h-full max-w-screen-2xl mx-auto flex flex-col">
-      {children}
-      </div>
-   </div>)
-}
 
 export const MainContainer = ({children}) => {
    return <div className="w-full h-full flex flex-col items-center">

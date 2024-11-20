@@ -8,8 +8,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        eva: {
+          c0: "#FFFFFF",
+          c1: "#9E21E8",
+          c2: "#8BA5F8",
+          c3: "#691220",
+          c4: "#EC6735",
+          c5: "#F1A73D",
+          c6: "#3118E8",
+        }
       },
     },
   },
