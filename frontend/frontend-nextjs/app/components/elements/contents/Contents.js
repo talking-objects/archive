@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ContentContainer from "../../containers/ContentContainer";
 import ContentBox from "./ContentBox";
 import LeafletMap from "../../map/Map";
-import { CATEGORY_AND_TAGVALUE } from "@/app/utils/constant/etc";
+import { BASE_URL, CATEGORY_AND_TAGVALUE } from "@/app/utils/constant/etc";
 import * as d3 from "d3"
 const Contents = ({isLoading, getVideoData, showContentVideo}) => {
     const contentsRef = useRef(null)
@@ -41,7 +41,7 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
                     height: svgContainerRef.current.clientHeight - 10,
                 }
                 const newGridList = []
-                const totalColumnLength = data.length < 9 ? 9 : data.length + (data.length % 2 === 0 ? 5 : 6)
+                const totalColumnLength = data.length < 7 ? 7 : data.length + (data.length % 2 === 0 ? 5 : 6)
 
                 for(let i = 0; i < totalColumnLength; i++){
                     for(let j = 0; j < totalColumnLength; j++){
@@ -60,18 +60,21 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
                     row: Math.floor(totalColumnLength/2),
                     data: data[0]
                 }
-
+                const randomValue = () => {
+                    const random = Math.random();
+                    return random < 0.33 ? -1 : random < 0.66 ? 0 : 1;
+                };
                 const randomPosList = [startPos]
                 let index = 1;
                 let maxIndex = 0
-                while(index < data.length && maxIndex < 10){
+                while(index < data.length && maxIndex < 1000){
                     console.log("check")
                     // start Point
                     const startPoint = randomPosList[index - 1];
 
                     // random Direction
-                    const getRandomX = startPoint.column + (Math.random() > 0.5 ? 1 : -1)
-                    const getRandomY = startPoint.row + (Math.random() > 0.5 ? 1 : -1)
+                    const getRandomX = startPoint.column + randomValue()
+                    const getRandomY = startPoint.row + randomValue()
                     console.log(getRandomX, getRandomY)
                     // check if there is already a box exist;
                     const check = randomPosList.findIndex((v) => {
@@ -98,7 +101,7 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
                     // console.log(check)
 
 
-                    // maxIndex += 1
+                    maxIndex += 1
 
                 
                     
@@ -110,8 +113,9 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
                 svg.selectAll("*").remove()
 
                 svg
-                .style("width", svgContainerSize.width + 10)
-                .style("height",svgContainerSize.height + 10)
+                .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 10])
+                // .style("width", svgContainerSize.width + 10)
+                // .style("height",svgContainerSize.height + 10)
                 .style("background", "white")
 
               
@@ -120,35 +124,85 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
                 .attr("transform", "translate(5, 5)")
 
                 gridG
-                .selectAll("rect")
+                .selectAll("g")
                 .data(newGridList)
-                .join("rect")
-                .attr("x", (d, i) => {
-                    return d.x
+                .join("g")
+                .attr("transform", (d, i) => {
+                    return `translate(${d.x}, ${d.y})`
                 })
-                .attr("y", (d, i) => {
-                    return d.y
-                })
-                .attr("width", (d) => {
-                    return d.width
-                })
-                .attr("height", (d) => {
-                    return d.height
-                })
-                .attr("fill",  (d) => {
+                .each(function(d2, i2){
+                    const group = d3.select(this);
                     const getItem = randomPosList.filter((v) => {
-                        if(v.column === d.column && v.row === d.row){
+                        if(v.column === d2.column && v.row === d2.row){
                             return v
                         }
                     })
                     if(getItem[0]){
                         console.log(getItem[0])
-                        return "red"
-                    }else{
-                        return "white"
+                        const imageEle = group.append("image")
+                        imageEle
+                        .attr("width", d2.width)
+                        .attr("height", d2.height)
+                        .attr("x", 0) 
+                        .attr("y", 0)
+                        .attr("xlink:href", () => {
+                            console.log(getItem[0])
+                            return `${BASE_URL}/${"AL"}/480p${getItem[0].data.in}.jpg`
+                            // Check if the image URL is valid, otherwise use a local image
+                            // return d2.image !== "false" ? `${process.env.KB_API_FILE}/${d.image}` : getRandomPlaceHolder();
+                          })
                     }
+                    const rectEle = group.append("rect")
+                    rectEle
+                    .attr("x", (d, i) => {
+                        return 0
+                    })
+                    .attr("y", (d, i) => {
+                        return 0
+                    })
+                    .attr("width", () => {
+                        return d2.width
+                    })
+                    .attr("height", () => {
+                        return d2.height
+                    })
+                    .attr("fill",  () => {
+                        if(getItem[0]){
+                            return "none"
+                        }else{
+                            return "none"
+                        }
+                    })
+                    .attr("stroke", "black")
+
+                    
                 })
-                .attr("stroke", "black")
+                // .attr("x", (d, i) => {
+                //     return d.x
+                // })
+                // .attr("y", (d, i) => {
+                //     return d.y
+                // })
+                // .attr("width", (d) => {
+                //     return d.width
+                // })
+                // .attr("height", (d) => {
+                //     return d.height
+                // })
+                // .attr("fill",  (d) => {
+                //     const getItem = randomPosList.filter((v) => {
+                //         if(v.column === d.column && v.row === d.row){
+                //             return v
+                //         }
+                //     })
+                //     if(getItem[0]){
+                //         console.log(getItem[0])
+                //         return "red"
+                //     }else{
+                //         return "white"
+                //     }
+                // })
+                // .attr("stroke", "black")
 
 
 
