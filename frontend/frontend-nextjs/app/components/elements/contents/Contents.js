@@ -4,7 +4,7 @@ import ContentBox from "./ContentBox";
 import LeafletMap from "../../map/Map";
 import { BASE_URL, CATEGORY_AND_TAGVALUE } from "@/app/utils/constant/etc";
 import * as d3 from "d3"
-const Contents = ({isLoading, getVideoData, showContentVideo}) => {
+const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
     const contentsRef = useRef(null)
     const contentsDummyRef = useRef(null)
     const contentVideoBoxRef = useRef(null)
@@ -13,6 +13,189 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
     const svgRef = useRef(null)
     const svgContainerRef = useRef(null)
 
+    const createGrid = ({data, bgColor="#fff"}) => {
+        console.log(data)
+
+        if(svgContainerRef && svgRef){
+            const svgContainerSize = {
+                width: svgContainerRef.current.clientWidth - 10,
+                height: svgContainerRef.current.clientHeight - 10,
+            }
+            const newGridList = []
+            const totalColumnLength = data.length < 5 ? 7 : data.length + (data.length % 2 === 0 ? 5 : 6)
+
+            for(let i = 0; i < totalColumnLength; i++){
+                for(let j = 0; j < totalColumnLength; j++){
+                    newGridList.push({
+                        column: j,
+                        row: i,
+                        x: (svgContainerSize.width / totalColumnLength) * j,
+                        y: (svgContainerSize.width / totalColumnLength) * i,
+                        width: svgContainerSize.width / totalColumnLength,
+                        height: svgContainerSize.width / totalColumnLength,
+                    })
+                }
+            }
+            const startPos = {
+                column: Math.floor(totalColumnLength/2),
+                row: Math.floor(totalColumnLength/2),
+                data: data[0]
+            }
+            const randomValue = () => {
+                const random = Math.random();
+                return random < 0.33 ? -1 : random < 0.66 ? 0 : 1;
+            };
+            const randomPosList = [startPos]
+            let index = 1;
+            let maxIndex = 0
+            while(index < data.length && maxIndex < 1000){
+          
+                // start Point
+                const startPoint = randomPosList[index - 1];
+
+                // random Direction
+                const getRandomX = startPoint.column + randomValue()
+                const getRandomY = startPoint.row + randomValue()
+            
+                // check if there is already a box exist;
+                const check = randomPosList.findIndex((v) => {
+                    if(v.column === getRandomX && v.row === getRandomY){
+                        return v;
+                    }
+                })
+             
+                if(check < 0){
+                 
+                    //  get New Pos
+                    if((getRandomX >= 0 && getRandomX < totalColumnLength) && (getRandomY >= 0 && getRandomY < totalColumnLength)){
+                        randomPosList.push({
+                            row: getRandomY,
+                            column: getRandomX,
+                            data: data[index]
+                        })
+                        index +=1
+                    }
+                    
+                }else{
+
+                }
+                // console.log(check)
+
+
+                maxIndex += 1
+
+            
+                
+            }
+
+           
+           
+            const svg = d3.select(svgRef.current)
+            svg.selectAll("*").remove()
+
+            svg
+            .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 10])
+            // .style("width", svgContainerSize.width + 10)
+            // .style("height",svgContainerSize.height + 10)
+            .style("background", "white")
+
+          
+            const gridG = svg.append("g")
+            gridG
+            .attr("transform", "translate(5, 5)")
+
+            gridG
+            .selectAll("g")
+            .data(newGridList)
+            .join("g")
+            .attr("transform", (d, i) => {
+                return `translate(${d.x}, ${d.y})`
+            })
+            .each(function(d2, i2){
+                const group = d3.select(this);
+                group
+                .on("mouseenter",function(){
+                    if(getItem[0]){
+                        document.body.style.cursor = "pointer"
+                    }else{
+                        document.body.style.cursor = "auto"
+                    }
+                })
+                .on("mouseleave", function(){
+                    document.body.style.cursor = "auto"
+                        
+                })
+
+                const getItem = randomPosList.filter((v) => {
+                    if(v.column === d2.column && v.row === d2.row){
+                        return v
+                    }
+                })
+                const rectEleBG = group.append("rect")
+                rectEleBG
+                .attr("x", (d, i) => {
+                    return 0
+                })
+                .attr("y", (d, i) => {
+                    return 0
+                })
+                .attr("width", () => {
+                    return d2.width
+                })
+                .attr("height", () => {
+                    return d2.height
+                })
+                .attr("fill",  () => {
+                    if(getItem[0] && data.length > 0){
+                        return bgColor
+                    }else{
+                        return "none"
+                    }
+                })
+
+                if(getItem[0] && data.length > 0){
+                    const imageEle = group.append("image")
+                    imageEle
+                    .attr("width", d2.width)
+                    .attr("height", d2.height)
+                    .attr("x", 0) 
+                    .attr("y", 0)
+                    .attr("xlink:href", () => {
+                        return `${BASE_URL}/${videoId}/480p${getItem[0].data?.in}.jpg`
+                    })
+                    .attr("background", "red")
+                }
+                const rectEle = group.append("rect")
+                rectEle
+                .attr("x", (d, i) => {
+                    return 0
+                })
+                .attr("y", (d, i) => {
+                    return 0
+                })
+                .attr("width", () => {
+                    return d2.width
+                })
+                .attr("height", () => {
+                    return d2.height
+                })
+                .attr("fill",  () => {
+                    if(getItem[0]){
+                        return "none"
+                    }else{
+                        return "none"
+                    }
+                })
+                .attr("stroke", "#000") 
+                .attr("stroke-width", "0.1") 
+            })
+            
+      
+
+
+
+        }
+    }
     useEffect(() => {
         if(!isLoading){
             if(contentsDummyRef && contentsRef && contentVideoBoxRef){
@@ -34,208 +217,40 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
         console.log(getData)
         setCurrentCatAndTagData(getData)
 
-        const createGrid = ({data}) => {
-            if(svgContainerRef && svgRef){
-                const svgContainerSize = {
-                    width: svgContainerRef.current.clientWidth - 10,
-                    height: svgContainerRef.current.clientHeight - 10,
-                }
-                const newGridList = []
-                const totalColumnLength = data.length < 7 ? 7 : data.length + (data.length % 2 === 0 ? 5 : 6)
+        
+     
 
-                for(let i = 0; i < totalColumnLength; i++){
-                    for(let j = 0; j < totalColumnLength; j++){
-                        newGridList.push({
-                            column: j,
-                            row: i,
-                            x: (svgContainerSize.width / totalColumnLength) * j,
-                            y: (svgContainerSize.width / totalColumnLength) * i,
-                            width: svgContainerSize.width / totalColumnLength,
-                            height: svgContainerSize.width / totalColumnLength,
-                        })
-                    }
-                }
-                const startPos = {
-                    column: Math.floor(totalColumnLength/2),
-                    row: Math.floor(totalColumnLength/2),
-                    data: data[0]
-                }
-                const randomValue = () => {
-                    const random = Math.random();
-                    return random < 0.33 ? -1 : random < 0.66 ? 0 : 1;
-                };
-                const randomPosList = [startPos]
-                let index = 1;
-                let maxIndex = 0
-                while(index < data.length && maxIndex < 1000){
-                    console.log("check")
-                    // start Point
-                    const startPoint = randomPosList[index - 1];
-
-                    // random Direction
-                    const getRandomX = startPoint.column + randomValue()
-                    const getRandomY = startPoint.row + randomValue()
-                    console.log(getRandomX, getRandomY)
-                    // check if there is already a box exist;
-                    const check = randomPosList.findIndex((v) => {
-                        if(v.column === getRandomX && v.row === getRandomY){
-                            return v;
-                        }
-                    })
-                    console.log("new", check, Boolean(check))
-                    if(check < 0){
-                        console.log("new")
-                        //  get New Pos
-                        if((getRandomX >= 0 && getRandomX < totalColumnLength) && (getRandomY >= 0 && getRandomY < totalColumnLength)){
-                            randomPosList.push({
-                                row: getRandomY,
-                                column: getRandomX,
-                                data: data[index]
-                            })
-                            index +=1
-                        }
-                        
-                    }else{
-
-                    }
-                    // console.log(check)
-
-
-                    maxIndex += 1
-
-                
-                    
-                }
-                console.log(randomPosList)
-               
-               
-                const svg = d3.select(svgRef.current)
-                svg.selectAll("*").remove()
-
-                svg
-                .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 10])
-                // .style("width", svgContainerSize.width + 10)
-                // .style("height",svgContainerSize.height + 10)
-                .style("background", "white")
-
-              
-                const gridG = svg.append("g")
-                gridG
-                .attr("transform", "translate(5, 5)")
-
-                gridG
-                .selectAll("g")
-                .data(newGridList)
-                .join("g")
-                .attr("transform", (d, i) => {
-                    return `translate(${d.x}, ${d.y})`
-                })
-                .each(function(d2, i2){
-                    const group = d3.select(this);
-                    const getItem = randomPosList.filter((v) => {
-                        if(v.column === d2.column && v.row === d2.row){
-                            return v
-                        }
-                    })
-                    if(getItem[0]){
-                        console.log(getItem[0])
-                        const imageEle = group.append("image")
-                        imageEle
-                        .attr("width", d2.width)
-                        .attr("height", d2.height)
-                        .attr("x", 0) 
-                        .attr("y", 0)
-                        .attr("xlink:href", () => {
-                            console.log(getItem[0])
-                            return `${BASE_URL}/${"AL"}/480p${getItem[0].data.in}.jpg`
-                            // Check if the image URL is valid, otherwise use a local image
-                            // return d2.image !== "false" ? `${process.env.KB_API_FILE}/${d.image}` : getRandomPlaceHolder();
-                          })
-                    }
-                    const rectEle = group.append("rect")
-                    rectEle
-                    .attr("x", (d, i) => {
-                        return 0
-                    })
-                    .attr("y", (d, i) => {
-                        return 0
-                    })
-                    .attr("width", () => {
-                        return d2.width
-                    })
-                    .attr("height", () => {
-                        return d2.height
-                    })
-                    .attr("fill",  () => {
-                        if(getItem[0]){
-                            return "none"
-                        }else{
-                            return "none"
-                        }
-                    })
-                    .attr("stroke", "black")
-
-                    
-                })
-                // .attr("x", (d, i) => {
-                //     return d.x
-                // })
-                // .attr("y", (d, i) => {
-                //     return d.y
-                // })
-                // .attr("width", (d) => {
-                //     return d.width
-                // })
-                // .attr("height", (d) => {
-                //     return d.height
-                // })
-                // .attr("fill",  (d) => {
-                //     const getItem = randomPosList.filter((v) => {
-                //         if(v.column === d.column && v.row === d.row){
-                //             return v
-                //         }
-                //     })
-                //     if(getItem[0]){
-                //         console.log(getItem[0])
-                //         return "red"
-                //     }else{
-                //         return "white"
-                //     }
-                // })
-                // .attr("stroke", "black")
-
-
-
-            }
-        }
-        if(getData.length > 0){
-
-            createGrid({data: getData})
-        }
+            createGrid({data: getData, bgColor:CATEGORY_AND_TAGVALUE[0].color})
+        
         
         
     },[])
 
     const onClickCatAndTag = (idx) => {
-        setCurrentCatAndTag(CATEGORY_AND_TAGVALUE[idx])
-        const changeData = (dataList, tag) => {
-            const getData = dataList.filter((val) => {
-                if(tag){
-                    return val
-                }else{
-                    if(val.category.slug === CATEGORY_AND_TAGVALUE[idx].slug){
-                        return val;
+     
+        if(currentCatAndTag.slug !== CATEGORY_AND_TAGVALUE[idx].slug){
+            setCurrentCatAndTag(CATEGORY_AND_TAGVALUE[idx])
+            const changeData = (dataList, tag) => {
+                const getData = dataList.filter((val) => {
+                    if(tag){
+                        return val
+                    }else{
+                        if(val.category.slug === CATEGORY_AND_TAGVALUE[idx].slug){
+                            return val;
+                        }
                     }
-                }
-            })
-            setCurrentCatAndTagData(getData)
+                })
+                createGrid({data: getData, bgColor:CATEGORY_AND_TAGVALUE[idx].color})
+                setCurrentCatAndTagData(getData)
+            }
+            if(CATEGORY_AND_TAGVALUE[idx].slug === "tag"){
+                changeData(getVideoData.nAnnotations.tagList, true)
+            }else{
+                changeData(getVideoData.nAnnotations.categoryList, false)
+    
+            }
         }
-        if(CATEGORY_AND_TAGVALUE[idx].slug === "tag"){
-
-            changeData(getVideoData.nAnnotations.tagList, true)
-        }else{
-            changeData(getVideoData.nAnnotations.categoryList, false)
-        }
+       
     }
     
     return <ContentContainer>
@@ -289,18 +304,6 @@ const Contents = ({isLoading, getVideoData, showContentVideo}) => {
                         })}
                     </div>
                     <div ref={svgContainerRef} className="w-full aspect-square bg-neutral-200">
-                        {/* {
-                           currentCatAndTagData && currentCatAndTagData.map((val, idx) => {
-                                return <React.Fragment key={idx}>
-                                    {currentCatAndTag.slug !== "tag" && <div >{val.category.value}</div>}
-                                    {currentCatAndTag.slug === "tag" && <div className="flex">
-                                        <div>{val.type}{idx}:</div>
-                                        <div>{val?.value.join(",")}</div>
-                                        </div>}
-                                
-                                </React.Fragment>
-                            })
-                        } */}
                         <svg ref={svgRef}>
 
                         </svg>

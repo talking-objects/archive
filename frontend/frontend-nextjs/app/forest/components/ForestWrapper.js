@@ -1,4 +1,5 @@
-import { ContentContainer, ForestPlayerContainer } from "@/app/components/containers/Containers";
+import { ForestPlayerContainer } from "@/app/components/containers/Containers";
+import ContentContainer from "@/app/components/containers/ContentContainer";
 import { BASE_URL, COLORS } from "@/app/utils/constant/etc";
 import { getAllAnnotations, getAllAnnotationsCounts, getAllClips, getAllVideos, getAllVideosCounts } from "@/app/utils/hooks/pandora_api";
 import { useRouter } from "next/navigation";
