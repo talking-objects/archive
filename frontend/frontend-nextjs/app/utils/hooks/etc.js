@@ -116,6 +116,7 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
        const endDate = new Date(startDate);
        endDate.setFullYear(startDate.getFullYear() + ((Math.random() * 5) + 1))
        const event = {
+          idx: i,
           type: "eventLayer",
           in: randomIn,
           startDate: startDate,
