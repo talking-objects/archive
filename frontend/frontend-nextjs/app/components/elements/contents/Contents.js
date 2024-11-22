@@ -12,6 +12,8 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
     const [currentCatAndTagData, setCurrentCatAndTagData] = useState(null)
     const svgRef = useRef(null)
     const svgContainerRef = useRef(null)
+    const [showRef, setShowRef] = useState(false)
+    const [showNarration, setShowNarration] = useState(false)
 
     const createGrid = ({data, bgColor="#fff"}) => {
         console.log(data)
@@ -311,6 +313,30 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
                 </div>
              </ContentBox>}
              {(getVideoData.nAnnotations.refList && getVideoData.nAnnotations.refList.length > 0) && <ContentBox title={"References"}>
+                <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
+                    {
+                        getVideoData.nAnnotations.refList.slice(0, showRef ? getVideoData.nAnnotations.refList.length : 4).map((val, idx) => {
+                            return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2">
+                                <div>Reference test</div>
+                                <div>in: {val.in}</div>
+                            </div>
+                        })
+                    }
+                </div>
+                {getVideoData.nAnnotations.refList.length > 4 && <div className="w-full flex justify-center"><span onClick={() => setShowRef((prev) => !prev)} className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer">{!showRef ? "Expand/Show All" : "Close"}</span></div>}
+             </ContentBox>}
+             {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <ContentBox title={"Narrations"}>
+                <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
+                    {
+                        getVideoData.nAnnotations.narrationList.slice(0, showNarration ? getVideoData.nAnnotations.narrationList.length : 4).map((val, idx) => {
+                            return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
+                                <div>Narration test</div>
+                                <div>in: {val.in}</div>
+                            </div>
+                        })
+                    }
+                </div>
+                {getVideoData.nAnnotations.narrationList.length > 4 && <div className="w-full flex justify-center"><span onClick={() => setShowNarration((prev) => !prev)} className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer">{!showNarration ? "Expand/Show All" : "Close"}</span></div>}
              </ContentBox>}
         </div>
         
