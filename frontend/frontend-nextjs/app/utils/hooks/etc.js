@@ -103,11 +103,23 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
     }
     // create events
     let eventList = [];
+    function getRandomDate(start, end) {
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+      const randomTime = Math.random() * (endDate.getTime() - startDate.getTime()) + startDate.getTime();
+      return new Date(randomTime);
+  }
     for(let i = 0; i < eventsCounts; i++){
        const randomIn = Math.floor(Math.random() * duration)
+       const now =  new Date()
+       const startDate = getRandomDate('1900-01-01', now)
+       const endDate = new Date(startDate);
+       endDate.setFullYear(startDate.getFullYear() + ((Math.random() * 5) + 1))
        const event = {
           type: "eventLayer",
           in: randomIn,
+          startDate: startDate,
+          endDate: endDate
       
        };
        eventList.push(event)

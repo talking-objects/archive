@@ -11,13 +11,14 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
     const [currentCatAndTag, setCurrentCatAndTag] = useState(CATEGORY_AND_TAGVALUE[0])
     const [currentCatAndTagData, setCurrentCatAndTagData] = useState(null)
     const svgRef = useRef(null)
+    const svgRefEvent = useRef(null)
+    const eventSvgContainer = useRef(null)
     const svgContainerRef = useRef(null)
     const [showRef, setShowRef] = useState(false)
     const [showNarration, setShowNarration] = useState(false)
 
+    // categories & tags
     const createGrid = ({data, bgColor="#fff"}) => {
-        console.log(data)
-
         if(svgContainerRef && svgRef){
             const svgContainerSize = {
                 width: svgContainerRef.current.clientWidth - 10,
@@ -210,26 +211,18 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
         }
     },[getVideoData])
 
+    // categories & tags
     useEffect(() => {
         const getData = getVideoData.nAnnotations.categoryList.filter((val) => {
             if(val.category.slug === CATEGORY_AND_TAGVALUE[0].slug){
                 return val;
             }
         })
-        console.log(getData)
         setCurrentCatAndTagData(getData)
-
-        
-     
-
-            createGrid({data: getData, bgColor:CATEGORY_AND_TAGVALUE[0].color})
-        
-        
-        
+        createGrid({data: getData, bgColor:CATEGORY_AND_TAGVALUE[0].color})
     },[])
-
+// categories & tags
     const onClickCatAndTag = (idx) => {
-     
         if(currentCatAndTag.slug !== CATEGORY_AND_TAGVALUE[idx].slug){
             setCurrentCatAndTag(CATEGORY_AND_TAGVALUE[idx])
             const changeData = (dataList, tag) => {
@@ -249,102 +242,169 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
                 changeData(getVideoData.nAnnotations.tagList, true)
             }else{
                 changeData(getVideoData.nAnnotations.categoryList, false)
-    
             }
         }
-       
     }
+
+    // Event
+    const createTimeLine = ({eventData}) => {
+        console.log("timeline")
+        if(svgRefEvent.current && eventSvgContainer.current){
+            const svgContainerSize = {
+                width: eventSvgContainer.current.clientWidth,
+                height: eventSvgContainer.current.clientHeight
+            }
+            const svg = d3.select(svgRefEvent.current);
+       
+            svg.selectAll("*").remove()
+            const maxDate = new Date()
+            const minDate = new Date(Math.min(...eventData.map((val) => val.startDate.getTime())))
+       
+            const scaleTime = d3.scaleTime([minDate, maxDate],[0, svgContainerSize.height])
+
+            svg
+            .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 10])
+            .style("background", "#ececec")
+
+            const bgBarWidth = 50
+            const bgBar = svg
+            .append("rect")
+            .attr("x", svgContainerSize.width + 5 - bgBarWidth)
+            .attr("y", 5)
+            .attr("fill", "blue")
+            .attr("width", bgBarWidth)
+            .attr("height", svgContainerSize.height)
+
+            const timelineBoxG = svg
+            .append("g")
+            .attr("transform", `translate(${svgContainerSize.width + 5 - bgBarWidth}, 5)`)
+
+            const timelineBoxs = timelineBoxG
+            .selectAll("rect")
+            .data(eventData)
+            .join("rect")
+            .attr("x", 0)
+            .attr("y", function(d,i){
+                return scaleTime(d.startDate)
+            })
+            .attr("width", bgBarWidth)
+            .attr("height", function(d, i){
+                return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
+            })
+            .attr("fill", "rgba(255,100,0,0.9)")
+            .on("mouseenter", function(){
+                document.body.style.cursor = "pointer"
+            })
+            .on("mouseleave", function(){
+                document.body.style.cursor = "auto"
+            })
+
+
+
+        }
+    }
+    useEffect(() => {
+        if(!isLoading){
+            createTimeLine({eventData: getVideoData.nAnnotations.eventList})
+        }
+    },[getVideoData])
+
     
     return <ContentContainer>
-    <div className="w-full relative bg-white">
-        {/* Small Video */}
-        <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 bg-neutral-100 ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700 z-[30]`}>
-            <div className="aspect-video bg-green-300"></div>
-        </div>
-        <div ref={contentsDummyRef} className="w-full bg-white"></div>
-        <div ref={contentsRef} className="w-full absolute top-[40px] left-0 bg-blue-400 flex flex-col gap-10">
-            {getVideoData.summary && <ContentBox title={"Context"}>
-                     <div>
-                        <div>Summary</div>
-                        <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div>
-                     </div>
-                     <div className="grid grid-cols-3 mt-4 gap-4">
-                        {getVideoData.user && <div>
-                           <div>Contributors</div>
-                           <div className="text-sm"> {getVideoData.user} </div>
-                        </div>}
-                        {getVideoData.country && <div>
-                           <div>Country</div>
-                           <div className="text-sm"> {getVideoData.country.join(", ")} </div>
-                        </div>}
-                        <div>
-                           <div>Source</div>
-                           <div className="text-sm"></div>
-                        </div>
-                        {getVideoData.language && <div>
-                           <div>Language</div>
-                           <div className="text-sm"> {getVideoData.language.join(", ")} </div>
-                        </div>}
-                        <div>
-                           <div>Genre</div>
-                           <div className="text-sm"></div>
-                        </div>
-                     </div>  
-            </ContentBox>}
-             {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <ContentBox title={"Place"}>
-                <div className="w-full aspect-square relative bg-black overflow-hidden">
-                    <LeafletMap allPlaces={getVideoData.nAnnotations.placeList} />
-                </div>
-             </ContentBox>}
-             {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox title={"Event"}>
-             </ContentBox>}
-             {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <ContentBox title={"Categories & Tags"}>
-                <div className="w-full relative bg-neutral-100 overflow-hidden">
-                    <div className="flex gap-2 items-center justify-start flex-wrap mb-2">
-                        {CATEGORY_AND_TAGVALUE.map((val, idx) => {
-                            return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-sm px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? "bg-eva-c5" : "bg-eva-c2"} hover:bg-eva-c5 rounded-xl select-none cursor-pointer transition-all duration-150`}>{val.value}</div>
-                        })}
+                <div className="w-full relative bg-white">
+                    {/* Small Video */}
+                    <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 bg-neutral-100 ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700 z-[30]`}>
+                        <div className="aspect-video bg-green-300"></div>
                     </div>
-                    <div ref={svgContainerRef} className="w-full aspect-square bg-neutral-200">
-                        <svg ref={svgRef}>
+                    <div ref={contentsDummyRef} className="w-full bg-white"></div>
+                    <div ref={contentsRef} className="w-full absolute top-[40px] left-0 bg-blue-400 flex flex-col gap-10">
+                        {getVideoData.summary && <ContentBox title={"Context"}>
+                                 <div>
+                                    <div>Summary</div>
+                                    <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div>
+                                 </div>
+                                 <div className="grid grid-cols-3 mt-4 gap-4">
+                                    {getVideoData.user && <div>
+                                       <div>Contributors</div>
+                                       <div className="text-sm"> {getVideoData.user} </div>
+                                    </div>}
+                                    {getVideoData.country && <div>
+                                       <div>Country</div>
+                                       <div className="text-sm"> {getVideoData.country.join(", ")} </div>
+                                    </div>}
+                                    <div>
+                                       <div>Source</div>
+                                       <div className="text-sm"></div>
+                                    </div>
+                                    {getVideoData.language && <div>
+                                       <div>Language</div>
+                                       <div className="text-sm"> {getVideoData.language.join(", ")} </div>
+                                    </div>}
+                                    <div>
+                                       <div>Genre</div>
+                                       <div className="text-sm"></div>
+                                    </div>
+                                 </div>  
+                        </ContentBox>}
+                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <ContentBox title={"Place"}>
+                            <div className="w-full aspect-square relative bg-black overflow-hidden">
+                                <LeafletMap allPlaces={getVideoData.nAnnotations.placeList} />
+                            </div>
+                         </ContentBox>}
+                         {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox title={"Event"}>
+                            <div ref={eventSvgContainer} className="w-full flex h-[90svh] bg-neutral-100">
+                                    <svg ref={svgRefEvent}>
 
-                        </svg>
+                                    </svg>
+                            </div>
+                         </ContentBox>}
+                         {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <ContentBox title={"Categories & Tags"}>
+                            <div className="w-full relative bg-neutral-100 overflow-hidden">
+                                <div className="flex gap-2 items-center justify-start flex-wrap mb-2">
+                                    {CATEGORY_AND_TAGVALUE.map((val, idx) => {
+                                        return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-sm px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? "bg-eva-c5" : "bg-eva-c2"} hover:bg-eva-c5 rounded-xl select-none cursor-pointer transition-all duration-150`}>{val.value}</div>
+                                    })}
+                                </div>
+                                <div ref={svgContainerRef} className="w-full aspect-square bg-neutral-200">
+                                    <svg ref={svgRef}>
+
+                                    </svg>
+                                </div>
+                            </div>
+                         </ContentBox>}
+                         {(getVideoData.nAnnotations.refList && getVideoData.nAnnotations.refList.length > 0) && <ContentBox title={"References"}>
+                            <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
+                                {
+                                    getVideoData.nAnnotations.refList.slice(0, showRef ? getVideoData.nAnnotations.refList.length : 4).map((val, idx) => {
+                                        return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2">
+                                            <div>Reference test</div>
+                                            <div>in: {val.in}</div>
+                                        </div>
+                                    })
+                                }
+                            </div>
+                            {getVideoData.nAnnotations.refList.length > 4 && <div className="w-full flex justify-center"><span onClick={() => setShowRef((prev) => !prev)} className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer">{!showRef ? "Expand/Show All" : "Close"}</span></div>}
+                         </ContentBox>}
+                         {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <ContentBox title={"Narrations"}>
+                            <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
+                                {
+                                    getVideoData.nAnnotations.narrationList.slice(0, showNarration ? getVideoData.nAnnotations.narrationList.length : 4).map((val, idx) => {
+                                        return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
+                                            <div>Narration test</div>
+                                            <div>in: {val.in}</div>
+                                        </div>
+                                    })
+                                }
+                            </div>
+                            {getVideoData.nAnnotations.narrationList.length > 4 && <div className="w-full flex justify-center"><span onClick={() => setShowNarration((prev) => !prev)} className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer">{!showNarration ? "Expand/Show All" : "Close"}</span></div>}
+                         </ContentBox>}
                     </div>
+                            
                 </div>
-             </ContentBox>}
-             {(getVideoData.nAnnotations.refList && getVideoData.nAnnotations.refList.length > 0) && <ContentBox title={"References"}>
-                <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
-                    {
-                        getVideoData.nAnnotations.refList.slice(0, showRef ? getVideoData.nAnnotations.refList.length : 4).map((val, idx) => {
-                            return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2">
-                                <div>Reference test</div>
-                                <div>in: {val.in}</div>
-                            </div>
-                        })
-                    }
+                <div className="w-full h-[200svh] bg-red-400">
+                    Related Items
                 </div>
-                {getVideoData.nAnnotations.refList.length > 4 && <div className="w-full flex justify-center"><span onClick={() => setShowRef((prev) => !prev)} className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer">{!showRef ? "Expand/Show All" : "Close"}</span></div>}
-             </ContentBox>}
-             {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <ContentBox title={"Narrations"}>
-                <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
-                    {
-                        getVideoData.nAnnotations.narrationList.slice(0, showNarration ? getVideoData.nAnnotations.narrationList.length : 4).map((val, idx) => {
-                            return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
-                                <div>Narration test</div>
-                                <div>in: {val.in}</div>
-                            </div>
-                        })
-                    }
-                </div>
-                {getVideoData.nAnnotations.narrationList.length > 4 && <div className="w-full flex justify-center"><span onClick={() => setShowNarration((prev) => !prev)} className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer">{!showNarration ? "Expand/Show All" : "Close"}</span></div>}
-             </ContentBox>}
-        </div>
-        
-    </div>
-    <div className="w-full h-[200svh] bg-red-400">
-        Related Items
-    </div>
-</ContentContainer>
+        </ContentContainer>
 }
 
 export default Contents;
