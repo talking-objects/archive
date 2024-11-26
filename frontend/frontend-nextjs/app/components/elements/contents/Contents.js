@@ -454,7 +454,7 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
                          {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox title={"Event"}>
                             <div ref={eventSvgContainer} className="w-full flex h-[90svh] bg-neutral-100 relative overflow-hidden">
                                     <svg ref={svgRefEvent}></svg>
-                                    <div ref={eventTextBoxRef} className="absolute top-[10px] min-w-[50px] w-1/2 h-[calc(100%-20px)] left-[10px] bg-white px-2 py-2 rounded-lg border-4 border-eva-c6 -translate-x-[calc(100%+10px)] transition-all duration-300">
+                                    <div ref={eventTextBoxRef} className="absolute top-[10px] min-w-[50px] w-1/2 h-[calc(100%-20px)] left-[10px] bg-white px-2 py-2 rounded-lg border-4 border-eva-c6 -translate-x-[calc(100%+10px)] transition-all duration-700">
                                         <div className="textbox">
                                             <div className="textboxTitle text-2xl font-bold"></div>
                                             <div className="textboxInput"></div>

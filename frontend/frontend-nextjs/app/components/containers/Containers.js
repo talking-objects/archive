@@ -732,12 +732,7 @@ const CategoryBox = ({category}) => {
    return <div style={{backgroundColor: category.category.color}} className="w-full h-full text-4xl text-white italic px-2 py-1">{category.category.value}</div>
 }
 export const OverViewBox = ({data, fakeData=false}) => {
-  
-
-  
-  
-
-   switch (data.type) {
+     switch (data.type) {
       case "categoryLayer":
          return <CategoryBox category={data} />
       case "placeLayer":
@@ -755,7 +750,7 @@ export const OverViewBox = ({data, fakeData=false}) => {
    }
 }
 
-const FilterBox = ({children, type, toggleShow}) => {
+export const FilterBox = ({children, type, toggleShow}) => {
    if(toggleShow.category && type === "categoryLayer"){
       return <>{children}</>
    }

@@ -6,7 +6,7 @@ import {
 import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import Contents from "@/app/components/elements/contents/Contents";
 import { createFakeAnnotations } from "@/app/utils/hooks/etc";
-import { getVideo } from "@/app/utils/hooks/pandora_api";
+import { getAllAnnotations, getVideo } from "@/app/utils/hooks/pandora_api";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -14,20 +14,23 @@ const VideoWrapper = () => {
   const params = useParams();
   const [getVideoData, setVideoData] = useState(null);
   const { isLoading, data, error } = getVideo({ pId: params.slug });
+  const {data:annotationData, isLoading:annotationLoading} = getAllAnnotations({itemId:params.slug})
   const videoContainerRef = useRef(null);
   const [showContentVideo, setShowContentVideo] = useState(false);
  
   useEffect(() => {
-    if (!isLoading) {
-      console.log(data.data.items[0]);
-      // 🤡Fake DataData
+    if (!isLoading && !annotationLoading) {
+      console.log(annotationData)
+
+      // 🤡Fake DataData: You can use "annotationData" later.
       data.data.items[0].nAnnotations = createFakeAnnotations({
         duration: data.data.items[0].duration,
         editVersion: false,
       });
+      console.log(data.data.items[0])
       setVideoData(data.data.items[0]);
     }
-  }, [data]);
+  }, [data, annotationData]);
 
   if (error) {
     return (

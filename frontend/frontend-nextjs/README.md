@@ -16,12 +16,11 @@ https://github.com/talking-objects/archive/tree/frontend
 
 
 # TODOS:
-- [x] D3js Data Vis Resize Event
-- [x] PlaceBox + [turkjs](https://turfjs.org/)
-- [x] Testing the Dockerfile on the Hetzner server(🔔 after upate you need to create a new image)
-- [ ] Index Page Experiment
-- [ ] Index/places Page Experiment
-- [ ] FloatingIP 💾 
+- [ ] Player Component
+    - Video Player
+    - Edit Player
+    - Cplp Player
+    
 
 # Folder Structure (updated: 28.10.24)
 ```bash

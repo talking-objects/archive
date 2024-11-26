@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { LegendContainer, VideoNavigation } from "../../elements/Elements"
 import { EntangledContainer, OverViewContainer, VideoDataVisContainer } from "../Containers"
+import DiagramaticView from "./views/DiagramaticView"
+import EntangledView from "./views/EntangledView"
 
 
 
@@ -12,7 +14,6 @@ const VideoPlayerCon = ({data, clip=false}) => {
     const [toggleLegend, setToggleLegend] = useState(false)
     const videoRef = useRef(null)
     const [playToggle, setPlayToggle] = useState(false)
-    const {data:annotationData, isLoading:annotationLoading} = getAllItemAnnotations({itemId:data.id})
     const [currentTime, setCurrentTime] = useState(0)
     const [getNAnnotations, setNAnnotations] = useState(null)
     const route = useRouter()
@@ -267,11 +268,11 @@ const VideoPlayerCon = ({data, clip=false}) => {
                 
              </div>
              {/* Video Data Visualization : Diagramatic View */}
-             {(videoRef && getNAnnotations) && <VideoDataVisContainer data={data} clip={clip} fakeData={getNAnnotations} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={annotationData} annotationLoading={annotationLoading} />}
+             {(videoRef && getNAnnotations) && <DiagramaticView data={data} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={getNAnnotations} annotationLoading={!Boolean(getNAnnotations)} />}
              {/* Video Data Visualization : Entangled View */}
-             {(videoRef && getNAnnotations) && <EntangledContainer clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} fakeData={getNAnnotations} />}
+             {(videoRef && getNAnnotations) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} annotationData={getNAnnotations} />}
              {/* Video Data Visualization : Overview View */}
-             {(videoRef && getNAnnotations) && <OverViewContainer data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getNAnnotations} />}
+             {/* {(videoRef && getNAnnotations) && <OverViewContainer data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getNAnnotations} />} */}
          </div>
          {/* video controller */}
          {videoRef && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
