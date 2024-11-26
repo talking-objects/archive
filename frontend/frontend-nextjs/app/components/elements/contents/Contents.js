@@ -22,8 +22,8 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
     const createGrid = ({data, bgColor="#fff"}) => {
         if(svgContainerRef && svgRef){
             const svgContainerSize = {
-                width: svgContainerRef.current.clientWidth - 10,
-                height: svgContainerRef.current.clientHeight - 10,
+                width: svgContainerRef.current?.clientWidth - 10,
+                height: svgContainerRef.current?.clientHeight - 10,
             }
             const newGridList = []
             const totalColumnLength = data.length < 5 ? 7 : data.length + (data.length % 2 === 0 ? 5 : 6)

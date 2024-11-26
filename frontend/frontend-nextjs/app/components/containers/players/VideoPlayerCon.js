@@ -1,12 +1,11 @@
 import { BASE_URL } from "@/app/utils/constant/etc"
 import { formatTime } from "@/app/utils/hooks/etc"
-import { getAllItemAnnotations } from "@/app/utils/hooks/pandora_api"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
 import { LegendContainer, VideoNavigation } from "../../elements/Elements"
-import { EntangledContainer, OverViewContainer, VideoDataVisContainer } from "../Containers"
 import DiagramaticView from "./views/DiagramaticView"
 import EntangledView from "./views/EntangledView"
+import OverviewView from "./views/OverviewView"
 
 
 
@@ -272,7 +271,7 @@ const VideoPlayerCon = ({data, clip=false}) => {
              {/* Video Data Visualization : Entangled View */}
              {(videoRef && getNAnnotations) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} annotationData={getNAnnotations} />}
              {/* Video Data Visualization : Overview View */}
-             {/* {(videoRef && getNAnnotations) && <OverViewContainer data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} fakeData={getNAnnotations} />} */}
+             {(videoRef && getNAnnotations) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} annotationData={getNAnnotations} />}
          </div>
          {/* video controller */}
          {videoRef && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">

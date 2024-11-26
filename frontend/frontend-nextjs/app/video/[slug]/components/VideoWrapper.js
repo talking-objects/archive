@@ -23,6 +23,17 @@ const VideoWrapper = () => {
       console.log(annotationData)
 
       // 🤡Fake DataData: You can use "annotationData" later.
+      /* 
+        Data Strucutre
+        {
+          categoryList: [],
+          eventList: [],
+          narrationList: [],
+          placeList: [],
+          refList: [],
+          tagList: []
+        }
+      */
       data.data.items[0].nAnnotations = createFakeAnnotations({
         duration: data.data.items[0].duration,
         editVersion: false,
