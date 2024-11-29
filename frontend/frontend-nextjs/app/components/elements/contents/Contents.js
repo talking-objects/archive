@@ -469,14 +469,14 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
     return <ContentContainer>
                 <div className="w-full relative bg-white">
                     {/* Small Video */}
-                    <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 bg-neutral-100 ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700 z-[30]`}>
-                        <div className="aspect-video bg-green-300">
-                            <div>{currentBox}</div>
-                            <MiniVideoPlayerCon getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
+                    <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 ${showContentVideo ? "translate-x-0 opacity-100 select-auto pointer-events-auto" : "-translate-x-full opacity-0"} transition-all duration-700 z-[30]`}>
+                        <div className="aspect-video">
+                            <div className="text-sm text-neutral-600 font-light">Current Position: {currentBox}</div>
+                            <MiniVideoPlayerCon currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
                         </div>
                     </div>
                     <div ref={contentsDummyRef} className="w-full bg-white"></div>
-                    <div ref={contentsRef} className="w-full absolute top-[40px] left-0 bg-blue-400 flex flex-col gap-10">
+                    <div ref={contentsRef} className="w-full absolute top-[40px] left-0 flex flex-col gap-10">
                         {getVideoData.summary && <ContentBox title={"Context"} id="context_box">
                                  <div>
                                     <div>Summary</div>
