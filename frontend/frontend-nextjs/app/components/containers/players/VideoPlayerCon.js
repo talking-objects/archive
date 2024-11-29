@@ -9,7 +9,7 @@ import OverviewView from "./views/OverviewView"
 
 
 
-const VideoPlayerCon = ({data, clip=false, showContentVideo=false}) => {
+const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTimeForMini}) => {
     const [toggleLegend, setToggleLegend] = useState(false)
     const videoRef = useRef(null)
     const [playToggle, setPlayToggle] = useState(false)
@@ -95,10 +95,12 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false}) => {
        setNAnnotations(data.nAnnotations)
     },[])
 
+   //  For MiniVideo Player
     useEffect(() => {
       if(showContentVideo){
          videoRef.current.pause()
          setPlayToggle(false)
+         setCurrentTimeForMini(videoRef.current.currentTime)
       }
     },[showContentVideo])
  
@@ -120,7 +122,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false}) => {
        const onKeyController = (event) => {
           event.preventDefault(); 
           if (event.code === 'Space') {
-             if(videoRef){
+             if(videoRef && !showContentVideo){
                 if(videoRef.current.paused){
                    
                    videoRef.current.play()
@@ -197,7 +199,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false}) => {
           document.removeEventListener("keyup", onKeyController)
           document.removeEventListener("keydown", onSpaceScroll)
        }
-    },[])
+    },[showContentVideo])
  
     // update video progress bar
     useEffect(() => {

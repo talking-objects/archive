@@ -4,7 +4,8 @@ import ContentBox from "./ContentBox";
 import LeafletMap from "../../map/Map";
 import { BASE_URL, CATEGORY_AND_TAGVALUE } from "@/app/utils/constant/etc";
 import * as d3 from "d3"
-const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
+import MiniVideoPlayerCon from "../../containers/players/MiniVideoPlayerCon";
+const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, showContentVideo}) => {
     const contentsRef = useRef(null)
     const contentsDummyRef = useRef(null)
     const contentVideoBoxRef = useRef(null)
@@ -17,6 +18,7 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
     const eventTextBoxRef = useRef(null)
     const [showRef, setShowRef] = useState(false)
     const [showNarration, setShowNarration] = useState(false)
+    const [getItemTime, setItemTime] = useState(null)
 
     // categories & tags
     const createGrid = ({data, bgColor="#fff"}) => {
@@ -115,6 +117,12 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
             })
             .each(function(d2, i2){
                 const group = d3.select(this);
+
+                const getItem = randomPosList.filter((v) => {
+                    if(v.column === d2.column && v.row === d2.row){
+                        return v
+                    }
+                })
                 group
                 .on("mouseenter",function(){
                     if(getItem[0]){
@@ -128,12 +136,14 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
                     document.body.style.cursor = "auto"
                         
                 })
-
-                const getItem = randomPosList.filter((v) => {
-                    if(v.column === d2.column && v.row === d2.row){
-                        return v
+                .on("click", function(){
+                    if(getItem[0]){
+                        setItemTime(getItem[0].data.in)
                     }
                 })
+
+               
+               
                 const rectEleBG = group.append("rect")
                 rectEleBG
                 .attr("x", (d, i) => {
@@ -414,7 +424,9 @@ const Contents = ({videoId, isLoading, getVideoData, showContentVideo}) => {
                 <div className="w-full relative bg-white">
                     {/* Small Video */}
                     <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 bg-neutral-100 ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700 z-[30]`}>
-                        <div className="aspect-video bg-green-300"></div>
+                        <div className="aspect-video bg-green-300">
+                            <MiniVideoPlayerCon getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
+                        </div>
                     </div>
                     <div ref={contentsDummyRef} className="w-full bg-white"></div>
                     <div ref={contentsRef} className="w-full absolute top-[40px] left-0 bg-blue-400 flex flex-col gap-10">

@@ -17,6 +17,7 @@ const VideoWrapper = () => {
   const {data:annotationData, isLoading:annotationLoading} = getAllAnnotations({itemId:params.slug})
   const videoContainerRef = useRef(null);
   const [showContentVideo, setShowContentVideo] = useState(false);
+  const [getCurrentTimeForMini, setCurrentTimeForMini] = useState(0)
  
  
   useEffect(() => {
@@ -79,9 +80,9 @@ const VideoWrapper = () => {
       {!isLoading && getVideoData && (
         <>
           <div ref={videoContainerRef} className="w-full h-[100svh] relative">
-            <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} />
+            <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} setCurrentTimeForMini={setCurrentTimeForMini} />
           </div>
-          <Contents videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo}  />
+          <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo}  />
         </>
       )}
     </MainContainer>
