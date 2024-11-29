@@ -9,7 +9,7 @@ import OverviewView from "./views/OverviewView"
 
 
 
-const VideoPlayerCon = ({data, clip=false}) => {
+const VideoPlayerCon = ({data, clip=false, showContentVideo=false}) => {
     const [toggleLegend, setToggleLegend] = useState(false)
     const videoRef = useRef(null)
     const [playToggle, setPlayToggle] = useState(false)
@@ -94,6 +94,13 @@ const VideoPlayerCon = ({data, clip=false}) => {
     useEffect(() => {
        setNAnnotations(data.nAnnotations)
     },[])
+
+    useEffect(() => {
+      if(showContentVideo){
+         videoRef.current.pause()
+         setPlayToggle(false)
+      }
+    },[showContentVideo])
  
     // video keyboard controller
     useEffect(() => {

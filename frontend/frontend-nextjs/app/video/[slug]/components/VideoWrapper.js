@@ -18,6 +18,7 @@ const VideoWrapper = () => {
   const videoContainerRef = useRef(null);
   const [showContentVideo, setShowContentVideo] = useState(false);
  
+ 
   useEffect(() => {
     if (!isLoading && !annotationLoading) {
       console.log(annotationData)
@@ -34,7 +35,7 @@ const VideoWrapper = () => {
           tagList: []
         }
       */
-     
+
       data.data.items[0].nAnnotations = createFakeAnnotations({
         duration: data.data.items[0].duration,
         editVersion: false,
@@ -78,7 +79,7 @@ const VideoWrapper = () => {
       {!isLoading && getVideoData && (
         <>
           <div ref={videoContainerRef} className="w-full h-[100svh] relative">
-            <VideoPlayerCon data={getVideoData} />
+            <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} />
           </div>
           <Contents videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo}  />
         </>

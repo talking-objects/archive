@@ -15,76 +15,23 @@ https://github.com/talking-objects/archive/tree/frontend
 - How to navigate from Index to Index/:children
 
 
+# Memo
+### Components
+- containers
+    - players
+        - editPlayerCon
+        - forestPlayerCon
+        - videoPlyaerCon(Video & Clip)
+        - views/
+            - view_element/
+                - ViewElements.js
+
 # TODOS:
 - [ ] Player Component
     - Video Player
     - Edit Player
     - Cplp Player
     
-
-# Folder Structure (updated: 28.10.24)
-```bash
-└── 📁frontend-nextjs 
-    └── .env.local
-        └── .eslintrc.json
-        └── .gitignore
-        └── Dockerfile
-        └── jsconfig.json
-        └── next.config.mjs
-        └── package-lock.json
-        └── package.json
-        └── postcss.config.mjs
-        └── README.md
-        └── tailwind.config.js
-    └── 📁app
-        └── 📁(home) # Home page
-            └── 📁components # Home Component
-            └── page.js
-        └── 📁about # About page
-            └── 📁components # About Component
-            └── page.js
-        └── 📁clip # Clips page
-            └── 📁[slug] # Clip page
-                └── 📁components # Clip Component
-                └── page.js
-            └── 📁components # Clips Component
-            └── page.js
-        └── 📁components # Global Components
-        └── 📁edit # Edits Page
-            └── 📁[slug] # Edit Page
-                └── 📁components # Edit Component
-                └── page.js
-            └── page.js
-        └── 📁forest # Index Page
-            └── 📁[slug] # Index Children Page
-                └── 📁[id]
-                    └── page.js
-                └── 📁components # Index Children Component
-                └── page.js
-            └── 📁components # Index Component
-            └── page.js
-        └── 📁imprint # Imprint Page
-            └── 📁components # Imporint Component
-            └── page.js
-        └── 📁utils # Utils
-            └── 📁constant # Constant
-                └── etc.js
-            └── 📁hooks # my Hooks
-                └── etc.js # ETC
-                └── pandora_api.js # PANDORA API using SWR
-                └── toaFetch.js # PANDORA FETCH
-        └── 📁video # Videos Page
-            └── 📁[slug] # Video Page
-                └── 📁components
-                └── page.js
-            └── 📁components
-            └── page.js
-        └── favicon.ico
-        └── globals.css
-        └── layout.js
-```
-
-
 
 
 # URL
