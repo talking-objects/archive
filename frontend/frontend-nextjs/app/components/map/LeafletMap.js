@@ -59,15 +59,13 @@ const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
  
   return (
         <Marker
-        eventHandlers={{
-          click: () => {
-            if(content){
-              console.log("Click")
-              console.log(v)
-              changeItemTime(v.in)
+          eventHandlers={{
+            click: () => {
+              if(content){
+                changeItemTime(v.in)
+              }
             }
-          }
-        }}
+          }}
         ref={markerRef} icon={(center[0] === v.position.lat && center[1] === v.position.long) ? ICON2 :ICON} position={[v.position.lat, v.position.long]}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.

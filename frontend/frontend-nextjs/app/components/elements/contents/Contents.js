@@ -312,6 +312,9 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                 return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
             })
             .attr("fill", "rgba(255,100,0,0.9)")
+            .on("click", function(d, i){
+                changeItemTime(i.in)
+            })
             .on("mouseenter", function(d, i){
                 const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
                 yAxisGroupBox
