@@ -18,7 +18,9 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
     const eventTextBoxRef = useRef(null)
     const [showRef, setShowRef] = useState(false)
     const [showNarration, setShowNarration] = useState(false)
+
     const [getItemTime, setItemTime] = useState(null)
+    const [currentBox, setCurrentBox] = useState("")
 
 
     const changeItemTime = (time) => {
@@ -425,18 +427,57 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
         }
     },[getVideoData])
 
+    useEffect(() => {
+        const boxes = [
+            { id: "#context_box", name: "contextBox" },
+            { id: "#place_box", name: "placeBox" },
+            { id: "#event_box", name: "eventBox" },
+            { id: "#cate_and_tag_box", name: "cateAndTagBox" },
+            { id: "#ref_box", name: "refBox" },
+            { id: "#narration_box", name: "narrationBox" },
+          ];
+      
+          const scrollEvent = () => {
+            const currentPos = window.innerHeight / 2; // 화면 중간 기준
+            let currentBoxName = "";
+      
+            for (const box of boxes) {
+              const element = document.querySelector(box.id);
+              if (element) {
+                const { top, bottom } = element.getBoundingClientRect();
+      
+                // 화면 중앙에 박스가 있으면 currentBoxName 갱신
+                if (top <= currentPos && bottom >= currentPos) {
+                  currentBoxName = box.name;
+                  break; // 가장 먼저 찾은 박스만 처리
+                }
+              }
+            }
+      
+            if (currentBoxName) {
+              setCurrentBox(currentBoxName); // 상태 변경
+            }
+          };
+        window.addEventListener("scroll", scrollEvent);
+        return () => {
+            window.removeEventListener("scroll", scrollEvent)
+        }
+
+    },[])
+
     
     return <ContentContainer>
                 <div className="w-full relative bg-white">
                     {/* Small Video */}
                     <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 bg-neutral-100 ${showContentVideo ? "translate-x-0 opacity-100 select-auto" : "-translate-x-full opacity-0 pointer-events-none select-none"} transition-all duration-700 z-[30]`}>
                         <div className="aspect-video bg-green-300">
+                            <div>{currentBox}</div>
                             <MiniVideoPlayerCon getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
                         </div>
                     </div>
                     <div ref={contentsDummyRef} className="w-full bg-white"></div>
                     <div ref={contentsRef} className="w-full absolute top-[40px] left-0 bg-blue-400 flex flex-col gap-10">
-                        {getVideoData.summary && <ContentBox title={"Context"}>
+                        {getVideoData.summary && <ContentBox title={"Context"} id="context_box">
                                  <div>
                                     <div>Summary</div>
                                     <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div>
@@ -464,12 +505,12 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                                     </div>
                                  </div>  
                         </ContentBox>}
-                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <ContentBox title={"Place"}>
+                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <ContentBox title={"Place"} id="place_box">
                             <div className="w-full aspect-square relative bg-black overflow-hidden">
                                 <LeafletMap allPlaces={getVideoData.nAnnotations.placeList} content={true} changeItemTime={changeItemTime} />
                             </div>
                          </ContentBox>}
-                         {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox title={"Event"}>
+                         {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox title={"Event"} id="event_box">
                             <div ref={eventSvgContainer} className="w-full flex h-[90svh] bg-neutral-100 relative overflow-hidden">
                                     <svg ref={svgRefEvent}></svg>
                                     <div ref={eventTextBoxRef} className="absolute top-[10px] min-w-[50px] w-1/2 h-[calc(100%-20px)] left-[10px] bg-white px-2 py-2 rounded-lg border-4 border-eva-c6 -translate-x-[calc(100%+10px)] transition-all duration-700">
@@ -480,7 +521,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                                     </div>
                             </div>
                          </ContentBox>}
-                         {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <ContentBox title={"Categories & Tags"}>
+                         {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <ContentBox title={"Categories & Tags"} id="cate_and_tag_box">
                             <div className="w-full relative bg-neutral-100 overflow-hidden">
                                 <div className="flex gap-2 items-center justify-start flex-wrap mb-2">
                                     {CATEGORY_AND_TAGVALUE.map((val, idx) => {
@@ -494,7 +535,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                                 </div>
                             </div>
                          </ContentBox>}
-                         {(getVideoData.nAnnotations.refList && getVideoData.nAnnotations.refList.length > 0) && <ContentBox title={"References"}>
+                         {(getVideoData.nAnnotations.refList && getVideoData.nAnnotations.refList.length > 0) && <ContentBox title={"References"} id="ref_box">
                             <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
                                 {
                                     getVideoData.nAnnotations.refList.slice(0, showRef ? getVideoData.nAnnotations.refList.length : 4).map((val, idx) => {
@@ -507,7 +548,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                             </div>
                             {getVideoData.nAnnotations.refList.length > 4 && <div className="w-full flex justify-center"><span onClick={() => setShowRef((prev) => !prev)} className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer">{!showRef ? "Expand/Show All" : "Close"}</span></div>}
                          </ContentBox>}
-                         {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <ContentBox title={"Narrations"}>
+                         {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <ContentBox title={"Narrations"} id="narration_box">
                             <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
                                 {
                                     getVideoData.nAnnotations.narrationList.slice(0, showNarration ? getVideoData.nAnnotations.narrationList.length : 4).map((val, idx) => {
