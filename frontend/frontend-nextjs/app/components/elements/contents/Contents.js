@@ -20,6 +20,10 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
     const [showNarration, setShowNarration] = useState(false)
     const [getItemTime, setItemTime] = useState(null)
 
+
+    const changeItemTime = (time) => {
+        setItemTime(time)
+    }
     // categories & tags
     const createGrid = ({data, bgColor="#fff"}) => {
         if(svgContainerRef && svgRef){
@@ -130,15 +134,14 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                     }else{
                         document.body.style.cursor = "auto"
                     }
-
                 })
                 .on("mouseleave", function(){
-                    document.body.style.cursor = "auto"
-                        
+                    document.body.style.cursor = "auto"  
                 })
                 .on("click", function(){
                     if(getItem[0]){
-                        setItemTime(getItem[0].data.in)
+                        changeItemTime(getItem[0].data.in)
+                        // setItemTime(getItem[0].data.in)
                     }
                 })
 
@@ -460,7 +463,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                         </ContentBox>}
                          {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <ContentBox title={"Place"}>
                             <div className="w-full aspect-square relative bg-black overflow-hidden">
-                                <LeafletMap allPlaces={getVideoData.nAnnotations.placeList} />
+                                <LeafletMap allPlaces={getVideoData.nAnnotations.placeList} content={true} changeItemTime={changeItemTime} />
                             </div>
                          </ContentBox>}
                          {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox title={"Event"}>
@@ -492,7 +495,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                             <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
                                 {
                                     getVideoData.nAnnotations.refList.slice(0, showRef ? getVideoData.nAnnotations.refList.length : 4).map((val, idx) => {
-                                        return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2 ">
+                                        return <div key={idx} onClick={() => changeItemTime(val.in)} className="bg-white w-full cursor-pointer h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2 ">
                                             <div>Reference test</div>
                                             <div>in: {val.in}</div>
                                         </div>
@@ -505,7 +508,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                             <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
                                 {
                                     getVideoData.nAnnotations.narrationList.slice(0, showNarration ? getVideoData.nAnnotations.narrationList.length : 4).map((val, idx) => {
-                                        return <div key={idx} className="bg-white w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
+                                        return <div key={idx} onClick={() => changeItemTime(val.in)} className="bg-white cursor-pointer w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
                                             <div>Narration test</div>
                                             <div>in: {val.in}</div>
                                         </div>

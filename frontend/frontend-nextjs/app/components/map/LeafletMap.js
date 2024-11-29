@@ -47,7 +47,7 @@ function MapUpdate({center, allPlaces}) {
 }
 
 
-const CustomMarker = ({ICON, ICON2, center, v}) => {
+const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
   const markerRef = useRef(null)
   const isCenterMarker = center[0] === v.position.lat && center[1] === v.position.long;
   useEffect(() => {
@@ -58,14 +58,24 @@ const CustomMarker = ({ICON, ICON2, center, v}) => {
   }, [isCenterMarker]);
  
   return (
-        <Marker ref={markerRef} icon={(center[0] === v.position.lat && center[1] === v.position.long) ? ICON2 :ICON} position={[v.position.lat, v.position.long]}>
+        <Marker
+        eventHandlers={{
+          click: () => {
+            if(content){
+              console.log("Click")
+              console.log(v)
+              changeItemTime(v.in)
+            }
+          }
+        }}
+        ref={markerRef} icon={(center[0] === v.position.lat && center[1] === v.position.long) ? ICON2 :ICON} position={[v.position.lat, v.position.long]}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>
         </Marker>
   )
 }
-const LeafletMap = ({center=[52.5200,13.4050], allPlaces}) => {
+const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeItemTime=false}) => {
   const ICON = icon({
     iconUrl: "/map-marker.svg",
     iconSize: [32, 32],
@@ -92,7 +102,7 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces}) => {
       {
         allPlaces && allPlaces.map((v, idx) => {
         
-          return <CustomMarker key={idx} v={v} center={center} ICON={ICON} ICON2={ICON2} />
+          return <CustomMarker changeItemTime={changeItemTime} key={idx} content={content} v={v} center={center} ICON={ICON} ICON2={ICON2} />
         })
       }
       <MapUpdate center={center} allPlaces={allPlaces} />
