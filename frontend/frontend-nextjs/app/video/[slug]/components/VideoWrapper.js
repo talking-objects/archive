@@ -34,6 +34,7 @@ const VideoWrapper = () => {
           tagList: []
         }
       */
+     
       data.data.items[0].nAnnotations = createFakeAnnotations({
         duration: data.data.items[0].duration,
         editVersion: false,

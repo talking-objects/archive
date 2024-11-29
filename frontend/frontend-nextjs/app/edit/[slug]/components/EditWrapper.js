@@ -1,5 +1,6 @@
 
-import { EditVideoPlayerContainer, MainContainer } from "@/app/components/containers/Containers";
+import {MainContainer } from "@/app/components/containers/Containers";
+import EditPlayerCon from "@/app/components/containers/players/EditPlayerCon";
 import { createFakeAnnotations } from "@/app/utils/hooks/etc";
 import { getAllClipsOfSelectedVideo } from "@/app/utils/hooks/pandora_api";
 import { useParams } from "next/navigation";
@@ -8,7 +9,7 @@ import { useEffect, useState } from "react";
 
 const EditWrapper = () => {
     const params = useParams();
-    const {data, isLoading, error} = getAllClipsOfSelectedVideo({itemId: params.slug})
+    const {data, isLoading, error} = getAllClipsOfSelectedVideo({itemId: params.slug, counts: 5})
     const [editData, setEditData] = useState(null);
     const [editMetaData, setEditMetaData] = useState(null);
     
@@ -18,7 +19,6 @@ const EditWrapper = () => {
     // create random annotation data for each clips => Clip
     useEffect(() => {
         if(!isLoading){
-           
             const metaData = {
                 title: "TestEdit_VIDEO_01",
                 year: data.data.items[0].year,
@@ -30,7 +30,6 @@ const EditWrapper = () => {
             }
           
             setEditMetaData(metaData)
-            console.log(data)
             let originalData = JSON.parse(JSON.stringify(data.data.items[0].clips))
          
             if(originalData.length > 0){
@@ -68,7 +67,6 @@ const EditWrapper = () => {
 
                 originalData.id = params.slug
                 originalData.totalDuration = totalDuration
-                console.log(originalData)
                 setEditData(originalData)
             }
            
@@ -80,7 +78,7 @@ const EditWrapper = () => {
         (<MainContainer>
             {(Boolean(editData) && Boolean(editMetaData)) && <>
                 <div className="w-full h-[100svh] relative">
-                    <EditVideoPlayerContainer data={editData} metaData={editMetaData} />
+                    <EditPlayerCon data={editData} metaData={editMetaData} />
                 </div>
                
             </>

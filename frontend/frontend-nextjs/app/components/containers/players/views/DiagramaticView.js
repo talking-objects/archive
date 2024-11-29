@@ -1,8 +1,8 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { OverViewBox } from "../../Containers";
 import gsap from "gsap";
+import { OverViewBox } from "./view_element/ViewElements";
 
 const DiagramaticView = ({
   data,

@@ -1,5 +1,6 @@
-import { ForestPlayerContainer } from "@/app/components/containers/Containers";
+
 import ContentContainer from "@/app/components/containers/ContentContainer";
+import ForestPlayerCon from "@/app/components/containers/players/ForestPlayerCon";
 import { BASE_URL, COLORS } from "@/app/utils/constant/etc";
 import { getAllAnnotations, getAllAnnotationsCounts, getAllClips, getAllVideos, getAllVideosCounts } from "@/app/utils/hooks/pandora_api";
 import { useRouter } from "next/navigation";
@@ -247,7 +248,7 @@ const ForestWrapper = () => {
         <div className="w-full h-full flex flex-col items-center relative">
             <div className="w-full h-fit py-4 flex justify-center items-center text-7xl font-medium">Our Archive</div>
             {/* Forest Video Player */}
-            {(previewVideoData && previewVideoData.length > 0) && <ForestPlayerContainer data={previewVideoData} />}
+            {(previewVideoData && previewVideoData.length > 0) && <ForestPlayerCon data={previewVideoData} />}
             <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-0 left-0 z-[30]"></div>
                 <ContentContainer>
                     <ForestContentsContainer isLoading={(isLoading || isLoadingClips || isLoadingAnnotations)} allData={allData} />

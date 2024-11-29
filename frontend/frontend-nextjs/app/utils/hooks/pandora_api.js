@@ -102,7 +102,7 @@ export const getClip = ({originId}) => {
 }
 
 
-export const getAllClipsOfSelectedVideo = ({itemId}) => {
+export const getAllClipsOfSelectedVideo = ({itemId, counts=5}) => {
   const bodyData = {
     action: "find",
     data:  {
@@ -112,7 +112,7 @@ export const getAllClipsOfSelectedVideo = ({itemId}) => {
       "sort":[{"key":"title","operator":"+"}],
       "clips":{
         "query":{"conditions":[],"operator":"&"},
-        "items": 5,
+        "items": counts,
         "keys":[],
         // "sort":[{"key":"in","operator":"-"}]
         }
