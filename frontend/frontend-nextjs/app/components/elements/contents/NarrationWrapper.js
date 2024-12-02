@@ -7,7 +7,7 @@ const NarrationWrapper = ({getVideoData, changeItemTime}) => {
     <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
         {
             getVideoData.nAnnotations.narrationList.slice(0, showNarration ? getVideoData.nAnnotations.narrationList.length : 4).map((val, idx) => {
-                return <div key={idx} onClick={() => changeItemTime(val.in)} className="bg-white cursor-pointer w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
+                return <div key={idx} onClick={() => changeItemTime({data:val})} className="bg-white cursor-pointer w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
                     <div>Narration test</div>
                     <div>in: {val.in}</div>
                 </div>

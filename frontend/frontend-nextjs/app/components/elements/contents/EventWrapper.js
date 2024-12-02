@@ -61,7 +61,8 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             })
             .attr("fill", "rgba(255,100,0,0.9)")
             .on("click", function(d, i){
-                changeItemTime(i.in)
+                console.log(i)
+                changeItemTime({data:i})
             })
             .on("mouseenter", function(d, i){
                 const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)

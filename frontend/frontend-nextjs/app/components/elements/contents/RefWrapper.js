@@ -7,7 +7,7 @@ const RefWapper = ({getVideoData, changeItemTime}) => {
     <div className="flex w-full h-fit overflow-hidden bg-eva-c2 bg-opacity-[27%] px-4 py-4 flex-col gap-4 ">
         {
             getVideoData.nAnnotations.refList.slice(0, openRef ? getVideoData.nAnnotations.refList.length : 4).map((val, idx) => {
-                return <div key={idx} onClick={() => changeItemTime(val.in)} className="bg-white w-full cursor-pointer h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2 ">
+                return <div key={idx} onClick={() => changeItemTime({data:val})} className="bg-white w-full cursor-pointer h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2 ">
                     <div>Reference test</div>
                     <div>in: {val.in}</div>
                 </div>

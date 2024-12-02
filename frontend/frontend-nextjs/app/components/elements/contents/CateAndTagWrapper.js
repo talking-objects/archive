@@ -123,7 +123,7 @@ const CateAndTagWrapper = ({getVideoData, videoId, changeItemTime}) => {
                 })
                 .on("click", function(){
                     if(getItem[0]){
-                        changeItemTime(getItem[0].data.in)
+                        changeItemTime({data:getItem[0].data})
                         // setItemTime(getItem[0].data.in)
                     }
                 })

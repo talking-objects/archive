@@ -62,7 +62,7 @@ const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
           eventHandlers={{
             click: () => {
               if(content){
-                changeItemTime(v.in)
+                changeItemTime({data: v})
               }
             }
           }}

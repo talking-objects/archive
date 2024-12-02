@@ -13,10 +13,13 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
     const contentVideoBoxRef = useRef(null)
     
     const [getItemTime, setItemTime] = useState(null)
+    const [getCurrentItem, setCurrentItem] = useState(null)
     const [currentBox, setCurrentBox] = useState("")
 
-    const changeItemTime = (time) => {
-        setItemTime(time)
+    const changeItemTime = ({data}) => {
+        console.log(data)
+        setCurrentItem(data)
+        setItemTime(data.in)
     }
     
     useEffect(() => {
@@ -76,9 +79,10 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                 <div className="w-full relative bg-white">
                     {/* Small Video */}
                     <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 ${showContentVideo ? "translate-x-0 opacity-100 select-auto pointer-events-auto" : "-translate-x-full opacity-0"} transition-all duration-700 z-[30]`}>
-                        <div className="aspect-video">
+                        <div className="">
                             <div className="text-sm text-neutral-600 font-light">Current Position: {currentBox}</div>
-                            <MiniVideoPlayerCon currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
+                            <MiniVideoPlayerCon getCurrentItem={getCurrentItem}  currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
+                            {getCurrentItem && <div>data</div>}
                         </div>
                     </div>
                     <div ref={contentsDummyRef} className="w-full bg-white"></div>

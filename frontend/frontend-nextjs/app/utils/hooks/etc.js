@@ -83,9 +83,12 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
     let refList = [];
     for(let i = 0; i < refCounts; i++){
        const randomIn = Math.floor(Math.random() * duration)
+       const outValue = 5
+       const randomOut = randomIn + outValue >= duration ? duration : randomIn + outValue
        const ref = {
           type: "referenceLayer",
           in: randomIn,
+          out: randomOut
       
        };
        refList.push(ref)
@@ -94,9 +97,12 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
     let narrationList = [];
     for(let i = 0; i < narrationCounts; i++){
        const randomIn = Math.floor(Math.random() * duration)
+       const outValue = 5
+       const randomOut = randomIn + outValue >= duration ? duration : randomIn + outValue
        const narration = {
           type: "narrationLayer",
           in: randomIn,
+          out: randomOut
       
        };
        narrationList.push(narration)
@@ -111,6 +117,8 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
   }
     for(let i = 0; i < eventsCounts; i++){
        const randomIn = Math.floor(Math.random() * duration)
+       const outValue = 5
+       const randomOut = randomIn + outValue >= duration ? duration : randomIn + outValue
        const now =  new Date()
        const startDate = getRandomDate('1900-01-01', now)
        const endDate = new Date(startDate);
@@ -119,6 +127,7 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
           idx: i,
           type: "eventLayer",
           in: randomIn,
+          out:randomOut,
           startDate: startDate,
           endDate: endDate
       
@@ -129,9 +138,12 @@ export const createFakeAnnotations = ({duration, editVersion=false}) => {
     let placeList = [];
     for(let i = 0; i < placeCounts; i++){
        const randomIn = Math.floor(Math.random() * duration)
+       const outValue = 5
+       const randomOut = randomIn + outValue >= duration ? duration : randomIn + outValue
        const place = {
           type: "placeLayer",
           in: randomIn,
+          out: randomOut,
           position: {
             lat: 52.5200 + Math.floor((Math.random() - 0.5) * 10) ,
             long: 13.4050 + Math.floor((Math.random() - 0.5) * 10) 
