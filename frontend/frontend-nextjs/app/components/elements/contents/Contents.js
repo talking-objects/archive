@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import ContentContainer from "../../containers/ContentContainer";
 import ContentBox from "./ContentBox";
-import LeafletMap from "../../map/Map";
+
 import { BASE_URL, CATEGORY_AND_TAGVALUE } from "@/app/utils/constant/etc";
 import * as d3 from "d3"
 import MiniVideoPlayerCon from "../../containers/players/MiniVideoPlayerCon";
+import AboutWapper from "./AboutWrapper";
+import PlaceWrapper from "./PlaceWrapper";
 const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, showContentVideo}) => {
     const contentsRef = useRef(null)
     const contentsDummyRef = useRef(null)
@@ -477,39 +479,8 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                     </div>
                     <div ref={contentsDummyRef} className="w-full bg-white"></div>
                     <div ref={contentsRef} className="w-full absolute top-[40px] left-0 flex flex-col gap-10">
-                        {getVideoData.summary && <ContentBox title={"Context"} id="context_box">
-                                 <div>
-                                    <div>Summary</div>
-                                    <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div>
-                                 </div>
-                                 <div className="grid grid-cols-3 mt-4 gap-4">
-                                    {getVideoData.user && <div>
-                                       <div>Contributors</div>
-                                       <div className="text-sm"> {getVideoData.user} </div>
-                                    </div>}
-                                    {getVideoData.country && <div>
-                                       <div>Country</div>
-                                       <div className="text-sm"> {getVideoData.country.join(", ")} </div>
-                                    </div>}
-                                    <div>
-                                       <div>Source</div>
-                                       <div className="text-sm"></div>
-                                    </div>
-                                    {getVideoData.language && <div>
-                                       <div>Language</div>
-                                       <div className="text-sm"> {getVideoData.language.join(", ")} </div>
-                                    </div>}
-                                    <div>
-                                       <div>Genre</div>
-                                       <div className="text-sm"></div>
-                                    </div>
-                                 </div>  
-                        </ContentBox>}
-                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <ContentBox title={"Place"} id="place_box">
-                            <div className="w-full aspect-square relative bg-black overflow-hidden">
-                                <LeafletMap allPlaces={getVideoData.nAnnotations.placeList} content={true} changeItemTime={changeItemTime} />
-                            </div>
-                         </ContentBox>}
+                        {getVideoData.summary && <AboutWapper getVideoData={getVideoData} />}
+                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <PlaceWrapper getVideoData={getVideoData} changeItemTime={changeItemTime}/>}
                          {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <ContentBox title={"Event"} id="event_box">
                             <div ref={eventSvgContainer} className="w-full flex h-[90svh] bg-neutral-100 relative overflow-hidden">
                                     <svg ref={svgRefEvent}></svg>
