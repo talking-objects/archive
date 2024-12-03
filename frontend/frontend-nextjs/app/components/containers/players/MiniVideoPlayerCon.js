@@ -90,7 +90,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
      // update video progress bar
      useEffect(() => {
         const videoElement = videoRef.current
-        if (playing && videoElement) {
+        if (playing && videoElement && getCurrentItem) {
             setCurrentTime(0)
            const handleTimeUpdate = () => {
               
