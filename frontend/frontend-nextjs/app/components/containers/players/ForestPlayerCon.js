@@ -146,8 +146,8 @@ const ForestPlayerCon = ({data, metaData}) => {
        
     },[])
    
-   return (<div className="w-full h-[calc(100svh-96px)] relative">
-      <div className="w-full h-[calc(100svh-96px)] overflow-hidden flex flex-col">
+   return (<div className="w-full h-[calc(100svh-56px)] relativer">
+      <div className="w-full h-[calc(100svh-56px)] overflow-hidden flex flex-col">
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}

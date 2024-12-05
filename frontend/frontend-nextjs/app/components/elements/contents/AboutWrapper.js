@@ -9,7 +9,7 @@ const AboutWapper = ({getVideoData}) => {
     <div className="grid grid-cols-3 mt-4 gap-4">
        {getVideoData.user && <div>
           <div>Contributors</div>
-          <div className="text-sm">{typeof getVideoData.director === "string" ? getVideoData.director : getVideoData.director.join(", ")} </div>
+          { getVideoData.director && <div className="text-sm">{typeof getVideoData.director === "string" ? getVideoData.director : getVideoData.director.join(", ")} </div>}
           <div className="text-sm">{typeof getVideoData.user === "string" ? getVideoData.user : getVideoData.user.join(", ")} </div>
        </div>}
        {getVideoData.country && <div>

@@ -79,7 +79,7 @@ const VideoWrapper = () => {
     <MainContainer>
       {!isLoading && getVideoData && (
         <>
-          <div ref={videoContainerRef} className="w-full h-[100svh] relative">
+          <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
             <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} setCurrentTimeForMini={setCurrentTimeForMini} />
           </div>
           <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo}  />

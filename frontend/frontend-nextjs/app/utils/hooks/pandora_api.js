@@ -125,7 +125,7 @@ return globalFetcher(bodyData);
 
 // 🔴 Video Items
 // get all videos list
-export const getAllVideos = ({pagination=1}={}) => {
+export const getAllVideos = ({pagination=1, amount=AMOUNT_OF_PAGINATION}={}) => {
     const bodyData = {
         action: "find",
         data: {
@@ -136,7 +136,7 @@ export const getAllVideos = ({pagination=1}={}) => {
           },
           sort: [{ key: "duration", operator: "-" }],
           // range: [0, pagination * AMOUNT_OF_PAGINATION]
-          range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION]
+          range: [(pagination - 1) * amount, pagination * amount]
         },
       };
     return globalFetcher(bodyData);

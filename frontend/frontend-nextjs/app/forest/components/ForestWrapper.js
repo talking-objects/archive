@@ -245,11 +245,10 @@ const ForestWrapper = () => {
     },[allData])
     
     return <>
-        <div className="w-full h-full flex flex-col items-center relative">
-            <div className="w-full h-fit py-4 flex justify-center items-center text-7xl font-medium">Our Archive</div>
+        <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
             {(previewVideoData && previewVideoData.length > 0) && <ForestPlayerCon data={previewVideoData} />}
-            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-0 left-0 z-[30]"></div>
+            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-0 left-0 z-[40]"></div>
                 <ContentContainer>
                     <ForestContentsContainer isLoading={(isLoading || isLoadingClips || isLoadingAnnotations)} allData={allData} />
               

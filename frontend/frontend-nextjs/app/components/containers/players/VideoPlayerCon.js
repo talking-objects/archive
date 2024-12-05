@@ -241,8 +241,8 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
           };
        }
     },[playToggle])
-    return <div className="w-full h-[100svh] relative">
-        <div className="w-full h-[100svh] overflow-hidden flex flex-col">
+    return <div className="w-full h-[calc(100svh-56px)] relative">
+        <div className="w-full h-[calc(100svh-56px)] overflow-hidden flex flex-col">
          <div className="w-full h-full flex flex-col overflow-hidden relative">
              <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
                <source type="video/mp4" />
