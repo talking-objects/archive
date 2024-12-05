@@ -64,13 +64,13 @@ export const getAllItemAnnotations = ({itemId}) => {
 // }
 // 🟢 Clips 
 // get all clips
-export const getAllClips = ({pagination=1}={}) => {
+export const getAllClips = ({pagination=1, amount=AMOUNT_OF_PAGINATION}={}) => {
     const bodyData = {
         action: "findClips",
         data: {
           keys: ['id', 'in', 'out', 'position', 'created', 'modified', 'title',
                  'hue', 'saturation', 'lightness', 'volume', 'videoRatio','annotations', 'layers', 'cuts', 'parts', 'duration', 'user'],
-          range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION],
+          range: [(pagination - 1) * amount, pagination * amount],
           query: {
             conditions: [{"key": "duration", "value": 0, "operator": ">" }]
           },

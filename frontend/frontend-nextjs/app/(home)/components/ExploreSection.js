@@ -1,7 +1,17 @@
+import { getAllClips, getAllVideos } from "@/app/utils/hooks/pandora_api";
 import SectionContainer from "./elements/SectionContainer";
 import SectionHeader from "./elements/SectionHeader";
+import { useEffect } from "react";
 
 const ExploreSection = () => {
+  const {data, isLoading} = getAllVideos({pagination: 1, amount: 3})
+  const {data:dataC, isLoading:isLoadingC} = getAllClips({pagination: 1, amount: 3})
+
+  useEffect(() => {
+    if(!isLoading && !isLoadingC){
+        console.log(data, dataC)
+    }
+  },[data, dataC])
   return (
     <SectionContainer big={true}>
         <SectionHeader text={"Explore our Archive"} />
