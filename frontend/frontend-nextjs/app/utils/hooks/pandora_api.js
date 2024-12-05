@@ -142,6 +142,23 @@ export const getAllVideos = ({pagination=1}={}) => {
     return globalFetcher(bodyData);
     
 }
+export const getRandomVideo = ({randomN}={}) => {
+  const bodyData = {
+      action: "find",
+      data: {
+        keys: ["id", "user", "duration", "posterFrame","modified", "created", "title"],
+        query: { 
+          conditions: [],
+          operator: "&" 
+        },
+        sort: [{ key: "duration", operator: "-" }],
+        // range: [0, pagination * AMOUNT_OF_PAGINATION]
+        range: [randomN, randomN+1]
+      },
+    };
+  return globalFetcher(bodyData);
+  
+}
 // get all videos list
 export const getAllVideosCounts = () => {
     const bodyData = {

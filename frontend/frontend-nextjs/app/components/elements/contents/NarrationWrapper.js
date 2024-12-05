@@ -8,8 +8,8 @@ const NarrationWrapper = ({getVideoData, changeItemTime}) => {
         {
             getVideoData.nAnnotations.narrationList.slice(0, showNarration ? getVideoData.nAnnotations.narrationList.length : 4).map((val, idx) => {
                 return <div key={idx} onClick={() => changeItemTime({data:val})} className="bg-white cursor-pointer w-full h-fit min-h-28 rounded-lg border-4 border-eva-c2 px-4 py-2">
-                    <div>Narration test</div>
                     <div>in: {val.in}</div>
+                    {val.value && <div className="text-sm">{val.value}</div>}
                 </div>
             })
         }

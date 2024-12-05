@@ -8,8 +8,8 @@ const RefWapper = ({getVideoData, changeItemTime}) => {
         {
             getVideoData.nAnnotations.refList.slice(0, openRef ? getVideoData.nAnnotations.refList.length : 4).map((val, idx) => {
                 return <div key={idx} onClick={() => changeItemTime({data:val})} className="bg-white w-full cursor-pointer h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2 ">
-                    <div>Reference test</div>
                     <div>in: {val.in}</div>
+                    {val.value && <div className="text-sm">{val.value}</div>}
                 </div>
             })
         }

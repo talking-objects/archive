@@ -1,4 +1,4 @@
-import {  useMemo } from "react"
+import {  useEffect, useMemo } from "react"
 import LeafletMap from "../../../../map/Map"
 
 
@@ -6,10 +6,12 @@ import LeafletMap from "../../../../map/Map"
 
 
 const TagBox = ({tag}) => {
-   return <div className="w-full flex gap-2">
+  
+   return <div className="w-full flex flex-wrap gap-2">
       {
          tag.value.map((val, idx) => {
-            return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-xl">#{val}</div>
+            
+            return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-xl">{val.slice(0,1) === "#" ? val.slice(0) : `#${val.slice(0)}`}</div>
          })
       }
       </div>
@@ -33,15 +35,18 @@ const EventBox = ({event}) => {
 }
 
 const NarrationBox = ({narration}) => {
-   return <div className="w-full min-h-[200px] h-full flex px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black">
-      <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div>
+  
+   return <div className="w-full min-h-[200px] h-full flex flex-col px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black overflow-hidden">
+      {/* <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div> */}
       <div>{narration.type}</div>
+      {narration.value && <div className="text-sm">{narration.value}</div>}
    </div>
 }
 const ReferenceBox = ({reference}) => {
-   return <div className="w-full min-h-[200px] h-full flex px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
-      <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div>
+   return <div className="w-full min-h-[200px] h-full flex flex-col overflow-hidden px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
+      {/* <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div> */}
       <div>{reference.type}</div>
+      {reference.value && <div className="text-sm">{reference.value}</div>}
    </div>
 }
 
