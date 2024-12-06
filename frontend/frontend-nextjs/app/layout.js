@@ -1,3 +1,5 @@
+import Footer from "./components/elements/Footer";
+import NavigationBar from "./components/elements/NavigationBar";
 import "./globals.css";
 import RecoilContextProvider from "./utils/recoillib/RecoilContextProvider";
 
@@ -11,26 +13,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <RecoilContextProvider>
-          <div className="fixed top-0 left-0 w-full h-[56px] bg-black z-[1000] text-white flex items-center px-4 gap-8">
-            <div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-                />
-              </svg>
-            </div>
-          </div>
+          <NavigationBar />
           {children}
-          <div className="w-full min-h-[200px] bg-black">Footer</div>
+          <Footer />
         </RecoilContextProvider>
       </body>
     </html>
