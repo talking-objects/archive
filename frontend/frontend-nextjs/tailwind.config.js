@@ -18,6 +18,10 @@ module.exports = {
           c6: "#3118E8",
         }
       },
+      fontFamily: {
+        eva: ["WritingObjects"],
+        
+      },
     },
   },
   plugins: [],

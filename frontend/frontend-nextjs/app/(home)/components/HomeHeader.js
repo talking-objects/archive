@@ -1,9 +1,13 @@
-const HomeHeader = () => {
-    return <div className="w-screen h-[100svh] pt-[56px] bg-black">
-        <div className="w-full h-full bg-red-400 relative">
-            <div className="w-full h-full bg-black absolute left-0 top-1/2 -translate-y-1/2">
+import { BASE_URL } from "@/app/utils/constant/etc";
 
-            </div>
+const HomeHeader = ({currentVideo, isLoading}) => {
+    return <div className="w-full h-[100svh] pt-[56px] bg-black">
+        <div className="w-full h-full bg-black relative">
+            {(!isLoading && currentVideo) && <div 
+                style={{backgroundImage: `url(${BASE_URL}/${currentVideo.id}/480p${currentVideo.posterFrame}.jpg)`}}
+                className="w-full h-full bg-no-repeat bg-center bg-cover">
+
+            </div>}
         </div>
     </div>
 }

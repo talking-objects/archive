@@ -4,6 +4,12 @@
 
 
 
+@font-face {
+  font-family: "WritingObjects";
+  src: url("/assets/fonts/WritingObjects-Regular.woff") format("woff");
+}
+
+
 body {
  
   font-family: Arial, Helvetica, sans-serif;
