@@ -8,7 +8,18 @@
   font-family: "WritingObjects";
   src: url("/assets/fonts/WritingObjects-Regular.woff") format("woff");
 }
-
+@font-face {
+  font-family: "IBMMonoBoldItalic";
+  src: url("/assets/fonts/IBMPlexMono-BoldItalic.ttf");
+}
+@font-face {
+  font-family: "IBMMonoBold";
+  src: url("/assets/fonts/IBMPlexMono-Bold.ttf");
+}
+@font-face {
+  font-family: "IBMMonoRegular";
+  src: url("/assets/fonts/IBMPlexMono-Regular.ttf");
+}
 
 body {
  

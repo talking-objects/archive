@@ -6,28 +6,28 @@ import gsap from "gsap"
 
 const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
-  useEffect(() => {
-    if(getLoadingState.isLoading && !getLoadingState.hasAnimated){
-        gsap
-        .to(".navAni", {
-            duration: 2,
-            ease: "expo.inOut",
-            css: {
-                transform: "translateY(0)"
-            },
-            onComplete: () => {
-                setLoadingState((prev) => ({
-                    ...prev,
-                    hasAnimated: true
-                }))
-              }
-        })
-    }
-  },[getLoadingState])
+//   useEffect(() => {
+//     if(getLoadingState.isLoading && !getLoadingState.hasAnimated){
+//         gsap
+//         .to(".navAni", {
+//             duration: 2,
+//             ease: "expo.inOut",
+//             css: {
+//                 transform: "translateY(0)"
+//             },
+//             onComplete: () => {
+//                 setLoadingState((prev) => ({
+//                     ...prev,
+//                     hasAnimated: true
+//                 }))
+//               }
+//         })
+//     }
+//   },[getLoadingState])
   return (
     <>
       {getLoadingState && (
-        <div className={`navAni fixed top-0 left-0 -translate-y-full w-full h-[56px] bg-black z-[1000] text-white flex items-center px-4 gap-8`}>
+        <div className={`navAni fixed top-0 left-0 w-full h-[56px] bg-black z-[1000] text-white flex items-center px-4 gap-8`}>
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
