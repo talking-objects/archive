@@ -5,10 +5,13 @@ import {
 } from "@/app/components/containers/Containers";
 import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import Contents from "@/app/components/elements/contents/Contents";
+import LoadingCon from "@/app/components/LoadingCon";
 import { createFakeAnnotations } from "@/app/utils/hooks/etc";
 import { getAllAnnotations, getVideo } from "@/app/utils/hooks/pandora_api";
+import { loadingState } from "@/app/utils/recoillib/state/state";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 
 const VideoWrapper = () => {
   const params = useParams();
@@ -74,18 +77,22 @@ const VideoWrapper = () => {
       };
     }
   }, []);
+  const getLoadingState = useRecoilValue(loadingState);
 
   return (
-    <MainContainer>
-      {!isLoading && getVideoData && (
+    <>
+      {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
+        <LoadingCon ready={Boolean(getVideoData)} />
+      )}
+     {!isLoading && getVideoData && (<MainContainer>
         <>
           <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
             <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} setCurrentTimeForMini={setCurrentTimeForMini} />
           </div>
           <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo}  />
         </>
-      )}
-    </MainContainer>
+    </MainContainer>)}
+    </>
   );
 };
 

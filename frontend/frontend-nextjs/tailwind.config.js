@@ -16,7 +16,8 @@ module.exports = {
           c4: "#EC6735",
           c5: "#F1A73D",
           c6: "#3118E8",
-        }
+        },
+      
       },
       fontFamily: {
         eva: ["WritingObjects"],

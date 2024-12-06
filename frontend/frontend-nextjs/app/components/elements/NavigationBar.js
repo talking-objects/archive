@@ -3,9 +3,11 @@ import { loadingState } from "@/app/utils/recoillib/state/state";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import gsap from "gsap"
+import { useRouter } from "next/navigation";
 
 const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
+  const router = useRouter()
 //   useEffect(() => {
 //     if(getLoadingState.isLoading && !getLoadingState.hasAnimated){
 //         gsap
@@ -28,7 +30,7 @@ const NavigationBar = () => {
     <>
       {getLoadingState && (
         <div className={`navAni fixed top-0 left-0 w-full h-[56px] bg-black z-[1000] text-white flex items-center px-4 gap-8`}>
-          <div>
+          <div onClick={() => router.push("/")}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

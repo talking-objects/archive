@@ -27,9 +27,9 @@ body {
 }
 
 @layer components {
-  .section-padding {
+  /* .section-padding {
     @apply py-8
-  }
+  } */
 }
 .hide_scrollbar {
   -ms-overflow-style: none; /* for Internet Explorer, Edge */

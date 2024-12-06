@@ -77,7 +77,7 @@ const LoadingCon = ({ ready = false }) => {
           transform: "translateY(0)",
         },
         stagger: {
-          amount: 0.5,
+          amount: 1,
         },
         onComplete: () => {
           console.log("Yeah");
