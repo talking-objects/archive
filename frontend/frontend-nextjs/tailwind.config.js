@@ -23,6 +23,7 @@ module.exports = {
         eva: ["WritingObjects"],
         ibm_mono_bolditalic: ["IBMMonoBoldItalic"],
         ibm_mono_bold: ["IBMMonoBold"],
+        ibm_mono_semibold: ["IBMMonoSemiBold"],
         ibm_mono_regular: ["IBMMonoRegular"],
         
       },

@@ -32,7 +32,7 @@ const HomeWrapper = () => {
         <MainContainer>
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (
-            <ContentContainer>
+            <ContentContainer padding={false}>
               <AboutSection />
               <RelatedSection />
             </ContentContainer>

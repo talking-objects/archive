@@ -1,11 +1,17 @@
+import Image from "next/image";
 import SectionContainer from "./elements/SectionContainer";
 import SectionHeader from "./elements/SectionHeader";
 import SectionSubHeader from "./elements/SectionSubHeader";
+import DefaultBG from "/public/assets/logo-full-menu.svg"
 
 const RelationBox = () => {
     return (
     <div className="flex-1">
-      <div className="w-full aspect-video bg-white rounded-2xl border border-black"></div>
+      <div className="w-full aspect-video bg-white rounded-2xl border border-black">
+        <div className="w-full h-full flex justify-center items-center px-4 py-2">
+          <DefaultBG />
+        </div>
+      </div>
       <div className="w-full h-fit font-ibm_mono_regular px-4 py-4 pt-8 text-[10px] lg:text-[16px]">
         <p>A digital archive for decolonial knowledge production. It is a curated archive and has no claim to completeness. Based on selected objects or collections, the Western canon is expanded to include further schools of thought and epistemologies.</p>
       </div>

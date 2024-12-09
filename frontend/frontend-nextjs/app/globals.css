@@ -17,6 +17,10 @@
   src: url("/assets/fonts/IBMPlexMono-Bold.ttf");
 }
 @font-face {
+  font-family: "IBMMonoSemiBold";
+  src: url("/assets/fonts/IBMPlexMono-SemiBold.ttf");
+}
+@font-face {
   font-family: "IBMMonoRegular";
   src: url("/assets/fonts/IBMPlexMono-Regular.ttf");
 }
