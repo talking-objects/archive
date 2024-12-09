@@ -8,29 +8,17 @@ import { useRouter } from "next/navigation";
 const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
   const router = useRouter()
-//   useEffect(() => {
-//     if(getLoadingState.isLoading && !getLoadingState.hasAnimated){
-//         gsap
-//         .to(".navAni", {
-//             duration: 2,
-//             ease: "expo.inOut",
-//             css: {
-//                 transform: "translateY(0)"
-//             },
-//             onComplete: () => {
-//                 setLoadingState((prev) => ({
-//                     ...prev,
-//                     hasAnimated: true
-//                 }))
-//               }
-//         })
-//     }
-//   },[getLoadingState])
   return (
     <>
       {getLoadingState && (
-        <div className={`navAni fixed top-0 left-0 w-full h-[56px] bg-black z-[1000] text-white flex items-center px-4 gap-8`}>
-          <div onClick={() => router.push("/")}>
+        <div className={`navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[1000] text-white flex items-center justify-between px-4 gap-8`}>
+          <div onClick={() => router.push("/")} className="cursor-pointer">Experimental Video Archive</div>
+          <div className="flex gap-4 items-center text-[14px]">
+            <div>Forest</div>
+            <div>About</div>
+            <div className="px-3 py-[6px] bg-eva-c2 rounded-sm">Annotation Board</div>
+          </div>
+          {/* <div onClick={() => router.push("/")}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -45,7 +33,7 @@ const NavigationBar = () => {
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </svg>
-          </div>
+          </div> */}
         </div>
       )}
     </>
