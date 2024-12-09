@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil";
 import gsap from "gsap";
 import { loadingState } from "../utils/recoillib/state/state";
 
-const LoadingCon = ({ ready = false }) => {
+const LoadingCon = ({ ready = false, comLoader=()=>{} }) => {
     const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
     const [ready2, setReady2] = useState(false);
   
@@ -25,6 +25,7 @@ const LoadingCon = ({ ready = false }) => {
                 transform: "translateY(-100%)",
               },
               onComplete: () => {
+                comLoader()
                 setLoadingState((prev) => ({
                   ...prev,
                   hasAnimated: true,

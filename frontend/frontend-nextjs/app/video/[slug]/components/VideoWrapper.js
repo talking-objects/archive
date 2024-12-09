@@ -6,6 +6,7 @@ import {
 import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import Contents from "@/app/components/elements/contents/Contents";
 import LoadingCon from "@/app/components/LoadingCon";
+import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { createFakeAnnotations } from "@/app/utils/hooks/etc";
 import { getAllAnnotations, getVideo } from "@/app/utils/hooks/pandora_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
@@ -21,7 +22,8 @@ const VideoWrapper = () => {
   const videoContainerRef = useRef(null);
   const [showContentVideo, setShowContentVideo] = useState(false);
   const [getCurrentTimeForMini, setCurrentTimeForMini] = useState(0)
- 
+  const [isReady, setIsReady] = useState(false)
+  const getLoadingState = useRecoilValue(loadingState);
  
   useEffect(() => {
     if (!isLoading && !annotationLoading) {
@@ -45,9 +47,18 @@ const VideoWrapper = () => {
         editVersion: false,
       });
       console.log(data.data.items[0])
+
       setVideoData(data.data.items[0]);
     }
   }, [data, annotationData]);
+
+  // useEffect(() => {
+  //   if(getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady)){
+  //     if(Boolean(getVideoData)){
+  //       setIsReady(true)
+  //     }
+  //   }
+  // },[getVideoData])
 
   if (error) {
     return (
@@ -77,13 +88,20 @@ const VideoWrapper = () => {
       };
     }
   }, []);
-  const getLoadingState = useRecoilValue(loadingState);
+  
+
+  if((getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady))){
+    return <div className="w-full h-[100svh]">
+      <LoadingDataCon ready={isReady} readyData={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
+    </div>
+  }
 
   return (
     <>
       {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
-        <LoadingCon ready={Boolean(getVideoData)} />
+        <LoadingCon ready={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
       )}
+      
      {!isLoading && getVideoData && (<MainContainer>
         <>
           <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
