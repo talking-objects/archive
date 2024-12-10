@@ -261,7 +261,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                 <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} flex`}>
                   <VideoTitle text={data.title} />
                 </div>
-                <VideoMeta currentVideo={data} />
+                <VideoMeta playToggle={playToggle} currentVideo={data} />
                 {/* <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                    <div>Author: {Boolean(data.director) && Boolean(data.director.length > 0) && data.director.map((v) => `${v},`)} {data.user}</div>
                    <div>

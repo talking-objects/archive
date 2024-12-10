@@ -55,7 +55,7 @@ const HomeHeader = ({ currentVideo }) => {
           >
             <VideoTitle text={currentVideo.title} />
           </div>
-          <VideoMeta currentVideo={currentVideo} />
+          <VideoMeta videoBool={false} currentVideo={currentVideo} />
         </div>
       </div>
     </div>

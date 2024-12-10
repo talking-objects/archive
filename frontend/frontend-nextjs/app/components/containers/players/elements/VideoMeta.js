@@ -1,6 +1,6 @@
-const VideoMeta = ({currentVideo}) => {
+const VideoMeta = ({currentVideo, videoBool=true, playToggle=true}) => {
     return <div
-    className={`text-black bg-white bg-opacity-80 w-fit px-2 py-1 opacity-100 translate-x-0 transition-all duration-1000`}
+    className={`${videoBool ? (!playToggle) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full" : "opacity-100 translate-x-0"} text-black bg-white bg-opacity-80 w-fit px-2 py-1 opacity-100 duration-1000`}
   >
     <div className="flex flex-wrap gap-2">
       <BoxLabel text={"Author:"} />
