@@ -6,6 +6,8 @@ import { LegendContainer, VideoNavigation } from "../../elements/Elements"
 import DiagramaticView from "./views/DiagramaticView"
 import EntangledView from "./views/EntangledView"
 import OverviewView from "./views/OverviewView"
+import VideoTitle from "./elements/VideoTitle"
+import VideoMeta from "./elements/VideoMeta"
 
 
 
@@ -256,8 +258,11 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                    </svg>
                 </div>
                 {clip && <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-fit text-black px-2 py-1 bg-[#9E21E8] text-4xl font-bold italic transition-all duration-1000`}>Clip</div>}
-                <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic transition-all duration-1000`}>{data.title}</div>
-                <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
+                <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} flex`}>
+                  <VideoTitle text={data.title} />
+                </div>
+                <VideoMeta currentVideo={data} />
+                {/* <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                    <div>Author: {Boolean(data.director) && Boolean(data.director.length > 0) && data.director.map((v) => `${v},`)} {data.user}</div>
                    <div>
                       <div>Created:</div>
@@ -267,7 +272,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                       <div>Modified:</div>
                       <div>{data.modified}</div>
                    </div>
-                </div>
+                </div> */}
                 {clip && <div onClick={() => route.push(`/video/${data.id}`)} className={`text-black bg-white w-fit px-2 py-2 cursor-pointer ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 19.5-15-15m0 0v11.25m0-11.25h11.25" />

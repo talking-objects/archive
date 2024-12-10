@@ -1,13 +1,10 @@
+import VideoMeta from "@/app/components/containers/players/elements/VideoMeta";
+import VideoTitle from "@/app/components/containers/players/elements/VideoTitle";
 import { BASE_URL } from "@/app/utils/constant/etc";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-const BoxLabel = ({ text }) => {
-  return <span className="font-ibm_mono_regular">{text}</span>;
-};
-const BoxValue = ({ text }) => {
-  return <span className="font-ibm_mono_bold">{text}</span>;
-};
+
 
 const HomeHeader = ({ currentVideo }) => {
   const router = useRouter();
@@ -54,43 +51,11 @@ const HomeHeader = ({ currentVideo }) => {
           className={`absolute top-0 left-0 z-[40] overflow-hidden w-full h-fit flex flex-col gap-4`}
         >
           <div
-            className={`opacity-100 translate-x-0 w-full lg:w-3/5 text-black px-2 bg-[#8BA5F8] text-2xl md:text-4xl lg:text-5xl font-ibm_mono_bolditalic italic transition-all duration-1000 py-2 lg:py-4`}
+            className={`opacity-100 translate-x-0 flex`}
           >
-            {currentVideo.title}
+            <VideoTitle text={currentVideo.title} />
           </div>
-          <div
-            className={`text-black bg-white bg-opacity-80 w-fit px-2 py-1 opacity-100 translate-x-0 transition-all duration-1000`}
-          >
-            <div className="flex flex-wrap gap-2">
-              <BoxLabel text={"Author:"} />
-              <BoxValue
-                text={[
-                  currentVideo.user &&
-                    (Array.isArray(currentVideo.user)
-                      ? currentVideo.user
-                          .map((val) => `${val[0].toUpperCase()}${val.slice(1)}`)
-                          .join(", ")
-                      : `${currentVideo.user[0].toUpperCase()}${currentVideo.user.slice(1)}`),
-                  currentVideo.director &&
-                    (Array.isArray(currentVideo.director)
-                      ? currentVideo.director
-                          .map((val) => `${val[0].toUpperCase()}${val.slice(1)}`)
-                          .join(", ")
-                      : `${currentVideo.director[0].toUpperCase()}${currentVideo.director.slice(1)}`),
-                    ]
-                  .filter(Boolean) // null, undefined 또는 빈 값을 제거
-                  .join(", ")} // 쉼표로 연결
-              />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <BoxLabel text={"Created:"} />
-              <BoxValue text={`${currentVideo.created}`} />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <BoxLabel text={"Modified:"} />
-              <BoxValue text={`${currentVideo.modified}`} />
-            </div>
-          </div>
+          <VideoMeta currentVideo={currentVideo} />
         </div>
       </div>
     </div>
