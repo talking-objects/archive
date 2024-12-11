@@ -3,60 +3,103 @@ import SectionHeader from "./elements/SectionHeader";
 import { useEffect, useState } from "react";
 import { BASE_URL } from "@/app/utils/constant/etc";
 import SectionContainer from "./elements/SectionContainer";
+import { Swiper, SwiperSlide } from "swiper/react";
+import 'swiper/css';
 
-
-const CurrentStageBox = ({val}) => {
-    const {data, isLoading} = getVideo({pId: val})
-    const [getCurrentVideo, setCurrentVideo] = useState(null);
-
-    useEffect(() => {
-      if(!isLoading){
-        console.log(val)
-        console.log(data)
-        if(data.data.items[0]){
-          setCurrentVideo(data.data.items[0])
-        }
-      }
-    },[data])
-    if(!getCurrentVideo){
-      return <div className="w-full aspect-video bg-cover bg-center bg-no-repeat">Error</div>
+const IndicatorBtn = ({children, left=true, clickFunc}) => {
+  return <div onClick={clickFunc} className="flex w-[50px] opacity-50 hover:opacity-100 bg-white border border-black rounded-full cursor-pointer aspect-square justify-center items-center">
+    {
+      left && <div className="pr-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+    </svg>
+    </div>
     }
-    return <div style={{backgroundImage: `url(${BASE_URL}/${getCurrentVideo.id}/480p${getCurrentVideo.posterFrame}.jpg)`}} className={`w-full aspect-video bg-cover bg-center bg-no-repeat`}></div>
+    {
+      !left && <div className="pl-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+    </svg>
+    </div>
+    }
+  </div>
 }
-
-
-const CurrentStage = ({itemList}) => {
-  const [getPage, setPage] = useState(1)
+const CurrentStageBox = ({ val, clickFunc, mainVideoId }) => {
+  const { data, isLoading } = getVideo({ pId: val });
+  const [getCurrentVideo, setCurrentVideo] = useState(null);
   
-  const onNext = () => {
-    setPage(prev => prev + 1)
-  }
-  const onPrev = () => {
-    setPage(prev => {
-      if(prev > 1){
-        return prev -1
-      }else{
-        return prev
-      }
-    })
-  }
 
+  useEffect(() => {
+    if (!isLoading) {
+      console.log(val);
+      console.log(data);
+      if (data.data.items[0]) {
+        setCurrentVideo(data.data.items[0]);
+      }
+    }
+  }, [data]);
+  if (!getCurrentVideo) {
+    return (
+      <div className="w-full aspect-video bg-cover bg-center bg-no-repeat">
+        Error
+      </div>
+    );
+  }
+  return (
+    <div
+      onClick={clickFunc}
+      style={{
+        backgroundImage: `url(${BASE_URL}/${getCurrentVideo.id}/480p${getCurrentVideo.posterFrame}.jpg)`,
+      }}
+      className={`relative w-full aspect-video bg-cover bg-center bg-no-repeat cursor-pointer group`}
+    >
+      <div className={`w-full h-full absolute top-0 left-0 bg-black ${val === mainVideoId ? "bg-opacity-0" : "bg-opacity-40"} group-hover:bg-opacity-0 transition-all`}></div>
+
+    </div>
+  );
+};
+
+const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
+  const [swiperRef, setSwiperRef] = useState(null);
+
+  const onNext = () => {
+    if (swiperRef) {
+      swiperRef.slideNext(); // Navigate to the next slide
+      
+    }
+  };
+  const onPrev = () => {
+    if (swiperRef) {
+      swiperRef.slidePrev(); // Navigate to the next slide
+    }
+  };
+
+  const onChangeCurrentVideo = (videoId) => {
+    setMainVideoId(videoId)
+  }
 
   return (
     <div className="w-full flex flex-col gap-4 px-4 py-4 section-padding">
-        <SectionHeader text={"Currently on Stage"} />
-         <div className="w-full flex justify-between items-center gap-8">
-         
-          {itemList && <div className="flex-1 grid grid-cols-3 gap-4">
-              {
+      <SectionHeader text={"Currently on Stage"} />
+      <div className="w-full flex justify-between items-center gap-4">
+        <IndicatorBtn clickFunc={onPrev}></IndicatorBtn>
+        {itemList && (
+          <Swiper
+            className="flex-1 w-full h-fit bg-white overflow-hidden"
+            slidesPerView={3}
+            loop={true}
+            spaceBetween={20}
+            onSwiper={(swiper) => setSwiperRef(swiper)}
+          
+          >
+            {
                 itemList.length > 0 && itemList.map((val, idx) => {
-                  return <CurrentStageBox key={idx} val={val} />
+                  return <SwiperSlide key={idx} ><CurrentStageBox val={val} mainVideoId={mainVideoId} clickFunc={() => onChangeCurrentVideo(val)} /></SwiperSlide>
                 })
               }
-          </div>}
-          
-        </div>
-
+          </Swiper>
+        )}
+        <IndicatorBtn clickFunc={onNext} left={false}></IndicatorBtn>
+        
+      </div>
     </div>
   );
 };

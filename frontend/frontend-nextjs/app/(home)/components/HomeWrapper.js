@@ -14,8 +14,8 @@ import CurrentStage from "./CurrentStage";
 
 
 const HomeWrapper = () => {
-  const itemList = ["AL", "G", "AA", "CL"]
-  const [mainVideoId, setMainVideoId] = useState(itemList[0])
+  const itemList = ["AL", "G", "AA", "CL","U","F"]
+  const [mainVideoId, setMainVideoId] = useState([...itemList][Math.floor(Math.random() * itemList.length)])
   const { data, isLoading } = getVideo({ pId: mainVideoId });
   const [currentVideo, setCurrentVideo] = useState(null);
   const getLoadingState = useRecoilValue(loadingState);
@@ -36,7 +36,7 @@ const HomeWrapper = () => {
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (
             <ContentContainer padding={false}>
-              <CurrentStage itemList={itemList} />
+              <CurrentStage itemList={itemList} setMainVideoId={setMainVideoId} mainVideoId={mainVideoId} />
               <AboutSection />
               <RelatedSection />
             </ContentContainer>
