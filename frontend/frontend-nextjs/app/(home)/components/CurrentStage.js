@@ -6,16 +6,16 @@ import SectionContainer from "./elements/SectionContainer";
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
 
-const IndicatorBtn = ({children, left=true, clickFunc}) => {
-  return <div onClick={clickFunc} className="flex w-[50px] opacity-50 hover:opacity-100 bg-white border border-black rounded-full cursor-pointer aspect-square justify-center items-center">
+const IndicatorBtn = ({ left=true, clickFunc}) => {
+  return <div onClick={clickFunc} className="flex w-[30px] lg:w-[50px] opacity-50 hover:opacity-100 bg-white border-0 border-black rounded-full cursor-pointer aspect-square justify-center items-center">
     {
-      left && <div className="pr-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+      left && <div className="lg:pr-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-5 lg:size-6">
       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
     </svg>
     </div>
     }
     {
-      !left && <div className="pl-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+      !left && <div className="lg:pl-1"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-5 lg:size-6">
       <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
     </svg>
     </div>
@@ -77,9 +77,9 @@ const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
   }
 
   return (
-    <div className="w-full flex flex-col gap-4 px-4 py-4 section-padding">
+    <SectionContainer row={false} big={true}>
       <SectionHeader text={"Currently on Stage"} />
-      <div className="w-full flex justify-between items-center gap-4">
+      <div className="w-full flex justify-between items-center gap-4 mt-4">
         <IndicatorBtn clickFunc={onPrev}></IndicatorBtn>
         {itemList && (
           <Swiper
@@ -100,7 +100,7 @@ const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
         <IndicatorBtn clickFunc={onNext} left={false}></IndicatorBtn>
         
       </div>
-    </div>
+      </SectionContainer>
   );
 };
 
