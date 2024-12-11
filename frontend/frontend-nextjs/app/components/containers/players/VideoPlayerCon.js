@@ -258,8 +258,8 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                    </svg>
                 </div>
                 {clip && <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-fit text-black px-2 py-1 bg-[#9E21E8] text-4xl font-bold italic transition-all duration-1000`}>Clip</div>}
-                <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} flex`}>
-                  <VideoTitle text={data.title} />
+                <div className={`${(!playToggle) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} duration-1000 flex`}>
+                  <VideoTitle text={data.title} playToggle={playToggle} />
                 </div>
                 <VideoMeta playToggle={playToggle} currentVideo={data} />
                 {/* <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>

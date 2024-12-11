@@ -1,36 +1,48 @@
 import ContentBox from "./ContentBox";
 
+const LabelTitle = ({text}) => {
+   return <div className="font-ibm_mono_semibold text-[16px]">{text}</div>
+}
+const ContentText = ({text}) => {
+   return <div className="text-[16px] font-ibm_mono_regular leading-tight">{text}</div>
+}
+const ContentTextHtml = ({text}) => {
+   return <div dangerouslySetInnerHTML={{__html: `${text}`}} className="text-[16px] font-ibm_mono_regular leading-tight"></div>
+}
+
 const AboutWapper = ({getVideoData}) => {
     return <ContentBox title={"Context"} id="context_box">
     <div>
-       <div>Summary</div>
-       <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div>
+       <LabelTitle text={"Description"} />
+       <ContentTextHtml text={getVideoData.summary} />
+       {/* <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div> */}
     </div>
     <div className="grid grid-cols-3 mt-4 gap-4">
        {getVideoData.user && <div>
-          <div>Contributors</div>
-          { getVideoData.director && <div className="text-sm">{typeof getVideoData.director === "string" ? getVideoData.director : getVideoData.director.join(", ")} </div>}
-          <div className="text-sm">{typeof getVideoData.user === "string" ? getVideoData.user : getVideoData.user.join(", ")} </div>
+          <LabelTitle text={"Contributors"} />
+          {getVideoData.director && <ContentText text={typeof getVideoData.director === "string" ? getVideoData.director : getVideoData.director.join(", ")} />}
+          {getVideoData.user && <ContentText text={typeof getVideoData.user === "string" ? getVideoData.user : getVideoData.user.join(", ")} />}
+          
        </div>}
        {getVideoData.country && <div>
-          <div>Country</div>
-          <div className="text-sm"> {getVideoData.country.join(", ")}</div>
+          <LabelTitle text={"Country"} />
+          <ContentText text={getVideoData.country.join(", ")} />
        </div>}
        {getVideoData.place && <div>
-          <div>Place</div>
-          <div className="text-sm"> {getVideoData.place}</div>
+          <LabelTitle text={"Place"} />
+          <ContentText text={getVideoData.place} />
        </div>}
        {getVideoData.source && <div>
-          <div>Source</div>
-          <div className="text-sm">{getVideoData.source}</div>
+          <LabelTitle text={"Source"} />
+          <ContentText text={getVideoData.source} />
        </div>}
        {getVideoData.language && <div>
-          <div>Language</div>
-          <div className="text-sm"> {typeof getVideoData.language ==="string" ? getVideoData.language : getVideoData.language.join(", ")} </div>
+          <LabelTitle text={"Language"} />
+          <ContentText text={typeof getVideoData.language ==="string" ? getVideoData.language : getVideoData.language.join(", ")} />
        </div>}
        {getVideoData.genre && <div>
-          <div>Genre</div>
-          <div className="text-sm">{getVideoData.genre}</div>
+          <LabelTitle text={"Genre"} />
+          <ContentText text={getVideoData.genre} />
        </div>}
     </div>  
 </ContentBox>

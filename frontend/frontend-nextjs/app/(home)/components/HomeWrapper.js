@@ -10,10 +10,13 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { loadingState } from "@/app/utils/recoillib/state/state";
 
 import LoadingCon from "@/app/components/LoadingCon";
+import CurrentStage from "./CurrentStage";
 
 
 const HomeWrapper = () => {
-  const { data, isLoading } = getVideo({ pId: "AL" });
+  const itemList = ["AL", "G", "AA", "CL"]
+  const [mainVideoId, setMainVideoId] = useState(itemList[0])
+  const { data, isLoading } = getVideo({ pId: mainVideoId });
   const [currentVideo, setCurrentVideo] = useState(null);
   const getLoadingState = useRecoilValue(loadingState);
 
@@ -33,6 +36,7 @@ const HomeWrapper = () => {
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (
             <ContentContainer padding={false}>
+              <CurrentStage itemList={itemList} />
               <AboutSection />
               <RelatedSection />
             </ContentContainer>
