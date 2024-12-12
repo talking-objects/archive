@@ -271,7 +271,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
         clearTimeout(resizeTimer); // 타이머 제거
       }
     };
-  },[])
+  },[data])
 
 //   useEffect(() => {
 //     if(isLoading){
@@ -290,7 +290,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
         </div>
         <div ref={svgContainerRef} className="w-full h-full flex-1 flex  flex-col border-2 border-neutral-500 overflow-hidden rounded-xl relative">
           <svg ref={svgRef}></svg>
-          {isLoading && <div id="ctvisResize" className="absolute top-0 left-0 w-full h-full bg-white flex justify-center items-center "><span className="animate-bounce">Resizing...</span></div>}
+          <div id="ctvisResize" className={`${isLoading ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}  select-none absolute top-0 left-0 w-full h-full bg-white flex justify-center items-center text-sm duration-300`}><span className="animate-bounce font-ibm_mono_semibold">Resizing...</span></div>
         </div>
     </div>
   );
