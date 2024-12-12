@@ -51,7 +51,7 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
                     return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-sm px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? "bg-eva-c5" : "bg-eva-c2"} hover:bg-eva-c5 rounded-xl select-none cursor-pointer transition-all duration-150`}>{val.value}</div>
                 })}
             </div>
-            <CTVis totalDuration={getVideoData.duration} data={currentCatAndTagData} bgColor={CATEGORY_AND_TAGVALUE[0].color} />
+            {currentCatAndTagData && <CTVis totalDuration={getVideoData.duration} data={currentCatAndTagData} bgColor={CATEGORY_AND_TAGVALUE[0].color} />}
         </div>
     </ContentBox>)
 }

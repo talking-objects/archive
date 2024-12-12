@@ -39,8 +39,24 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
       svg.selectAll("*").remove();
 
       const gGrid = svg.append("g");
+      const gItems = svg.append("g")
       const gx = svg.append("g");
       const gy = svg.append("g");
+   
+      gItems.selectAll("rect")
+      .data(data)
+      .join("rect")
+        .attr("fill", "red")
+        .attr("x", function(d){
+            const remainder= x(parseFloat(d.in) % 60)
+            return remainder
+        })
+        .attr("y", function(d){
+            const div= y(Math.floor(parseFloat(d.in) / 60)) - 15
+            return div
+        })
+        .attr("width", "15px")
+        .attr("height", "15px")
 
       const xAxis = (g, x) => g
       .attr("transform", `translate(0,${svgContainerSize.height})`)
@@ -50,6 +66,8 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
       const yAxis = (g, y) => g
       .call(d3.axisRight(y).ticks(12 * k))
       .call(g => g.select(".domain").attr("display", "none"))
+
+
 
       const grid = (g, x, y) =>
         g
@@ -94,12 +112,13 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
       
         const zx = transform.rescaleX(x).interpolate(d3.interpolateRound);
         const zy = transform.rescaleY(y).interpolate(d3.interpolateRound);
-     
         gx.call(xAxis, zx);
         gy.call(yAxis, zy);
         gGrid.call(grid, zx, zy);
+        gItems.attr("transform", transform)
       };
-      const zoom = d3.zoom().translateExtent([[0, 0], [svgContainerSize.width , svgContainerSize.height]]).scaleExtent([1, 40]).on("zoom", zoomed);
+
+      const zoom = d3.zoom().translateExtent([[0, 0], [svgContainerSize.width , svgContainerSize.height]]).scaleExtent([0.5, 40]).on("zoom", zoomed);
 
       svg
         .attr("viewBox", [
