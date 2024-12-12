@@ -60,11 +60,11 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
 
       const xAxis = (g, x) => g
       .attr("transform", `translate(0,${svgContainerSize.height})`)
-      .call(d3.axisTop(x).ticks(12))
+      .call(d3.axisTop(x).ticks(12).tickValues(x.ticks(12).filter(tick => Number.isInteger(tick))).tickFormat(d3.format("d")))
       .call(g => g.select(".domain").attr("display", "none"))
 
       const yAxis = (g, y) => g
-      .call(d3.axisRight(y).ticks(12 * k))
+      .call(d3.axisRight(y).ticks(12 * k).tickValues(y.ticks(12 * k).filter(tick => Number.isInteger(tick))).tickFormat(d3.format("d")))
       .call(g => g.select(".domain").attr("display", "none"))
 
 
@@ -76,7 +76,7 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
           .call((g) =>
             g
               .selectAll(".x")
-              .data(x.ticks(12))
+              .data(x.ticks(12).filter(tick => Number.isInteger(tick)))
               .join(
                 (enter) =>
                   enter
@@ -92,7 +92,7 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
           .call((g) =>
             g
               .selectAll(".y")
-              .data(y.ticks(12 * k))
+              .data(y.ticks(12 * k).filter(tick => Number.isInteger(tick)))
               .join(
                 (enter) =>
                   enter
@@ -118,7 +118,7 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
         gItems.attr("transform", transform)
       };
 
-      const zoom = d3.zoom().translateExtent([[0, 0], [svgContainerSize.width , svgContainerSize.height]]).scaleExtent([0.5, 40]).on("zoom", zoomed);
+      const zoom = d3.zoom().translateExtent([[0, 0], [svgContainerSize.width , svgContainerSize.height]]).scaleExtent([1, 40]).on("zoom", zoomed);
 
       svg
         .attr("viewBox", [
