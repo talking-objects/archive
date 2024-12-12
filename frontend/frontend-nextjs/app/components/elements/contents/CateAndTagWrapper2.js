@@ -46,13 +46,13 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
 
     return (
     <ContentBox title={"Categories & Tags"} id="cate_and_tag_box">
-        <div className="w-full relative overflow-hidden">
-            <div className="flex gap-2 items-center justify-start flex-wrap mb-8">
+        <div className="w-full aspect-square relative overflow-hidden flex flex-col gap-4">
+            <div className="flex gap-2 items-center justify-start flex-wrap">
                 {CATEGORY_AND_TAGVALUE.map((val, idx) => {
-                    return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-sm px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? "bg-eva-c5" : "bg-eva-c2"} hover:bg-eva-c5 rounded-xl select-none cursor-pointer transition-all duration-150`}>{val.value}</div>
+                    return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-[12px] px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? "bg-eva-c5" : "bg-eva-c2"} hover:bg-eva-c5 rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>{val.value}</div>
                 })}
             </div>
-            {currentCatAndTagData && <CTVis totalDuration={getVideoData.duration} data={currentCatAndTagData} bgColor={currentColor} />}
+            {currentCatAndTagData && <CTVis changeItemTime={changeItemTime} totalDuration={getVideoData.duration} data={currentCatAndTagData} bgColor={currentColor} videoId={videoId} />}
         </div>
     </ContentBox>)
 }
