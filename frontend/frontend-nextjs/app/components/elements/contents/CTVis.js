@@ -25,9 +25,10 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
       //     // .domain([0, Math.floor(totalDuration)])
       //     // .domain([-4.5, 4.5])
       //     .range([0, svgContainerSize.width]);
+      console.log(Math.floor(totalDuration / 60))
       const y = d3
         .scaleLinear()
-        .domain([0, Math.floor(totalDuration / 60) * k]) // y축 도메인을 분 단위로 설정
+        .domain([0, Math.floor(totalDuration / 60)]) // y축 도메인을 분 단위로 설정
         .range([svgContainerSize.height, 0]);
       //   const y = d3
       //     .scaleLinear()
@@ -52,7 +53,7 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
         .selectAll("rect")
         .data(data)
         .join("rect")
-        .attr("fill", "red")
+        .attr("fill", `${bgColor}`)
         .attr("x", function (d) {
           const remainder = x(parseFloat(d.in) % 60);
           return remainder;
@@ -182,7 +183,7 @@ const CTVis = ({ data, bgColor, totalDuration }) => {
               </svg>
           </div>
         </div>
-        <div ref={svgContainerRef} className="w-full aspect-square flex flex-col gap-2">
+        <div ref={svgContainerRef} className="w-full aspect-video flex flex-col gap-2">
           <svg ref={svgRef}></svg>
         </div>
     </div>
