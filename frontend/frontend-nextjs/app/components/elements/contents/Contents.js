@@ -94,7 +94,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <PlaceWrapper getVideoData={getVideoData} changeItemTime={changeItemTime}/>}
                         {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <EventWrapper getVideoData={getVideoData} isLoading={isLoading} changeItemTime={changeItemTime} />}
                         {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <CateAndTagWrapper2 getVideoData={getVideoData} videoId={videoId} changeItemTime={changeItemTime} />}
-                        {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <CateAndTagWrapper getVideoData={getVideoData} videoId={videoId} changeItemTime={changeItemTime} />}
+                        {/* {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <CateAndTagWrapper getVideoData={getVideoData} videoId={videoId} changeItemTime={changeItemTime} />} */}
                         {(getVideoData.nAnnotations.refList && getVideoData.nAnnotations.refList.length > 0) && <RefWapper getVideoData={getVideoData} changeItemTime={changeItemTime} />}
                         {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <NarrationWrapper getVideoData={getVideoData} changeItemTime={changeItemTime}  />}
                     </div>   
