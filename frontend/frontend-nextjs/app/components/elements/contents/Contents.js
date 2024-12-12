@@ -7,6 +7,8 @@ import EventWrapper from "./EventWrapper";
 import CateAndTagWrapper from "./CateAndTagWrapper";
 import RefWapper from "./RefWrapper";
 import NarrationWrapper from "./NarrationWrapper";
+import ContentBox from "./ContentBox";
+import CateAndTagWrapper2 from "./CateAndTagWrapper2";
 const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, showContentVideo}) => {
     const contentsRef = useRef(null)
     const contentsDummyRef = useRef(null)
@@ -88,8 +90,10 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                     <div ref={contentsDummyRef} className="w-full bg-white"></div>
                     <div ref={contentsRef} className="w-full absolute top-[40px] left-0 flex flex-col gap-10">
                         {getVideoData.summary && <AboutWapper getVideoData={getVideoData} />}
+                        {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <div className="w-full text-[40px] flex justify-end"><div className="w-1/2 px-4 font-ibm_mono_bolditalic text-[48px] leading-[1.1]">Expand the objects universe</div></div>}
                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <PlaceWrapper getVideoData={getVideoData} changeItemTime={changeItemTime}/>}
                         {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <EventWrapper getVideoData={getVideoData} isLoading={isLoading} changeItemTime={changeItemTime} />}
+                        {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <CateAndTagWrapper2 getVideoData={getVideoData} videoId={videoId} changeItemTime={changeItemTime} />}
                         {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <CateAndTagWrapper getVideoData={getVideoData} videoId={videoId} changeItemTime={changeItemTime} />}
                         {(getVideoData.nAnnotations.refList && getVideoData.nAnnotations.refList.length > 0) && <RefWapper getVideoData={getVideoData} changeItemTime={changeItemTime} />}
                         {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <NarrationWrapper getVideoData={getVideoData} changeItemTime={changeItemTime}  />}

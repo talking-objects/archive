@@ -11,7 +11,7 @@ const ContentTextHtml = ({text}) => {
 }
 
 const AboutWapper = ({getVideoData}) => {
-    return <ContentBox title={"Context"} id="context_box">
+    return <ContentBox title={"Context"} id="context_box" about={true}>
     <div>
        <LabelTitle text={"Description"} />
        <ContentTextHtml text={getVideoData.summary} />

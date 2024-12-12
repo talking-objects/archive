@@ -2,6 +2,8 @@
 https://github.com/talking-objects/archive/tree/frontend
 
 # Ref
+- [zoom grid d3js](https://observablehq.com/@d3/x-y-zoom)
+- [zoom grid 2](https://observablehq.com/@d3/zoomable-scatterplot?collection=@d3/d3-zoom)
 - [TOA-Miro](https://miro.com/app/board/uXjVKzMakEM=/)
 - Design Sketch(Adobe XD)
 - [pandora](https://talkingobjects.0x2620.org/)

@@ -11,6 +11,7 @@ import { loadingState } from "@/app/utils/recoillib/state/state";
 
 import LoadingCon from "@/app/components/LoadingCon";
 import CurrentStage from "./CurrentStage";
+import AboutSection2 from "./AboutSection2";
 
 
 const HomeWrapper = () => {
@@ -38,6 +39,7 @@ const HomeWrapper = () => {
             <ContentContainer padding={false}>
               <CurrentStage itemList={itemList} setMainVideoId={setMainVideoId} mainVideoId={mainVideoId} />
               <AboutSection />
+              <AboutSection2 />
               <RelatedSection />
             </ContentContainer>
           )}
