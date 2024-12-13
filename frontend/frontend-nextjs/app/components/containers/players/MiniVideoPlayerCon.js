@@ -180,7 +180,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         </video>
 
         {currentBox && getCurrentItem && (
-          <div className="absolute bottom-0 left-0 w-full h-[16px] overflow-hidden flex">
+          <div className="absolute bottom-0 left-0 w-full h-[16px] overflow-hidden flex group-hover:opacity-100 duration-300 opacity-0">
             <div className="w-full px-2">
               <div className="w-full h-1 rounded-full relative">
                 <input

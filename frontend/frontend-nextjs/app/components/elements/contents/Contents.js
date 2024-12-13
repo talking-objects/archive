@@ -21,9 +21,14 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
     const [currentBox, setCurrentBox] = useState("")
 
     const changeItemTime = ({data}) => {
-        console.log(data)
-        setCurrentItem(data)
-        setItemTime(data.in)
+        if(data){
+
+          setCurrentItem(data)
+          setItemTime(data.in)
+        }else{
+          setCurrentItem(null)
+          setItemTime(0)
+        }
     }
     
     // useEffect(() => {
@@ -112,6 +117,12 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
 
     },[])
 
+    useEffect(() => {
+      if(!showContentVideo){
+        changeItemTime({data: null})
+      }
+    },[showContentVideo])
+
     
     return <ContentContainer>
                 <div className="w-full relative bg-white">
@@ -122,7 +133,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                             <div className="w-full aspect-video relative">
                               <MiniVideoPlayerCon getCurrentItem={getCurrentItem}  currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
                             </div>
-                            {getCurrentItem && <div>Clip Data:</div>}
+                            {getCurrentItem && <div>Clip Data: {getCurrentItem.in}</div>}
                         </div>
                     </div>
                    
