@@ -21,8 +21,10 @@ const AboutSection = () => {
         <div className="flex-1 flex justify-center items-center flex-col">
           <div className="w-4/5 h-5/6">
             <div className="w-full h-full bg-eva-c2 bg-opacity-[15%] rounded-3xl p-2">
-              <div className="w-full h-full bg-white rounded-2xl flex justify-center items-center px-4 py-2">
-                <DefaultBG />
+              <div 
+              style={{backgroundImage: `url(/assets/img01.webp)`}}
+              className="w-full h-full bg-white rounded-2xl flex justify-center items-center px-4 py-2 bg-center bg-cover bg-no-repeat">
+                {/* <DefaultBG /> */}
               </div>
             </div>
             <div className="w-full flex justify-center">

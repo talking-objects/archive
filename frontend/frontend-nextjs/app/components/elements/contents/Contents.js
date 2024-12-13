@@ -10,6 +10,7 @@ import NarrationWrapper from "./NarrationWrapper";
 import ContentBox from "./ContentBox";
 import CateAndTagWrapper2 from "./CateAndTagWrapper2";
 import gsap from "gsap";
+import { formatTime } from "@/app/utils/hooks/etc";
 
 
 const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, showContentVideo}) => {
@@ -122,10 +123,12 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
         changeItemTime({data: null})
       }
     },[showContentVideo])
-
+    useEffect(() => {
+      console.log("getCurrentItem", getCurrentItem)
+    },[getCurrentItem])
     
     return <ContentContainer>
-                <div className="w-full relative bg-white">
+                <div className="w-full relative bg-white mb-[10%]">
                     {/* Small Video */}
                     <div id={"contentVideoBox"} ref={contentVideoBoxRef} className={`absolute top-[0] mt-[45px] bg-white left-0 w-1/2 h-fit aspect-square px-4 ${showContentVideo ? "select-auto pointer-events-auto" : ""} z-[30]`}>
                         <div className="w-full h-full flex flex-col justify-center">
@@ -133,7 +136,12 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                             <div className="w-full aspect-video relative">
                               <MiniVideoPlayerCon getCurrentItem={getCurrentItem}  currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
                             </div>
-                            {getCurrentItem && <div>Clip Data: {getCurrentItem.in}</div>}
+                            {getCurrentItem && <div className="w-full flex flex-col font-ibm_mono_regular text-sm">
+                                {getCurrentItem.type && <div>Type: {getCurrentItem.type}</div>}
+                                {formatTime(getCurrentItem.in) && <div>Start: {formatTime(getCurrentItem.in)}</div>}
+                                {formatTime(getCurrentItem.out) && <div>End: {formatTime(getCurrentItem.out)}</div>}
+                                
+                              </div>}
                         </div>
                     </div>
                    

@@ -16,7 +16,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
 
       const x = d3
         .scaleLinear()
-        .domain([0, 60])
+        .domain([0, 61])
         .range([0, svgContainerSize.width]);
       //   const x = d3
       //     .scaleLinear()
@@ -56,7 +56,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
         .join("g")
         .attr("transform", (d, i) => {
             const remainder = x(parseFloat(d.in) % 60);
-            const div = y(Math.floor(parseFloat(d.in) / 60)) - 15;
+            const div = y(Math.floor(parseFloat(d.in) / 60)) - 30;
             return `translate(${remainder}, ${div})`
         })
         .each(function(d2, i2){
@@ -91,11 +91,11 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
                 return CATEGORY_AND_TAGVALUE[CATEGORY_AND_TAGVALUE.length - 1].color
               }
             })
-            .attr("width", "15px")
-            .attr("height", "15px");
+            .attr("width", "30px")
+            .attr("height", "30px");
             imageEle
-            .attr("width", "15px")
-            .attr("height", "15px")
+            .attr("width", "30px")
+            .attr("height", "30px")
             .attr("x", 0) 
             .attr("y", 0)
             .attr("xlink:href", () => {
@@ -104,7 +104,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
             .attr("background", "red")
             rect2
             .attr("fill", `#000`)
-            .attr("y", "14px")
+            .attr("y", "29px")
             .attr("width", "1px")
             .attr("height", "1px");
             
@@ -159,7 +159,8 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
           .call((g) =>
             g
               .selectAll(".x")
-              .data(x.ticks(12).filter((tick) => Number.isInteger(tick)))
+              .data(x.ticks(12))
+              // .data(x.ticks(12).filter((tick) => Number.isInteger(tick)))
               .join(
                 (enter) =>
                   enter
@@ -175,7 +176,8 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
           .call((g) =>
             g
               .selectAll(".y")
-              .data(y.ticks(12 * k).filter((tick) => Number.isInteger(tick)))
+              .data(y.ticks(12 * k))
+              // .data(y.ticks(12 * k).filter((tick) => Number.isInteger(tick)))
               .join(
                 (enter) =>
                   enter

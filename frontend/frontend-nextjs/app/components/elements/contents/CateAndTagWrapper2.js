@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import CTVis from "./CTVis";
 
 const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
-    const [currentCatAndTag, setCurrentCatAndTag] = useState(CATEGORY_AND_TAGVALUE[0])
+    const [currentCatAndTag, setCurrentCatAndTag] = useState({slug:"All"})
     const [currentCatAndTagData, setCurrentCatAndTagData] = useState(null)
     const [currentColor, setCurrentColor] = useState(CATEGORY_AND_TAGVALUE[0].color)
 
@@ -48,6 +48,7 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
             }
         })
         setCurrentCatAndTagData(getData)
+        onClickCatAndTag(100)
     },[])
 
     return (
