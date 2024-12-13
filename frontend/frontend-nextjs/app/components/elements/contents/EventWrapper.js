@@ -30,7 +30,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
 
             svg
             .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 20])
-            .style("background", "#ececec")
+            .style("background", "#fff")
 
             const bgBarWidth = 50
             const itemBoxWidth = 50
@@ -179,7 +179,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
       <ContentBox title={"Annotated Events"} id="event_box">
         <div
           ref={eventSvgContainer}
-          className="w-full aspect-square flex bg-neutral-100 relative overflow-hidden"
+          className="w-full aspect-square flex bg-white relative overflow-hidden"
         >
           <svg ref={svgRefEvent}></svg>
           <div

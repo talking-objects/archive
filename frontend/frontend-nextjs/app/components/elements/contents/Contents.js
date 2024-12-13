@@ -85,7 +85,7 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                 // 화면 중앙에 박스가 있으면 currentBoxName 갱신
                 if (top <= currentPos && bottom >= currentPos) {
                   currentBoxName = box.name;
-                  if(contentVideoBoxRef && currentBoxName !== "eventBox"){
+                  if(contentVideoBoxRef){
                     // contentVideoBoxRef.current.style.top = `${pos}px`
                     gsap.to("#contentVideoBox", {
                       delay: 1,
@@ -116,11 +116,13 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
     return <ContentContainer>
                 <div className="w-full relative bg-white">
                     {/* Small Video */}
-                    <div id={"contentVideoBox"} ref={contentVideoBoxRef} className={`absolute top-[0] mt-[40px] bg-red-300 left-0 w-1/2 h-fit py-4 px-4 ${showContentVideo ? "select-auto pointer-events-auto" : ""} z-[30]`}>
-                        <div className="">
-                            <div className="text-sm text-neutral-600 font-light">Current Position: {currentBox}</div>
-                            <MiniVideoPlayerCon getCurrentItem={getCurrentItem}  currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
-                            {getCurrentItem && <div>data</div>}
+                    <div id={"contentVideoBox"} ref={contentVideoBoxRef} className={`absolute top-[0] mt-[45px] bg-white left-0 w-1/2 h-fit aspect-square px-4 ${showContentVideo ? "select-auto pointer-events-auto" : ""} z-[30]`}>
+                        <div className="w-full h-full flex flex-col justify-center">
+                            {/* <div className="text-sm text-neutral-600 font-light">Current Position: {currentBox}</div> */}
+                            <div className="w-full aspect-video relative">
+                              <MiniVideoPlayerCon getCurrentItem={getCurrentItem}  currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
+                            </div>
+                            {getCurrentItem && <div>Clip Data:</div>}
                         </div>
                     </div>
                    
