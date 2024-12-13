@@ -104,7 +104,7 @@ const LoadingCon = ({ ready = false, comLoader=()=>{} }) => {
           <div className="loadingAniDoorBorder w-0 h-1 border-t border-black"></div>
         </div>
         <div className="flex overflow-hidden">
-          {Array.from("Talking Object EVA").map((val, idx) => {
+          {Array.from("Experimental Video Archive").map((val, idx) => {
             return (
               <span
                 key={idx}
