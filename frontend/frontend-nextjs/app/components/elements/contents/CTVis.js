@@ -27,7 +27,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
    
       const y = d3
         .scaleLinear()
-        .domain([0, Math.floor(totalDuration / 60)]) // y축 도메인을 분 단위로 설정
+        .domain([0, Math.ceil(totalDuration / 60)]) // y축 도메인을 분 단위로 설정
         .range([svgContainerSize.height, 0]);
       //   const y = d3
       //     .scaleLinear()
@@ -76,7 +76,6 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
                     document.body.style.cursor = "auto"  
                 })
                 .on("click", function(){
-                  
                         changeItemTime({data:d2})
                    
                 })
@@ -85,17 +84,13 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
                 
             rect
             .attr("fill", function(d4){
-              // console.log(d4)
               if(d4.category){
-
                 const getBG = CATEGORY_AND_TAGVALUE.filter((val) => val.slug === d4.category.slug)
                 return getBG[0].color
               }else{
                 return CATEGORY_AND_TAGVALUE[CATEGORY_AND_TAGVALUE.length - 1].color
               }
-              // return getBG[0]
             })
-            // .attr("fill", `${bgColor}`)
             .attr("width", "15px")
             .attr("height", "15px");
             imageEle
@@ -160,7 +155,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
       const grid = (g, x, y) =>
         g
           .attr("stroke", "currentColor")
-          .attr("stroke-opacity", 0.1)
+          .attr("stroke-opacity", 0.5)
           .call((g) =>
             g
               .selectAll(".x")
@@ -205,7 +200,6 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
         gItems.attr("transform", transform);
       };
 
-      let lastScale = 1;
       const zoom = d3
         .zoom()
         .on("start", (event) => {
@@ -328,7 +322,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
               </svg>
           </div>
         </div>
-        <div ref={svgContainerRef} className="w-full h-full flex-1 flex  flex-col border-2 border-neutral-500 overflow-hidden rounded-xl relative">
+        <div ref={svgContainerRef} className="w-full h-full flex-1 flex  flex-col  overflow-hidden  relative">
           <svg ref={svgRef}></svg>
           <div id="ctvisResize" className={`${isLoading ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}  select-none absolute top-0 left-0 w-full h-full bg-white flex justify-center items-center text-sm duration-300`}><span className="animate-bounce font-ibm_mono_semibold">Resizing...</span></div>
         </div>
