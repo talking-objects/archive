@@ -12,7 +12,7 @@ import { loadingState } from "@/app/utils/recoillib/state/state";
 import LoadingCon from "@/app/components/LoadingCon";
 import CurrentStage from "./CurrentStage";
 import AboutSection2 from "./AboutSection2";
-
+import { ScrollSmoother } from "gsap/all";
 
 const HomeWrapper = () => {
   const itemList = ["AL", "G", "AA", "CL","U","F"]

@@ -1,3 +1,4 @@
+import SmoothScroll from "./components/containers/SmootherCon";
 import Footer from "./components/elements/Footer";
 import NavigationBar from "./components/elements/NavigationBar";
 import "./globals.css";
@@ -13,9 +14,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <RecoilContextProvider>
-          <NavigationBar />
-          {children}
-          <Footer />
+          <SmoothScroll>
+            <NavigationBar />
+            {children}
+            <Footer />
+          </SmoothScroll>
         </RecoilContextProvider>
       </body>
     </html>

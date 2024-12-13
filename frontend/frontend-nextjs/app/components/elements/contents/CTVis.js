@@ -173,6 +173,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
               .attr("x1", (d) => 0.5 + x(d))
               .attr("x2", (d) => 0.5 + x(d))
               .attr("stroke-opacity", (d) => (Number.isInteger(d) ? 0.5 : 0.1)) 
+              .attr("stroke-width", (d) => (Number.isInteger(d) ? 1.2 : 1)) 
           )
           .call((g) =>
             g
@@ -190,7 +191,8 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
               )
               .attr("y1", (d) => 0.5 + y(d))
               .attr("y2", (d) => 0.5 + y(d))
-              .attr("stroke-opacity", (d) => (Number.isInteger(d) ? 0.7 : 0.2))
+              .attr("stroke-opacity", (d) => (Number.isInteger(d) ? 0.5 : 0.2))
+              .attr("stroke-width", (d) => (Number.isInteger(d) ? 1.2 : 1)) 
           );
 
       const zoomed = ({ transform }) => {
