@@ -9,9 +9,11 @@ import RefWapper from "./RefWrapper";
 import NarrationWrapper from "./NarrationWrapper";
 import ContentBox from "./ContentBox";
 import CateAndTagWrapper2 from "./CateAndTagWrapper2";
+import gsap from "gsap";
+
+
 const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, showContentVideo}) => {
     const contentsRef = useRef(null)
-    const contentsDummyRef = useRef(null)
     const contentVideoBoxRef = useRef(null)
     
     const [getItemTime, setItemTime] = useState(null)
@@ -24,17 +26,39 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
         setItemTime(data.in)
     }
     
+    // useEffect(() => {
+    //     if(!isLoading){
+    //         // if(contentsDummyRef && contentsRef && contentVideoBoxRef){
+    //         //     console.log(contentsRef)
+    //         //     const refHeight = contentsRef.current.clientHeight;
+    //         //     console.log(contentVideoBoxRef.current.clientHeight)
+    //         //     contentsDummyRef.current.style.height = `${Math.floor(refHeight)}px`
+    //         //     contentsDummyRef.current.style.transform = `translateY(-${contentVideoBoxRef.current.clientHeight}px)`
+    //         // }
+    //     }
+    // },[getVideoData])
+
     useEffect(() => {
-        if(!isLoading){
-            if(contentsDummyRef && contentsRef && contentVideoBoxRef){
-                console.log(contentsRef)
-                const refHeight = contentsRef.current.clientHeight;
-                console.log(contentVideoBoxRef.current.clientHeight)
-                contentsDummyRef.current.style.height = `${Math.floor(refHeight)}px`
-                contentsDummyRef.current.style.transform = `translateY(-${contentVideoBoxRef.current.clientHeight}px)`
-            }
-        }
-    },[getVideoData])
+      if(showContentVideo){
+        gsap.to("#contentVideoBox", {
+          duration: 0.7,
+          ease: "power3.inOut",
+          css: {
+            opacity: 1,
+            transform: `translateX(0)`
+          }
+        })
+      }else{
+        gsap.to("#contentVideoBox", {
+          duration: 0.7,
+          ease: "power3.inOut",
+          css: {
+            opacity: 0,
+            transform: `translateX(-100%)`
+          }
+        })
+      }
+    },[showContentVideo])
 
    
 
@@ -56,10 +80,22 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
               const element = document.querySelector(box.id);
               if (element) {
                 const { top, bottom } = element.getBoundingClientRect();
-      
+                const pos = element.offsetTop;
+
                 // 화면 중앙에 박스가 있으면 currentBoxName 갱신
                 if (top <= currentPos && bottom >= currentPos) {
                   currentBoxName = box.name;
+                  if(contentVideoBoxRef && currentBoxName !== "eventBox"){
+                    // contentVideoBoxRef.current.style.top = `${pos}px`
+                    gsap.to("#contentVideoBox", {
+                      delay: 1,
+                      ease: "expo.out",
+                      duration: 2.5,
+                      css: {
+                        top: `${pos}px`
+                      }
+                    })
+                  }
                   break; // 가장 먼저 찾은 박스만 처리
                 }
               }
@@ -80,17 +116,17 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
     return <ContentContainer>
                 <div className="w-full relative bg-white">
                     {/* Small Video */}
-                    <div ref={contentVideoBoxRef} className={`sticky top-[0] mt-[40px] left-0 w-1/2 h-full py-4 px-4 ${showContentVideo ? "translate-x-0 opacity-100 select-auto pointer-events-auto" : "-translate-x-full opacity-0"} transition-all duration-700 z-[30]`}>
+                    <div id={"contentVideoBox"} ref={contentVideoBoxRef} className={`absolute top-[0] mt-[40px] bg-red-300 left-0 w-1/2 h-fit py-4 px-4 ${showContentVideo ? "select-auto pointer-events-auto" : ""} z-[30]`}>
                         <div className="">
                             <div className="text-sm text-neutral-600 font-light">Current Position: {currentBox}</div>
                             <MiniVideoPlayerCon getCurrentItem={getCurrentItem}  currentBox={currentBox} getItemTime={getItemTime} getCurrentTimeForMini={getCurrentTimeForMini} getVideoData={getVideoData} showContentVideo={showContentVideo} />
                             {getCurrentItem && <div>data</div>}
                         </div>
                     </div>
-                    <div ref={contentsDummyRef} className="w-full bg-white"></div>
-                    <div ref={contentsRef} className="w-full absolute top-[40px] left-0 flex flex-col gap-10">
+                   
+                    <div ref={contentsRef} className="w-full flex flex-col gap-10">
                         {getVideoData.summary && <AboutWapper getVideoData={getVideoData} />}
-                        {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <div className="w-full text-[40px] flex justify-end"><div className="w-1/2 px-4 font-ibm_mono_bolditalic text-[48px] leading-[1.1]">Expand the objects universe</div></div>}
+                        {<div className="w-full text-[40px] flex justify-end"><div className="w-1/2 px-4 font-ibm_mono_bolditalic text-[48px] leading-[1.1]">Expand the objects universe</div></div>}
                         {(getVideoData.nAnnotations.placeList && getVideoData.nAnnotations.placeList.length > 0) && <PlaceWrapper getVideoData={getVideoData} changeItemTime={changeItemTime}/>}
                         {(getVideoData.nAnnotations.eventList && getVideoData.nAnnotations.eventList.length > 0) && <EventWrapper getVideoData={getVideoData} isLoading={isLoading} changeItemTime={changeItemTime} />}
                         {(getVideoData.nAnnotations.categoryList && getVideoData.nAnnotations.categoryList.length > 0) && <CateAndTagWrapper2 getVideoData={getVideoData} videoId={videoId} changeItemTime={changeItemTime} />}
@@ -99,9 +135,9 @@ const Contents = ({getCurrentTimeForMini, videoId, isLoading, getVideoData, show
                         {(getVideoData.nAnnotations.narrationList && getVideoData.nAnnotations.narrationList.length > 0) && <NarrationWrapper getVideoData={getVideoData} changeItemTime={changeItemTime}  />}
                     </div>   
                 </div>
-                <div className="w-full h-[200svh] bg-red-400">
+                {/* <div className="w-full h-[100svh] bg-red-400">
                     Related Items
-                </div>
+                </div> */}
         </ContentContainer>
 }
 

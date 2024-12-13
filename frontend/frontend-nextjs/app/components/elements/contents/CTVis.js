@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { BASE_URL } from "@/app/utils/constant/etc";
+import { BASE_URL, CATEGORY_AND_TAGVALUE } from "@/app/utils/constant/etc";
 
 
 const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
@@ -35,6 +35,8 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
       //     .range([svgContainerSize.height, 0]);
 
       const svg = d3.select(svgRef.current);
+   
+     
       svg.selectAll("*").remove();
 
       const gGrid = svg.append("g");
@@ -67,6 +69,9 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
                 .on("mouseenter",function(){
                     document.body.style.cursor = "pointer"
                 })
+                .on("mousemove",function(){
+                    document.body.style.cursor = "pointer"
+                })
                 .on("mouseleave", function(){
                     document.body.style.cursor = "auto"  
                 })
@@ -77,8 +82,20 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
                 })
 
 
+                
             rect
-            .attr("fill", `${bgColor}`)
+            .attr("fill", function(d4){
+              // console.log(d4)
+              if(d4.category){
+
+                const getBG = CATEGORY_AND_TAGVALUE.filter((val) => val.slug === d4.category.slug)
+                return getBG[0].color
+              }else{
+                return CATEGORY_AND_TAGVALUE[CATEGORY_AND_TAGVALUE.length - 1].color
+              }
+              // return getBG[0]
+            })
+            // .attr("fill", `${bgColor}`)
             .attr("width", "15px")
             .attr("height", "15px");
             imageEle
@@ -188,8 +205,31 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
         gItems.attr("transform", transform);
       };
 
+      let lastScale = 1;
       const zoom = d3
         .zoom()
+        .on("start", (event) => {
+          if (event.sourceEvent && event.sourceEvent.type === "mousedown") {
+            // If the interaction is initiated by dragging
+            document.body.style.cursor = "grabbing";
+          } else {
+            // For zooming (e.g., mouse wheel or touch gesture)
+            document.body.style.cursor = "zoom-in";
+          }
+        })
+        .on("zoom", (event) => {
+          if (event.sourceEvent && event.sourceEvent.type === "mousemove") {
+            // While dragging
+            document.body.style.cursor = "grabbing";
+          } else {
+            // While zooming
+            document.body.style.cursor = "zoom-in";
+          }
+        })
+        .on("end", () => {
+          // Reset to default cursor when interaction ends
+          document.body.style.cursor = "auto";
+        })
         .translateExtent([
           [0, 0],
           [svgContainerSize.width, svgContainerSize.height],
