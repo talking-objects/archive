@@ -1,7 +1,6 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useRef } from "react";
-import { TweenLite, Power4 } from "gsap";
-
+import gsap from "gsap";
 const SmoothScroll = (props) => {
   const [height, setHeight] = useState(0);
   const viewportRef = useRef(null);
@@ -11,7 +10,6 @@ const SmoothScroll = (props) => {
     const handleResize = (elements) => {
       for (let elem of elements) {
         const crx = elem.contentRect;
-        console.log(crx);
         setHeight(crx.height);
       }
     };
@@ -20,9 +18,10 @@ const SmoothScroll = (props) => {
     ro.observe(viewportRef.current);
 
     const onScroll = () => {
-      TweenLite.to(viewportRef.current, 1, {
-        y: -window.pageYOffset,
-        ease: Power4.easeOut,
+      gsap.to(viewportRef.current, {
+        duration: 1,
+        y: -window.scrollY,
+        ease: "power4.out",
       });
     };
 
@@ -46,7 +45,6 @@ const SmoothScroll = (props) => {
           height: height,
         }}
       />
-      
     </>
   );
 };
