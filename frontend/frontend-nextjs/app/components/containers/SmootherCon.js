@@ -36,7 +36,7 @@ const SmoothScroll = (props) => {
 
   return (
     <>
-      <div className="overflow-x-hidden w-screen m-0 fixed" ref={viewportRef}>
+      <div className="overflow-x-hidden w-screen m-0 fixed z-[1900]" ref={viewportRef}>
         {props.children}
       </div>
       <div

@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <RecoilContextProvider>
-          <NavigationBar />
+            <NavigationBar />
             <SmoothScroll>
             {children}
             <Footer />
