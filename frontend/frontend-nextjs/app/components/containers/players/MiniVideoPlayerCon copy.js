@@ -35,6 +35,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
 
     useEffect(() => {
         if(videoRef){
+          console.log(getVideoData)
             if(!showContentVideo){
                 videoRef.current.pause()
                 setPlaying(false)
@@ -51,7 +52,6 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         if(videoRef && Boolean(getItemTime)){
             if(getItemTime > 0){
                 videoRef.current.currentTime = getItemTime
-                setCurrentTime(getItemTime)
             }
         }
     },[getItemTime])
@@ -83,7 +83,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
                 setCurrentData(getVideoData.nAnnotations[boxes[currentBox].annotationName])
             }
             // setCurrentData(getVideoData.nAnnotations[])
-            // console.log(currentBox)
+            console.log(currentBox)
         }
        
     },[currentBox])
@@ -91,28 +91,19 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
      // update video progress bar
      useEffect(() => {
         const videoElement = videoRef.current
-        if (playing && videoElement || getItemTime) {
-            // setCurrentTime(0)
+        if (playing && videoElement && getCurrentItem) {
+            setCurrentTime(0)
            const handleTimeUpdate = () => {
               
                  const newCurrentTime = videoElement?.currentTime
-                 setCurrentTime(newCurrentTime)
+                 setCurrentTime(newCurrentTime - getItemTime)
                  // end
-                 if(Math.round(newCurrentTime) > getVideoData.duration){
+                 if(Math.round(newCurrentTime) > getCurrentItem.out){
                     videoElement.pause()
-                    videoElement.currentTime = 0
+                    videoElement.currentTime = getItemTime
                     setCurrentTime(0)
                     setPlaying(false)
                  }
-                 if(getCurrentItem){
-                  if(Math.round(newCurrentTime) > (getCurrentItem.out)){
-                    videoElement.pause()
-                    videoElement.currentTime = getCurrentItem.in
-                    setCurrentTime(getCurrentItem.in)
-                    setPlaying(false)
-                 }
-                 }
-                
               
               
              
@@ -128,8 +119,11 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
      const onClickProgressBar = (e) => {
  
         if(videoRef){
-              videoRef.current.currentTime = parseFloat(e.target.value)
+          
+              console.log(parseFloat(e.target.value) + getItemTime)
+              videoRef.current.currentTime = parseFloat(e.target.value) + getItemTime
               setCurrentTime(e.target.value)
+           
         }
            
        
@@ -186,7 +180,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
           Your browser does not support the video tag.
         </video>
 
-        {currentBox  && (
+        {currentBox && getCurrentItem && (
           <div className="absolute bottom-0 left-0 w-full h-[16px] overflow-hidden flex group-hover:opacity-100 duration-300 opacity-0">
             <div className="w-full px-2">
               <div className="w-full h-1 rounded-full relative">
@@ -194,14 +188,14 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
                   onChange={(e) => onClickProgressBar(e)}
                   step={0.01}
                   min={0}
-                  max={getVideoData.duration}
+                  max={getCurrentItem.out - getCurrentItem.in}
                   defaultValue={0}
                   type="range"
                   className="w-full bg-red-400 range-custom"
                 />
                 <progress
                   value={currentTime}
-                  max={getVideoData.duration}
+                  max={getCurrentItem.out - getCurrentItem.in}
                   className="absolute bg-red-400 w-full h-full select-none pointer-events-none"
                 ></progress>
               </div>

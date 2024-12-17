@@ -90,7 +90,7 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
     <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={false} attributionControl={false} zoom={10} zoomControl={false} scrollWheelZoom={false} dragging={true}>
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png"
       />
       {/* <Marker icon={ICON} position={center}>
         <Popup>
