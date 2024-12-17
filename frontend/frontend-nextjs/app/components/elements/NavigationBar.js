@@ -11,7 +11,7 @@ const NavigationBar = () => {
   return (
     <>
       { (
-        <div className={`${(getLoadingState.isLoading && getLoadingState.hasAnimated) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[2000] text-white flex items-center justify-between px-4 gap-8 duration-500`}>
+        <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[2000] text-white flex items-center justify-between px-4 gap-8 duration-700`}>
           <div onClick={() => router.push("/")} className="cursor-pointer">Experimental Video Archive</div>
           {/* <div className="flex gap-4 items-center text-[14px]">
             <div>Forest</div>

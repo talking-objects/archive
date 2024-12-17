@@ -6,3 +6,8 @@ export const loadingState = atom({
     hasAnimated: false,
   },
 });
+
+export const componentDataLoadingState = atom({
+  key: "componentDataLoadingState",
+  default: false
+})

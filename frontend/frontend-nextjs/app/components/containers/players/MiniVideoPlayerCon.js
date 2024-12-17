@@ -104,14 +104,14 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
                     setCurrentTime(0)
                     setPlaying(false)
                  }
-                 if(getCurrentItem){
-                  if(Math.round(newCurrentTime) > (getCurrentItem.out)){
-                    videoElement.pause()
-                    videoElement.currentTime = getCurrentItem.in
-                    setCurrentTime(getCurrentItem.in)
-                    setPlaying(false)
-                 }
-                 }
+                //  if(getCurrentItem){
+                //   if(Math.round(newCurrentTime) > (getCurrentItem.out)){
+                //     videoElement.pause()
+                //     videoElement.currentTime = getCurrentItem.in
+                //     setCurrentTime(getCurrentItem.in)
+                //     setPlaying(false)
+                //  }
+                //  }
                 
               
               

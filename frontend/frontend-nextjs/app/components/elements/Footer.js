@@ -1,15 +1,16 @@
 "use client";
 
-import { loadingState } from "@/app/utils/recoillib/state/state";
-import { useRecoilState } from "recoil";
+import { componentDataLoadingState, loadingState } from "@/app/utils/recoillib/state/state";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { MainContainer } from "../containers/Containers";
 import ContentContainer from "../containers/ContentContainer";
 
 const Footer = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
+  const getComDataLoadingState = useRecoilValue(componentDataLoadingState)
   return (
     <>
-      {getLoadingState.isLoading && getLoadingState.hasAnimated && (
+      {getLoadingState.isLoading && getLoadingState.hasAnimated && getComDataLoadingState && (
         <div className="w-full min-h-[200px] bg-black flex text-white text-[14px] font-semibold">
           <ContentContainer full={false}>
             <div className="w-full flex py-8 gap-8 leading-tight">

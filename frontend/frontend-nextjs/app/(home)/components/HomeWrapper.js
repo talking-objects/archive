@@ -7,7 +7,7 @@ import HomeHeader from "./HomeHeader";
 import { getVideo } from "@/app/utils/hooks/pandora_api";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { loadingState } from "@/app/utils/recoillib/state/state";
+import { componentDataLoadingState, loadingState } from "@/app/utils/recoillib/state/state";
 
 import LoadingCon from "@/app/components/LoadingCon";
 import CurrentStage from "./CurrentStage";
@@ -20,9 +20,14 @@ const HomeWrapper = () => {
   const { data, isLoading } = getVideo({ pId: mainVideoId });
   const [currentVideo, setCurrentVideo] = useState(null);
   const getLoadingState = useRecoilValue(loadingState);
+  const [getComDataLoadingState, setComDataLoadingState] = useRecoilState(componentDataLoadingState)
 
   useEffect(() => {
+    if(isLoading){
+      setComDataLoadingState(false)
+    }
     if (!isLoading) {
+      setComDataLoadingState(true)
       setCurrentVideo(data.data.items[0]);
     }
   }, [data]);
