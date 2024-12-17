@@ -29,7 +29,9 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             const scaleTime = d3.scaleTime([minDate, maxDate],[0, svgContainerSize.height])
 
             svg
-            .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 20])
+            // .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 20])
+            .style("width", `${svgContainerSize.width + 10}px`)
+            .style("height", `${svgContainerSize.height + 20}px`)
             .style("background", "#fff")
 
             const bgBarWidth = 50

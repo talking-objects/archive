@@ -2,14 +2,20 @@ import Image from "next/image";
 import SectionContainer from "./elements/SectionContainer";
 import SectionHeader from "./elements/SectionHeader";
 import SectionSubHeader from "./elements/SectionSubHeader";
-import DefaultBG from "/public/assets/logo-full-menu.svg"
 
 const RelationBox = () => {
     return (
     <div className="flex-1">
       <div className="w-full aspect-video bg-white rounded-2xl border border-black">
-        <div className="w-full h-full flex justify-center items-center px-4 py-2">
-          <DefaultBG />
+        <div className="w-full h-full flex justify-center items-center px-4 py-2 relative">
+          <Image 
+            src={"/assets/logo-full-menu.svg"}
+            alt=""
+            width={1920}
+            height={1080}
+            layout="responsive"
+            objectFit="contain"
+          />
         </div>
       </div>
       <div className="w-full h-fit font-ibm_mono_regular px-4 py-4 pt-8 text-[10px] lg:text-[16px]">
