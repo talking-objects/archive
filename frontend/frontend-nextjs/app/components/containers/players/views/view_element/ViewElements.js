@@ -6,11 +6,9 @@ import LeafletMap from "../../../../map/Map"
 
 
 const TagBox = ({tag}) => {
-  
    return <div className="w-full flex flex-wrap gap-1 border-[#000000] border bg-white p-1">
       {
          tag.value.map((val, idx) => {
-            
             return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-[16px] font-ibm_mono_bolditalic">{val.slice(0,1) === "#" ? val.slice(0) : `#${val.slice(0)}`}</div>
          })
       }
@@ -19,7 +17,7 @@ const TagBox = ({tag}) => {
 
 const PlaceBox = ({place, allPlaces}) => {
    const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} allPlaces={allPlaces} />), [allPlaces, place])
-   return <div className="w-full h-full min-h-[200px] flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
+   return <div className="w-full h-full flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
       <div className="w-full p-2 bg-white">{place.type}</div>
       <div className="flex-1 w-full h-full bg-red-400 border-white border flex justify-center items-center relative">
          {miniMap}
