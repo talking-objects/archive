@@ -43,10 +43,10 @@ const NarrationBox = ({narration}) => {
    </div>
 }
 const ReferenceBox = ({reference}) => {
-   return <div className="w-full min-h-[200px] h-full flex flex-col overflow-hidden px-2 py-2 bg-white gap-4 border-[#EC6735] border-4 text-black">
+   return <div className="w-full min-h-[200px] h-full flex flex-col overflow-hidden px-2 py-2 bg-white gap-4 text-black">
       {/* <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div> */}
-      <div>{reference.type}</div>
-      {reference.value && <div className="text-sm">{reference.value}</div>}
+      <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and </div>
+      {reference.value && <div className="text-sm font-ibm_mono_italic">{reference.value}Lorem Text</div>}
    </div>
 }
 

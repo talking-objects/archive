@@ -2,6 +2,7 @@ import { icon } from "leaflet";
 import { useEffect, useRef } from "react";
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet"
+import 'leaflet/dist/leaflet.css'
 
 function MapWithResize() {
   const map = useMap();
@@ -89,8 +90,8 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
   return (
     <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={false} attributionControl={false} zoom={10} zoomControl={false} scrollWheelZoom={false} dragging={true}>
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
+        url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png?api_key=1d71d2d1-46eb-44d4-94f7-4fb64e39bc8d"
       />
       {/* <Marker icon={ICON} position={center}>
         <Popup>

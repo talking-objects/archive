@@ -65,3 +65,9 @@ https://github.com/talking-objects/archive/tree/frontend
 ### Search
 /search?name=
 
+
+
+### TODO
+- [] Update Design Vis View
+- [] Update Contents
+

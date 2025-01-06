@@ -25,6 +25,7 @@ module.exports = {
         ibm_mono_bold: ["IBMMonoBold"],
         ibm_mono_semibold: ["IBMMonoSemiBold"],
         ibm_mono_regular: ["IBMMonoRegular"],
+        ibm_mono_italic: ["IBMMonoItalic"],
         
       },
     },

@@ -656,7 +656,7 @@ const DiagramaticView = ({
     >
       <div
         ref={infoRef}
-        className="absolute opacity-0 pointer-events-none select-none border-[#000000] border rounded-lg overflow-hidden top-0 right-0 z-[30] bg-white text-black w-[300px] h-[250px] flex p-1"
+        className="absolute opacity-0 pointer-events-none select-none border-[#000000] border rounded-lg overflow-hidden top-0 right-0 z-[30] bg-white text-black w-[300px] min-h-[200px] h-fit flex p-1"
       >
         {hoverData && (
           <div className="w-full h-full">

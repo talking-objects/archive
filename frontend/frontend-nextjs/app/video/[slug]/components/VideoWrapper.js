@@ -27,8 +27,6 @@ const VideoWrapper = () => {
  
   useEffect(() => {
     if (!isLoading && !annotationLoading) {
-      console.log(annotationData)
-
       // 🤡Fake DataData: You can use "annotationData" later.
       /* 
         Data Strucutre
@@ -46,8 +44,6 @@ const VideoWrapper = () => {
         duration: data.data.items[0].duration,
         editVersion: false,
       });
-      console.log(data.data.items[0])
-
       setVideoData(data.data.items[0]);
     }
   }, [data, annotationData]);

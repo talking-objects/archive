@@ -24,6 +24,10 @@
   font-family: "IBMMonoRegular";
   src: url("/assets/fonts/IBMPlexMono-Regular.ttf");
 }
+@font-face {
+  font-family: "IBMMonoItalic";
+  src: url("/assets/fonts/IBMPlexMono-Italic.ttf");
+}
 
 body {
  
