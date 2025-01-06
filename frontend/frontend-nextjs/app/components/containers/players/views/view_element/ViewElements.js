@@ -35,23 +35,25 @@ const EventBox = ({event}) => {
 }
 
 const NarrationBox = ({narration}) => {
-  
-   return <div className="w-full min-h-[200px] h-full flex flex-col px-2 py-2 bg-white gap-4 border-[#8BA5F8] border-4 text-black overflow-hidden">
+   return <div className="w-full h-full border-[#000000] border rounded-lg  flex flex-col min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black">
       {/* <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div> */}
-      <div>{narration.type}</div>
-      {narration.value && <div className="text-sm">{narration.value}</div>}
+      {/* <div className="text-[16px] font-ibm_mono_italic">{narration.type}</div> */}
+      <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  </div>
+      {narration.value && <div className="text-[16px] font-ibm_mono_italic">{narration.value}</div>}
    </div>
 }
 const ReferenceBox = ({reference}) => {
-   return <div className="w-full h-full border-[#000000] border rounded-lg  flex flex-col overflow-hidden px-2 py-2 bg-white gap-4 text-black">
+   return <div className="w-full h-full border-[#000000] border rounded-lg  flex flex-col min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black">
       {/* <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div> */}
-      <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and </div>
-      {reference.value && <div className="text-sm font-ibm_mono_italic">{reference.value}Lorem Text</div>}
+      <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type and </div>
+      {reference.value && <div className="text-[16px] font-ibm_mono_italic">{reference.value}Lorem Text</div>}
    </div>
 }
 
 const CategoryBox = ({category}) => {
-   return <div style={{backgroundColor: category.category.color}} className="w-full h-full text-4xl text-white italic px-2 py-1">{category.category.value}</div>
+   return <div className="w-full flex flex-wrap gap-1 border-[#000000] border bg-white p-1">
+      <div style={{backgroundColor: category.category.color}} className="w-full h-full text-4xl text-white font-ibm_mono_bolditalic text-[30px] px-2 py-1">{category.category.value}</div>
+   </div>
 }
 
 export const OverViewBox = ({data, fakeData=false}) => {
