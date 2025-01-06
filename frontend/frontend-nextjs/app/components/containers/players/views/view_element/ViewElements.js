@@ -7,11 +7,11 @@ import LeafletMap from "../../../../map/Map"
 
 const TagBox = ({tag}) => {
   
-   return <div className="w-full flex flex-wrap gap-2 border-[#000000] border bg-white p-1">
+   return <div className="w-full flex flex-wrap gap-1 border-[#000000] border bg-white p-1">
       {
          tag.value.map((val, idx) => {
             
-            return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-xl">{val.slice(0,1) === "#" ? val.slice(0) : `#${val.slice(0)}`}</div>
+            return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-[16px] font-ibm_mono_bolditalic">{val.slice(0,1) === "#" ? val.slice(0) : `#${val.slice(0)}`}</div>
          })
       }
       </div>
