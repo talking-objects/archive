@@ -3,6 +3,7 @@
 import {
   MainContainer,
 } from "@/app/components/containers/Containers";
+import ContentContainer from "@/app/components/containers/ContentContainer";
 import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import Contents from "@/app/components/elements/contents/Contents";
 import LoadingCon from "@/app/components/LoadingCon";
@@ -105,6 +106,7 @@ const VideoWrapper = () => {
             <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} setCurrentTimeForMini={setCurrentTimeForMini} />
           </div>
           <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo}  />
+         
         </>
     </MainContainer>)}
     </>

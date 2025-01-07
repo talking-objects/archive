@@ -142,7 +142,7 @@ const Contents = ({
 
   return (
     <ContentContainer>
-      <div className="w-full relative bg-white mb-[10%]">
+      <div className="w-full relative bg-white mb-[20px]">
         {/* Small Video */}
         <div
           id={"contentVideoBox"}
@@ -218,6 +218,17 @@ const Contents = ({
                 changeItemTime={changeItemTime}
               />
             )}
+          {/* Related Objects */}
+          <div className="w-full h-fit bg-white flex flex-col justify-stretch">
+            <div className="mb-4">Related Objects</div>
+            <div className="w-full h-fit bg-red-400 grid grid-cols-4 gap-4">
+              {Array.from({length:8}).map((v, idx) => {
+                return <div key={idx} className="w-full aspect-video bg-blue-400">idx</div>
+              })}
+            </div>
+          </div>
+            
+        
         </div>
       </div>
       {/* <div className="w-full h-[100svh] bg-red-400">
