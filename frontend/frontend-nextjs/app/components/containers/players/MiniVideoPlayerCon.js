@@ -137,7 +137,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         
      }
     return (
-      <div className="relative group w-full h-full border border-black ">
+      <div className="relative group w-full h-fit">
         <div
           onClick={onClickPlay}
           className={`opacity-0 group-hover:opacity-100 transition-all duration-300 absolute cursor-pointer top-1/2 left-1/2 bg-black text-white -translate-x-1/2 -translate-y-1/2 rounded-full bg-opacity-50 w-[60px] aspect-square flex justify-center items-center z-50`}
@@ -175,17 +175,19 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
             </div>
           )}
         </div>
-        <video
-          ref={videoRef}
-          src={`${BASE_URL}/${getVideoData.id}/480p1.mp4`}
-          className={`w-full h-full aspect-video bg-black transition-all duration-1000  `}
-          controls={false}
-          aria-label="video player"
-          preload="auto"
-        >
-          <source type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
+        <div className="w-full bg-black flex items-center justify-center h-[50vh]">
+          <video
+            ref={videoRef}
+            src={`${BASE_URL}/${getVideoData.id}/480p1.mp4`}
+            className={`w-full h-full border border-black`}
+            controls={false}
+            aria-label="video player"
+            preload="auto"
+          >
+            <source type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
 
         {currentBox  && (
           <div className="absolute bottom-0 left-0 w-full h-[20px] overflow-hidden flex group-hover:opacity-100 duration-300 opacity-0">
