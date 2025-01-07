@@ -164,14 +164,8 @@ const Contents = ({
               />
             </div>
             {getCurrentItem && (
-              <div className="w-full flex flex-col font-ibm_mono_regular text-sm">
-                {getCurrentItem.type && <div>Type: {getCurrentItem.type}</div>}
-                {formatTime(getCurrentItem.in) && (
-                  <div>Start: {formatTime(getCurrentItem.in)}</div>
-                )}
-                {formatTime(getCurrentItem.out) && (
-                  <div>End: {formatTime(getCurrentItem.out)}</div>
-                )}
+              <div className="w-full">
+                {(getCurrentItem.in && getCurrentItem.out) && <div className="text-[11px] font-ibm_mono_regular flex items-center px-1 py-1 gap-1"><span>{formatTime(getCurrentItem.in)}</span> <span>{getCurrentItem.out && "~"}</span> <span>{getCurrentItem.out && formatTime(getCurrentItem.out)}</span></div>}
               </div>
             )}
           </div>

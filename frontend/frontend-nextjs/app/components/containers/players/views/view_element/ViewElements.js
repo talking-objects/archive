@@ -6,7 +6,7 @@ import LeafletMap from "../../../../map/Map"
 
 
 const TagBox = ({tag}) => {
-   return <div className="w-full flex max-w-[300px] flex-wrap gap-1 bg-white p-1">
+   return <div className="w-fit flex max-w-[480px] flex-wrap gap-1 bg-white p-1">
       {
          tag.value.map((val, idx) => {
             return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-[16px] font-ibm_mono_bolditalic">{val.slice(0,1) === "#" ? val.slice(0) : `#${val.slice(0)}`}</div>
@@ -50,8 +50,8 @@ const ReferenceBox = ({reference}) => {
 }
 
 const CategoryBox = ({category}) => {
-   return <div className="w-full max-w-[480px] flex flex-wrap bg-white">
-      <div style={{backgroundColor: category.category.color}} className="w-full h-full text-4xl text-white font-ibm_mono_bolditalic text-[30px] px-2 py-1">{category.category.value}</div>
+   return <div className="w-full flex flex-wrap">
+      <div style={{backgroundColor: category.category.color}} className="h-full text-4xl text-white font-ibm_mono_bolditalic text-[30px] px-2 py-1 flex w-fit max-w-[480px]">{category.category.value}</div>
    </div>
 }
 

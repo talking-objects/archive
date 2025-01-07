@@ -14,27 +14,42 @@ export const CATEGORYSVALUE = [
     {
        slug: "identity",
        value: "Identity",
-       color: "#9E21E8"
+       color: "#9E21E8",
+       tBG: "bg-eva-c1",
+       tBGHover: "hover:bg-eva-c1"
+
     },
     {
        slug: "knowledge",
        value: "Knowledge",
-       color: "#8BA5F8"
+       color: "#8BA5F8",
+       tBG: "bg-eva-c2",
+       tBGHover: "hover:bg-eva-c2"
+
     },
     {
        slug: "artistic_reflections",
        value: "Artistic Reflections",
-       color: "#691220"
+       color: "#691220",
+       tBG: "bg-eva-c3",
+       tBGHover: "hover:bg-eva-c3"
+
     },
     {
        slug: "restitution",
        value: "Restitution",
-       color: "#EC6735"
+       color: "#EC6735",
+       tBG: "bg-eva-c4",
+       tBGHover: "hover:bg-eva-c4"
+
     },
     {
        slug: "memory",
        value: "Memory and The Imaginary",
-       color: "#F1A73D"
+       color: "#F1A73D",
+       tBG: "bg-eva-c5",
+       tBGHover: "hover:bg-eva-c5"
+
     },
     
  ]
@@ -44,6 +59,8 @@ export const CATEGORY_AND_TAGVALUE= [
     {
         slug: "tag",
         value: "Tag",
-        color: "#3118E8"
+        color: "#3118E8",
+        tBG: "bg-eva-c6",
+        tBGHover: "hover:bg-eva-c6"
      },
 ]

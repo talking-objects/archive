@@ -136,7 +136,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         
      }
     return (
-      <div className="relative group w-full h-full">
+      <div className="relative group w-full h-full border border-black ">
         <div
           onClick={onClickPlay}
           className={`opacity-0 group-hover:opacity-100 transition-all duration-300 absolute cursor-pointer top-1/2 left-1/2 bg-black text-white -translate-x-1/2 -translate-y-1/2 rounded-full bg-opacity-50 w-[60px] aspect-square flex justify-center items-center z-50`}
@@ -177,7 +177,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         <video
           ref={videoRef}
           src={`${BASE_URL}/${getVideoData.id}/480p1.mp4`}
-          className={`w-full h-full aspect-video bg-black transition-all duration-1000`}
+          className={`w-full h-full aspect-video bg-black transition-all duration-1000  `}
           controls={false}
           aria-label="video player"
           preload="auto"

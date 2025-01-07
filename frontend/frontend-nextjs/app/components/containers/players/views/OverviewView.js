@@ -125,7 +125,7 @@ const OverviewView = ({data, clip=false, onClickProgressBar, currentTime, videoR
                                        </svg>
                                     </div>
                                  </div> 
-                                 <div className="text-[11px] font-ibm_mono_regular flex justify-center items-center px-1 py-1 gap-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
+                                 <div className="text-[11px] font-ibm_mono_regular flex justify-center items-center px-1 py-[1px] gap-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
                                </div>
                             </div>
                           </FilterBox>                         

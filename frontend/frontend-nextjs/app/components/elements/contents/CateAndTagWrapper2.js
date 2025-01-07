@@ -56,9 +56,10 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
         <div className="w-full aspect-square relative overflow-hidden flex flex-col gap-4">
             <div className="flex gap-2 items-center justify-start flex-wrap">
                 {CATEGORY_AND_TAGVALUE.map((val, idx) => {
-                    return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-[12px] px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? "bg-eva-c5" : "bg-eva-c2"} hover:bg-eva-c5 rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>{val.value}</div>
+                    return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-[12px] px-2 py-1 text-white ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? `${val.tBG} ` : `bg-neutral-400 text-black`} ${val.tBGHover} rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>{val.value}</div>
                 })}
-                <div onClick={() => onClickCatAndTag(100)} className={`text-[12px] px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === "All") ? "bg-eva-c5" : "bg-eva-c2"} hover:bg-eva-c5 rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>All</div>
+                <div onClick={() => onClickCatAndTag(100)} className={`text-[12px] px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === "All") ? "bg-black" : "bg-neutral-400"} hover:bg-black text-white rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>All</div>
+               
             </div>
             {currentCatAndTagData && <CTVis changeItemTime={changeItemTime} totalDuration={getVideoData.duration} data={currentCatAndTagData} bgColor={currentColor} videoId={videoId} />}
         </div>

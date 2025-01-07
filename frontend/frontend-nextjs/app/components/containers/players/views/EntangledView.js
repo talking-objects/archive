@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { formatTime } from "@/app/utils/hooks/etc";
 import { FilterBox, OverViewBox } from "./view_element/ViewElements";
-
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import "./transition.css"
 const EntangledView = ({
   clip = false,
   edit = false,
@@ -74,26 +75,27 @@ const EntangledView = ({
       <div className="w-full h-full overflow-scroll hide_scrollbar">
         <div className="w-full h-fit bg-none py-2 px-4">
           {allAnnotation && (
-            <div className="flex items-end flex-col gap-2">
+            <div className="flex items-end flex-col gap-4">
               {allAnnotation.map((v, idx) => {
                 return (
                   <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
-                    {Math.floor(currentTime) >= Math.floor(v.in - previewGap) &&
-                      currentTime <=
-                        Math.floor(
-                          v.out ? v.out + previewGap : v.in + previewGap
-                        ) && (
+                    <TransitionGroup component={null}>
+                    {(Math.floor(currentTime) >= Math.floor(v.in - previewGap) && currentTime <= Math.floor(v.out ? v.out + previewGap : v.in + previewGap)) && (
+                      <CSSTransition
+                      key={idx} // 유니크한 key 값
+                      timeout={300} // 애니메이션 지속 시간
+                      classNames="fade"
+                    >
                         <div
-                          className={`${"flex items-center justify-center gap-2"} min-w-[380px]`}
+                          className={`w-fit ${"flex flex-row items-center justify-end"} group relative opacity-[75%] hover:opacity-100 duration-300`}
                         >
-                          <div className="bg-white text-xs flex px-2 py-1">
-                            <span>{formatTime(v.in)}</span>{" "}
-                            <span>{v.out && "~"}</span>{" "}
-                            <span>{v.out && formatTime(v.out)}</span>
-                          </div>
+                          {/* <div className="group-hover:translate-x-0 translate-x-0 text-[11px] font-ibm_mono_regular justify-center items-center px-1 py-[1px] gap-1 bg-white bg-blend-color bg-opacity-80"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div> */}
                           <OverViewBox data={v} fakeData={getData} />
+                          
                         </div>
-                      )}
+                        </CSSTransition>
+                     )}
+                     </TransitionGroup>
                   </FilterBox>
                 );
               })}
