@@ -22,9 +22,10 @@ const RefWapper = ({getVideoData, changeItemTime}) => {
                   <div
                     key={idx}
                     onClick={() => changeItemTime({ data: val })}
-                    className="bg-white w-full cursor-pointer h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2 "
+                    className="bg-white w-full cursor-pointer h-fit min-h-28 rounded-lg border-4 border-eva-c5 px-4 py-2 font-ibm_mono_italic"
                   >
-                    <div>in: {val.in}</div>
+                    {/* <div>in: {val.in}</div> */}
+                    <div className="text-[16px]">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, </div>
                     {val.value && <div className="text-sm">{val.value}</div>}
                   </div>
                 );
@@ -34,7 +35,7 @@ const RefWapper = ({getVideoData, changeItemTime}) => {
             <div className="w-full flex justify-center">
               <span
                 onClick={() => setOpenRef((prev) => !prev)}
-                className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer"
+                className="bg-eva-c2 px-4 bg-opacity-[27%] py-2 rounded-b-xl text-sm font-extralight cursor-pointer font-ibm_mono_regular"
               >
                 {!openRef ? "Expand/Show All" : "Close"}
               </span>
