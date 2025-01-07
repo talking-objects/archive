@@ -13,9 +13,9 @@ const AboutSection = () => {
             <SectionHeader text={"About this Archive"} />
             <SectionSubHeader />
             <p className="font-ibm_mono_regular text-[16px] leading-snug">A digital archive for decolonial knowledge production. It is a curated archive and has no claim to completeness. Based on selected objects or collections, the Western canon is expanded to include further schools of thought and epistemologies.</p>
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
               <div onClick={() => router.push("/about")} className="cursor-pointer bg-white px-4 py-2 rounded-xl font-ibm_mono_bolditalic text-[16px] leading-tight">Read More</div>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex-1 flex justify-center items-center flex-col">

@@ -6,7 +6,7 @@ import LeafletMap from "../../../../map/Map"
 
 
 const TagBox = ({tag}) => {
-   return <div className="w-full flex flex-wrap gap-1 border-[#000000] border bg-white p-1">
+   return <div className="w-full flex max-w-[300px] flex-wrap gap-1 bg-white p-1">
       {
          tag.value.map((val, idx) => {
             return <div key={idx} className="bg-[#3118E8] px-2 py-1 text-white text-[16px] font-ibm_mono_bolditalic">{val.slice(0,1) === "#" ? val.slice(0) : `#${val.slice(0)}`}</div>
@@ -17,39 +17,40 @@ const TagBox = ({tag}) => {
 
 const PlaceBox = ({place, allPlaces}) => {
    const miniMap = useMemo(() => (<LeafletMap center={[place.position.lat, place.position.long]} allPlaces={allPlaces} />), [allPlaces, place])
-   return <div className="w-full h-full flex flex-col text-[#3118E8] border-[#EC6735] border-4 font-bold text-2xl">
-      <div className="w-full p-2 bg-white">{place.type}</div>
-      <div className="flex-1 w-full h-full bg-red-400 border-white border flex justify-center items-center relative">
+   return <div className="flex flex-col font-bold text-2xl w-fit h-[360px] overflow-hidden rounded-2xl">
+      {/* <div className="w-full p-2 bg-white">{place.type}</div> */}
+      <div className="flex-1 h-full flex justify-center items-center w-[600px] relative">
          {miniMap}
       </div>
    </div>
 }
 
 const EventBox = ({event}) => {
-   return <div className="w-full min-h-[200px] h-full flex flex-col px-2 py-2 bg-[#3118E8] border-[#F1A73D] border-4 text-white">
-      <div>{event.type}</div>
-      <div className="w-full h-full flex-1 border-white border flex justify-center items-center">Event</div>
+   return <div className="w-full h-[360px] overflow-hidden min-h-[200px] flex flex-col bg-[#3118E8] border-[#F1A73D] text-white rounded-2xl">
+      {/* <div>{event.type}</div> */}
+      <div className="h-full flex-1 flex justify-center items-center w-[600px]">Event</div>
    </div>
 }
 
 const NarrationBox = ({narration}) => {
-   return <div className="w-full h-full border-[#000000] border rounded-lg  flex flex-col min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black">
-      {/* <div><div className="w-10 aspect-square rounded-full bg-[#8BA5F8]"></div></div> */}
+   return <div className="w-full h-full max-w-[350px] border-[#8BA5F8] border-4 rounded-lg flex flex-row min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black">
+      <div><div className="w-10 aspect-square rounded-full border-[4px] border-[#8BA5F8]"></div></div>
       {/* <div className="text-[16px] font-ibm_mono_italic">{narration.type}</div> */}
       <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  </div>
       {narration.value && <div className="text-[16px] font-ibm_mono_italic">{narration.value}</div>}
    </div>
 }
 const ReferenceBox = ({reference}) => {
-   return <div className="w-full h-full border-[#000000] border rounded-lg  flex flex-col min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black">
+   return <div className="w-full max-w-[350px] h-full border-[#EC6735] border-4 rounded-lg  flex flex-row min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black">
       {/* <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div> */}
+      <div><div className="w-10 aspect-square rounded-full border-[4px] border-[#EC6735]"></div></div>
       <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type and </div>
       {reference.value && <div className="text-[16px] font-ibm_mono_italic">{reference.value}Lorem Text</div>}
    </div>
 }
 
 const CategoryBox = ({category}) => {
-   return <div className="w-full flex flex-wrap gap-1 border-[#000000] border bg-white p-1">
+   return <div className="w-full max-w-[480px] flex flex-wrap bg-white">
       <div style={{backgroundColor: category.category.color}} className="w-full h-full text-4xl text-white font-ibm_mono_bolditalic text-[30px] px-2 py-1">{category.category.value}</div>
    </div>
 }

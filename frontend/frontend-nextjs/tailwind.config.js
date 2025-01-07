@@ -28,6 +28,17 @@ module.exports = {
         ibm_mono_italic: ["IBMMonoItalic"],
         
       },
+      animation: {
+        'custom-ping': 'custom-ping 1s infinite',
+      },
+      keyframes: {
+        'custom-ping': {
+          '75%, 100%': {
+            transform: 'scale(1.5)',
+            opacity: '0',
+          },
+        },
+      },
     },
   },
   plugins: [],

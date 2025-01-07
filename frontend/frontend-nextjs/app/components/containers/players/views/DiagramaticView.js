@@ -656,7 +656,7 @@ const DiagramaticView = ({
     >
       <div
         ref={infoRef}
-        className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-0 right-0 z-[30] bg-none text-black w-[300px] h-fit flex"
+        className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-0 right-0 z-[30] bg-none text-black w-fit h-fit flex"
       >
         {hoverData && (
           <div className="w-full h-full">
@@ -666,7 +666,7 @@ const DiagramaticView = ({
       </div>
       <div
         ref={placeAndEventInfoRef}
-        className="absolute opacity-0 pointer-events-none select-none border-[#000000] border-1 rounded-lg overflow-hidden top-4 right-4 z-[30] border bg-white text-black w-[400px] h-[390px] flex"
+        className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-4 right-4 z-[30] w-fit h-fit flex"
       >
         {hoverData && (
           <div className="flex flex-col w-full h-full">

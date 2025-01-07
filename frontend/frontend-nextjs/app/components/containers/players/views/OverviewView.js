@@ -109,16 +109,24 @@ const OverviewView = ({data, clip=false, onClickProgressBar, currentTime, videoR
     return <div className={`${(toggleShow.view === "overview" && playToggle) ? "translate-x-0" : "translate-x-full"} z-[40] flex absolute top-0 right-0 lg:w-[660px] h-full bg-white transition-all duration-1000`}>
        <div ref={scrolltRef} className="w-full h-full overflow-scroll hide_scrollbar">
           <div ref={contentRef} className="w-full h-fit bg-white py-2 px-4">
-                {allAnnotation && <div className="flex flex-col gap-4">
+                {allAnnotation && <div className="flex flex-col gap-5">
                    {
                       allAnnotation.map((v, idx) => {
                          return <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
-                            <div className="w-full h-fit flex gap-2 items-center">
-                               <div className="">
-                                  <div className={`w-2 h-2 ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-emerald-400" : "bg-neutral-300"} rounded-full`}></div>
-                               </div>
+                            <div className="w-full h-fit flex flex-col">
                                <OverViewBox data={v} fakeData={getData} />
-                               <div onClick={() => onJumpTo(v.in)} className="text-xs flex flex-col cursor-pointer hover:bg-black justify-center items-center hover:text-white transition-all duration-150 rounded-md px-1 py-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
+                               <div className="flex gap-1 items-center mt-1">
+                                 <div className={`w-[24px] h-[24px] flex justify-center items-center relative bg-none`}>
+                                    <div className={`absolute top-0 left-0  w-full h-full rounded-full ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-eva-c2" : " bg-white "}`}></div>
+                                    <div className={`absolute top-0 left-0  w-full h-full rounded-full ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "animate-custom-ping bg-eva-c2" : "animate-none bg-white "}`}></div>
+                                    <div onClick={() => onJumpTo(v.in)} className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "text-white" : "text-black"}`}>
+                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
+                                          <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                                       </svg>
+                                    </div>
+                                 </div> 
+                                 <div className="text-[11px] font-ibm_mono_regular flex justify-center items-center px-1 py-1 gap-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
+                               </div>
                             </div>
                           </FilterBox>                         
                       })
