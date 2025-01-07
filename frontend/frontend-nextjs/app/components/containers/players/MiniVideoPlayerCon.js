@@ -1,4 +1,5 @@
 import { BASE_URL } from "@/app/utils/constant/etc";
+import { formatTime } from "@/app/utils/hooks/etc";
 import { useEffect, useRef, useState } from "react";
 
 const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrentTimeForMini, getVideoData, showContentVideo}) => {
@@ -187,8 +188,8 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         </video>
 
         {currentBox  && (
-          <div className="absolute bottom-0 left-0 w-full h-[16px] overflow-hidden flex group-hover:opacity-100 duration-300 opacity-0">
-            <div className="w-full px-2">
+          <div className="absolute bottom-0 left-0 w-full h-[20px] overflow-hidden flex group-hover:opacity-100 duration-300 opacity-0">
+            <div className="w-full px-2 flex justify-stretch items-center bg-black text-white gap-2">
               <div className="w-full h-1 rounded-full relative">
                 <input
                   onChange={(e) => onClickProgressBar(e)}
@@ -205,6 +206,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
                   className="absolute bg-red-400 w-full h-full select-none pointer-events-none"
                 ></progress>
               </div>
+               <div className="w-fit text-[12px] font-ibm_mono_regular whitespace-nowrap">{formatTime(currentTime)} / {formatTime(getVideoData.duration)}</div>
             </div>
             {/* <div>
                         {boxes[currentBox].name === "placeBox" && <div className="w-full h-[16px] bg-eva-c4 "></div>}

@@ -17,11 +17,13 @@ const HomeHeader = ({ currentVideo }) => {
   }, []);
 
   return (
+    
     <div className="w-full h-[100svh] pt-[56px] bg-white overflow-hidden relative">
       <div
         id="headerVideoAni"
         className={`w-full h-full bg-white relative group`}
       >
+        <div className="absolute top-0 left-0 w-full h-full bg-black pointer-events-none select-none bg-opacity-30"></div>
         <div
           style={{
             backgroundImage: `url(${BASE_URL}/${currentVideo.id}/480p${
@@ -32,13 +34,13 @@ const HomeHeader = ({ currentVideo }) => {
         ></div>
         <div
           onClick={() => moveToVideo({ videoId: currentVideo.id })}
-          className="absolute z-[45] w-[80px] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer opacity-0 group-hover:opacity-100 bg-black bg-opacity-50 rounded-full text-white transition-all duration-300"
+          className="absolute z-[45] w-[180px] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer opacity-0 group-hover:opacity-100 bg-black bg-opacity-0 rounded-full text-white transition-all duration-300"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
-            className="size-9 translate-x-[2px] opacity-90"
+            className="size-32 translate-x-[2px] opacity-90"
           >
             <path
               fillRule="evenodd"
@@ -53,6 +55,7 @@ const HomeHeader = ({ currentVideo }) => {
           <div
             className={`opacity-100 translate-x-0 flex`}
           >
+             
             <VideoTitle text={currentVideo.title} />
           </div>
           <VideoMeta videoBool={false} currentVideo={currentVideo} />

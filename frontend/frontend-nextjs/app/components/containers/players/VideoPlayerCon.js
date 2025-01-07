@@ -245,12 +245,31 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
     },[playToggle])
     return <div className="w-full h-[calc(100svh-56px)] relative">
         <div className="w-full h-[calc(100svh-56px)] overflow-hidden flex flex-col">
-         <div className="w-full h-full flex flex-col overflow-hidden relative">
+         <div className="w-full h-full flex flex-col overflow-hidden relative group">
              <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
                <source type="video/mp4" />
                Your browser does not support the video tag.
              </video>
              {/* video info */}
+             {!playToggle && <div
+               onClick={togglePlay}
+               className="absolute z-[45] w-[180px] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer opacity-0 group-hover:opacity-100 bg-black bg-opacity-0 rounded-full text-white transition-all duration-300"
+               >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="size-32 translate-x-[2px] opacity-90"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+             </div>}
+             <div className={`${playToggle ? "bg-opacity-0" : "bg-opacity-30"} w-full h-full absolute top-0 left-0 bg-black duration-300 pointer-events-none select-none flex justify-center items-center`}>
+             </div>
              <div className={`absolute top-0 left-0 z-[40] overflow-hidden w-full h-fit flex flex-col gap-4`}>
                 <div onClick={togglePlay} className={`${playToggle ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-full pointer-events-none"} cursor-pointer w-[76px] absolute top-0 left-0 flex justify-center items-center aspect-square text-black bg-[#8BA5F8] transition-all duration-1000`}>
                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -307,7 +326,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                    <progress value={currentTime} max={data.duration} className="absolute bg-red-400 w-full h-full select-none pointer-events-none"></progress>
                 </div>
              </div>
-             <div className="w-[140px] text-center text-xs">{formatTime(currentTime)} / {formatTime(data.duration)}</div>
+             <div className="w-fit text-center text-[12px] whitespace-nowrap font-ibm_mono_regular px-2">{formatTime(currentTime)} / {formatTime(data.duration)}</div>
       
          </div>}
          {/* video navigation */}

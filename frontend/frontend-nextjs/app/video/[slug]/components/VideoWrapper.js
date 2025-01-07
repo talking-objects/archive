@@ -94,6 +94,7 @@ const VideoWrapper = () => {
 
   return (
     <>
+    
       {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
         <LoadingCon ready={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
       )}

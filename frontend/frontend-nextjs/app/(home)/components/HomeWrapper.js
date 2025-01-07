@@ -34,11 +34,13 @@ const HomeWrapper = () => {
 
   return (
     <>
+       
       {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
         <LoadingCon ready={Boolean(currentVideo)} />
       )}
       {(getLoadingState.isLoading && !isLoading && currentVideo) && (
         <MainContainer>
+         
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (
             <ContentContainer padding={false}>
