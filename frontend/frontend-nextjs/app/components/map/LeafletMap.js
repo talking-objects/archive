@@ -50,11 +50,8 @@ function MapUpdate({center, allPlaces}) {
 }
 
 
-const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
+const CustomMarker = ({ center, v, content, changeItemTime}) => {
   const markerRef = useRef(null)
-  const map = useMap();
-
-
   const isCenterMarker = center[0] === v.position.lat && center[1] === v.position.long;
   // useEffect(() => {
   //   if (markerRef.current) {
@@ -114,15 +111,15 @@ const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
   // )
 }
 const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeItemTime=false, diagramatic=false}) => {
-  const ICON = icon({
-    iconUrl: "/map-marker.svg",
-    iconSize: [32, 32],
-  })
+  // const ICON = icon({
+  //   iconUrl: "/map-marker.svg",
+  //   iconSize: [32, 32],
+  // })
 
-  const ICON2 = icon({
-    iconUrl: "/marker-19.svg",
-    iconSize: [32, 32],
-  })
+  // const ICON2 = icon({
+  //   iconUrl: "/marker-19.svg",
+  //   iconSize: [32, 32],
+  // })
 
 
  
@@ -139,7 +136,7 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
       </Marker> */}
       {
         allPlaces && allPlaces.map((v, idx) => {
-          return <CustomMarker changeItemTime={changeItemTime} key={idx} content={content} v={v} center={center} ICON={ICON} ICON2={ICON2} />
+          return <CustomMarker changeItemTime={changeItemTime} key={idx} content={content} v={v} center={center}/>
         })
       }
       <MapUpdate center={center} allPlaces={allPlaces} />
