@@ -112,28 +112,28 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             })
             .on("mouseleave", function(d, i){
 
-                const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
-                yAxisGroupBox
-                .transition()
-                .duration(300)
-                .attr("transform", function(d, i){
-                    return `translate(${-20}, ${scaleTime(d.startDate)})`
-                })
-                const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
-                yAxisGroupLine
-                .transition()
-                .duration(300)
-                .attr("width", 15)
+                // const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
+                // yAxisGroupBox
+                // .transition()
+                // .duration(300)
+                // .attr("transform", function(d, i){
+                //     return `translate(${-20}, ${scaleTime(d.startDate)})`
+                // })
+                // const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
+                // yAxisGroupLine
+                // .transition()
+                // .duration(300)
+                // .attr("width", 15)
                 document.body.style.cursor = "auto"
-                if(eventTextBoxRef){
-                    const textBox = eventTextBoxRef.current;
-                    textBox.style.transform = `translate(-${itemGroupSize.width - 20 - bgBarWidth - 200 + 10}px,0)`
+                // if(eventTextBoxRef){
+                //     const textBox = eventTextBoxRef.current;
+                //     textBox.style.transform = `translate(-${itemGroupSize.width - 20 - bgBarWidth - 200 + 10}px,0)`
                    
 
-                    // textBox.style.display = `none`
-                    // textBox.style.width = `${0}px`
-                    // textBox.style.height = `${0}px`
-                }
+                //     // textBox.style.display = `none`
+                //     // textBox.style.width = `${0}px`
+                //     // textBox.style.height = `${0}px`
+                // }
             })
 
             const yAxisGroup = svg.append("g")
