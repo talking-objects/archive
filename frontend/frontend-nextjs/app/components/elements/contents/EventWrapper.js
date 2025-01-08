@@ -6,6 +6,8 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
     const eventSvgContainer = useRef(null)
     const svgRefEvent = useRef(null)
     const eventTextBoxRef = useRef(null)
+    const [currentEventData, setCurrentEventData] = useState(null)
+    let currentEventIdx = null
     function formatDateToYYYYMMDD(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading zero for single-digit months
@@ -14,7 +16,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
     }
      // Event
      const createTimeLine = ({eventData, eventSvgContainerSize}) => {
-        console.log("timeline")
+     
         if(svgRefEvent.current && eventSvgContainer.current){
             const svgContainerSize = eventSvgContainerSize
             // const svgContainerSize = {
@@ -76,64 +78,88 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             })
             .attr("fill", "rgba(255,100,0,0.9)")
             .on("click", function(d, i){
-                changeItemTime({data:i})
-            })
-            .on("mouseenter", function(d, i){
-                const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
-                yAxisGroupBox
-                .transition()
-                .duration(300)
-                .attr("transform", function(d, i){
-                    return `translate(${-100}, ${scaleTime(d.startDate)})`
-                })
-
-                const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
-                yAxisGroupLine
-                .transition()
-                .duration(300)
-                .attr("width", 95)
+                if(i.idx !== currentEventIdx){
+                    changeItemTime({data:i})
+                    const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
+                    yAxisGroupBox
+                    .transition()
+                    .duration(300)
+                    .attr("transform", function(d, i){
+                        return `translate(${-100}, ${scaleTime(d.startDate)})`
+                    })
                 
-                document.body.style.cursor = "pointer"
-                if(eventTextBoxRef){
-                    const textBox = eventTextBoxRef.current;
-                    // textBox.style.display = `block`
-                    textBox.style.transform = `translate(0,0)`
-                    textBox.style.width = `${itemGroupSize.width - 20 - bgBarWidth - 200}px`
-                    textBox.style.height = `${itemGroupSize.height - 20}px`
+                    const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
+                    yAxisGroupLine
+                    .transition()
+                    .duration(300)
+                    .attr("width", 95)
 
-                    const textBoxTextWrapper = eventTextBoxRef.current.querySelector(".textbox");
-                    const textBoxTextWrappertitle = eventTextBoxRef.current.querySelector(".textboxTitle");
-                    const textBoxTextWrapperinput = eventTextBoxRef.current.querySelector(".textboxInput");
+                    if(eventTextBoxRef){
+                        const textBox = eventTextBoxRef.current;
+                        // textBox.style.display = `block`
+                        textBox.style.transform = `translate(0,0)`
+                        textBox.style.width = `${itemGroupSize.width - 20 - bgBarWidth - 200}px`
+                        textBox.style.height = `${itemGroupSize.height - 20}px`
 
-                    textBoxTextWrappertitle.innerText = `Event${i.idx}`
-                    textBoxTextWrapperinput.innerText = `IN:${i.in}`
-                    // textBoxInput.innerHTML = `<div className="flex flex-col gap-8"><div className="textbox-header">Event${i.idx}</div><div>IN:${i.in}</div></div>`
+                        const textBoxTextWrapper = eventTextBoxRef.current.querySelector(".textbox");
+                        const textBoxTextWrappertitle = eventTextBoxRef.current.querySelector(".textboxTitle");
+                        const textBoxTextWrapperinput = eventTextBoxRef.current.querySelector(".textboxInput");
+
+                        // textBoxTextWrappertitle.innerText = `Event${i.idx}`
+                        // textBoxTextWrapperinput.innerText = `IN:${i.in}`
+                        // textBoxInput.innerHTML = `<div className="flex flex-col gap-8"><div className="textbox-header">Event${i.idx}</div><div>IN:${i.in}</div></div>`
+                    }
+                    setCurrentEventData(i)
+                    currentEventIdx = i.idx
+
+                    for(let j = 0; j < eventData.length; j++){
+                        if(eventData[j].idx !== i.idx ){
+                            const yAxisGroupBox = d3.select(`#yAItemGroup${eventData[j].idx}`)
+                            yAxisGroupBox
+                            .transition()
+                            .duration(300)
+                            .attr("transform", function(d, i){
+                                return `translate(${-20}, ${scaleTime(eventData[j].startDate)})`
+                            })
+                            const yAxisGroupLine = d3.select(`#yAItemGroupLine${eventData[j].idx}`)
+                            yAxisGroupLine
+                            .transition()
+                            .duration(300)
+                            .attr("width", 15)
+                        }
+                    }
+                }else{
+                     const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
+                        yAxisGroupBox
+                        .transition()
+                        .duration(300)
+                        .attr("transform", function(d, i){
+                            return `translate(${-20}, ${scaleTime(d.startDate)})`
+                        })
+                        const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
+                        yAxisGroupLine
+                        .transition()
+                        .duration(300)
+                        .attr("width", 15)
+                       
+                        if(eventTextBoxRef){
+                            const textBox = eventTextBoxRef.current;
+                            textBox.style.transform = `translate(-${itemGroupSize.width - 20 - bgBarWidth - 200 + 10}px,0)`
+                        
+                        
+                            // textBox.style.display = `none`
+                            // textBox.style.width = `${0}px`
+                            // textBox.style.height = `${0}px`
+                        }
+                        currentEventIdx = null
+                        // setCurrentEventData(null)
                 }
             })
+            .on("mouseenter", function(d, i){
+                  document.body.style.cursor = "pointer"
+            })
             .on("mouseleave", function(d, i){
-
-                // const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
-                // yAxisGroupBox
-                // .transition()
-                // .duration(300)
-                // .attr("transform", function(d, i){
-                //     return `translate(${-20}, ${scaleTime(d.startDate)})`
-                // })
-                // const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
-                // yAxisGroupLine
-                // .transition()
-                // .duration(300)
-                // .attr("width", 15)
-                document.body.style.cursor = "auto"
-                // if(eventTextBoxRef){
-                //     const textBox = eventTextBoxRef.current;
-                //     textBox.style.transform = `translate(-${itemGroupSize.width - 20 - bgBarWidth - 200 + 10}px,0)`
-                   
-
-                //     // textBox.style.display = `none`
-                //     // textBox.style.width = `${0}px`
-                //     // textBox.style.height = `${0}px`
-                // }
+                document.body.style.cursor = "auto" 
             })
 
             const yAxisGroup = svg.append("g")
@@ -201,7 +227,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
       if(!isLoading){
         
         const handleResize = () => {
-            console.log("fuckk")
+          
             setIsLoading(true); // 대기 화면 표시
       
             // 이전 타이머 제거
@@ -248,12 +274,12 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
           <svg ref={svgRefEvent}></svg>
           <div
             ref={eventTextBoxRef}
-            className="absolute top-[10px] min-w-[50px] w-1/2 h-[calc(100%-20px)] left-[10px] bg-white px-2 py-2 rounded-lg border-4 border-eva-c6 -translate-x-[calc(100%+10px)] transition-all duration-700"
+            className="absolute top-[10px] min-w-[50px] w-1/2 h-[calc(100%-20px)] left-[10px] bg-white px-2 py-2 rounded-lg border border-black -translate-x-[calc(100%+10px)] transition-all duration-700"
           >
-            <div className="textbox">
-              <div className="textboxTitle text-2xl font-bold"></div>
-              <div className="textboxInput"></div>
-            </div>
+            {currentEventData && <div className="textbox">
+              <div className="textboxTitle text-2xl font-bold">{currentEventData.idx}</div>
+              <div className="textboxInput">{currentEventData.type}</div>
+            </div>}
           </div>
           <div className={`${getIsLoading ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}  select-none absolute top-0 left-0 w-full h-full bg-white flex justify-center items-center text-sm duration-300`}><span className="animate-bounce font-ibm_mono_semibold">Resizing...</span></div>
         </div>
