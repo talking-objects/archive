@@ -64,6 +64,7 @@ const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
   // }, [isCenterMarker]);
   useEffect(() => {
     if (markerRef.current) {
+  
       if (isCenterMarker) {
         markerRef.current.bringToFront(); // 중심 마커를 앞으로 가져오기
       } else {
@@ -87,8 +88,8 @@ const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
     radius={10}
     pathOptions={{color: isCenterMarker ? "#EC6735" : "#F1A73D", weight: 4, fillColor: isCenterMarker ? "#3118E8" : "white", fillOpacity: 1}}
     >
-      <Popup>
-        A pretty CSS3 popup. <br /> Easily customizable.
+      <Popup className="font-ibm_mono_regular">
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  
       </Popup>
     </CircleMarker>
   
@@ -123,7 +124,7 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
 
  
   return (
-    <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={!diagramatic} attributionControl={false} zoom={5} zoomControl={!diagramatic} scrollWheelZoom={false} minZoom={2} maxZoom={12} dragging={!diagramatic}>
+    <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={!diagramatic} attributionControl={false} zoom={5} doubleClickZoom={false} zoomControl={!diagramatic} scrollWheelZoom={false} minZoom={2} maxZoom={12} dragging={!diagramatic}>
       <TileLayer
         attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
         url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png?api_key=1d71d2d1-46eb-44d4-94f7-4fb64e39bc8d"
