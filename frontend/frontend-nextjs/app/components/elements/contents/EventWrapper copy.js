@@ -27,12 +27,10 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             const svg = d3.select(svgRefEvent.current);
        
             svg.selectAll("*").remove()
-            const maxDate = new Date(Math.max(
-                ...eventData.map((val) => new Date(val.startDate).getTime()) // eventData에서 가장 큰 startDate 계산
-              ))
+            const maxDate = new Date()
             const minDate = new Date(Math.min(...eventData.map((val) => val.startDate.getTime())))
        
-            const scaleTime = d3.scaleTime([minDate, maxDate],[0, itemGroupSize.height])
+            const scaleTime = d3.scaleTime([minDate, maxDate],[0, svgContainerSize.height])
 
             svg
             // .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 20])
@@ -40,22 +38,22 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             .style("height", `100%`)
             // .style("width", `${svgContainerSize.width + 10}px`)
             // .style("height", `${svgContainerSize.height + 20}px`)
-            .style("background", "white")
+            .style("background", "#999")
 
             const bgBarWidth = 50
             const itemBoxWidth = 50
             const bgBar = svg
             .append("rect")
             .attr("x", svgContainerSize.width + 5 - bgBarWidth)
-            .attr("y", 5)
+            .attr("y", 0)
             .attr("fill", "blue")
             .attr("width", bgBarWidth)
-            .attr("height", itemGroupSize.height + 10)
+            .attr("height", itemGroupSize.height)
             
 
             const timelineBoxG = svg
             .append("g")
-            .attr("transform", `translate(${itemGroupSize.width + 5 - itemBoxWidth}, 5)`)
+            .attr("transform", `translate(${itemGroupSize.width + 5 - itemBoxWidth}, 0)`)
 
             const timelineBoxs = timelineBoxG
             .selectAll("rect")
@@ -67,12 +65,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             })
             .attr("width", itemBoxWidth)
             .attr("height", function(d, i){
-                // return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
-                const bH = scaleTime(d.endDate) - scaleTime(d.startDate)
-                if((scaleTime(d.startDate) + bH) > itemGroupSize.height){
-                    return 10
-                }
-                return 10
+                return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
             })
             .attr("fill", "rgba(255,100,0,0.9)")
             .on("click", function(d, i){
@@ -98,8 +91,8 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                     const textBox = eventTextBoxRef.current;
                     // textBox.style.display = `block`
                     textBox.style.transform = `translate(0,0)`
-                    textBox.style.width = `${itemGroupSize.width - 20 - bgBarWidth - 200}px`
-                    textBox.style.height = `${itemGroupSize.height - 20}px`
+                    textBox.style.width = `${svgContainerSize.width - 20 - bgBarWidth - 200}px`
+                    textBox.style.height = `${svgContainerSize.height - 20}px`
 
                     const textBoxTextWrapper = eventTextBoxRef.current.querySelector(".textbox");
                     const textBoxTextWrappertitle = eventTextBoxRef.current.querySelector(".textboxTitle");
@@ -127,7 +120,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 document.body.style.cursor = "auto"
                 if(eventTextBoxRef){
                     const textBox = eventTextBoxRef.current;
-                    textBox.style.transform = `translate(-${itemGroupSize.width - 20 - bgBarWidth - 200 + 10}px,0)`
+                    textBox.style.transform = `translate(-${svgContainerSize.width - 20 - bgBarWidth - 200 + 10}px,0)`
                    
 
                     // textBox.style.display = `none`
@@ -137,7 +130,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             })
 
             const yAxisGroup = svg.append("g")
-            .attr("transform", `translate(${itemGroupSize.width + 5 - itemBoxWidth}, 0)`)
+            .attr("transform", `translate(${svgContainerSize.width + 5 - itemBoxWidth}, 0)`)
 
             const pointerLineWidth = 15
             const gap = 5 + pointerLineWidth
@@ -157,7 +150,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 const pointLine = currentG
                 .append("rect")
                 .attr("x", 0)
-                .attr("y", 5)
+                .attr("y", 0)
                 .attr("id", function(d, i){
                     return `yAItemGroupLine${d.idx}`
                 })
@@ -169,7 +162,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 const axisText = currentG
                 .append("text")
                 .attr("x", -5)
-                .attr("y", 5)
+                .attr("y", 0)
                 .text(formatDateToYYYYMMDD(p.startDate))
                 .style("text-anchor", "end")
                 .attr("dy", "0.4em")

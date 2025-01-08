@@ -3,10 +3,19 @@ import SectionContainer from "./elements/SectionContainer";
 import SectionHeader from "./elements/SectionHeader";
 import SectionSubHeader from "./elements/SectionSubHeader";
 
-const RelationBox = () => {
+const RelationBox = ({path}) => {
+
+   const onClick = () => {
+    const aTag = document.createElement("a")
+    aTag.href = path
+    aTag.target = "_blank"
+    document.body.appendChild(aTag)
+    aTag.click()
+    document.body.removeChild(aTag)
+   }
     return (
     <div className="flex-1">
-      <div className="w-full aspect-video bg-white rounded-2xl border border-black">
+      <div onClick={onClick} className="w-full aspect-video bg-white rounded-2xl border border-black cursor-pointer">
         <div className="w-full h-full flex justify-center items-center px-4 py-2 relative">
           <Image 
             src={"/assets/logo-full-menu.svg"}
@@ -34,9 +43,9 @@ const RelatedSection = () => {
           <SectionSubHeader />
         </div>
         <div className="w-full h-fit gap-4 lg:items-center grid grid-cols-1 md:grid-cols-3" >
-          <RelationBox />
-          <RelationBox />
-          <RelationBox />
+          <RelationBox path={"https://staging.talkingobjectsarchive.org/"} />
+          <RelationBox path={"https://talkingobjectslab.org"} />
+          <RelationBox path={"https://github.com/talking-objects"} />
           
         </div>
       </div>
