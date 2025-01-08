@@ -40,7 +40,6 @@ const HomeWrapper = () => {
       )}
       {(getLoadingState.isLoading && !isLoading && currentVideo) && (
         <MainContainer>
-         
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (
             <ContentContainer padding={false}>

@@ -38,6 +38,7 @@ function MapUpdate({center, allPlaces}) {
         return [v.position.lat, v.position.long]
       })
       const bounds = L.latLngBounds(positions);
+
       map.fitBounds(bounds)
 
     }
@@ -74,7 +75,7 @@ const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
         </Marker>
   )
 }
-const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeItemTime=false}) => {
+const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeItemTime=false, diagramatic=false}) => {
   const ICON = icon({
     iconUrl: "/map-marker.svg",
     iconSize: [32, 32],
@@ -88,7 +89,7 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
 
  
   return (
-    <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={false} attributionControl={false} zoom={10} zoomControl={false} scrollWheelZoom={false} dragging={true}>
+    <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={!diagramatic} attributionControl={false} zoom={5} zoomControl={!diagramatic} scrollWheelZoom={false} minZoom={2} maxZoom={12}  dragging={!diagramatic}>
       <TileLayer
         attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
         url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png?api_key=1d71d2d1-46eb-44d4-94f7-4fb64e39bc8d"
@@ -100,7 +101,6 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
       </Marker> */}
       {
         allPlaces && allPlaces.map((v, idx) => {
-        
           return <CustomMarker changeItemTime={changeItemTime} key={idx} content={content} v={v} center={center} ICON={ICON} ICON2={ICON2} />
         })
       }

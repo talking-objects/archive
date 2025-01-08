@@ -322,7 +322,7 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
   return (
     <div className="w-full h-full flex flex-col gap-2 justify-stretch ">
         <div className="w-full h-fit flex justify-end gap-4">
-          <div onClick={() => setToggleGrid((prev) => !prev)} className={`w-[24px] flex justify-center items-center aspect-square  ${toggleGrid ? "text-white bg-neutral-800" : "bg-white text-neutral-800 border border-neutral-800"} hover:text-white hover:bg-neutral-800 text-white rounded-lg cursor-pointer`}>
+          <div onClick={() => setToggleGrid((prev) => !prev)} className={`w-[24px] flex justify-center items-center aspect-square  ${toggleGrid ? "text-white bg-neutral-800" : "bg-white text-neutral-800 border border-neutral-800"} hover:text-white hover:bg-neutral-800 text-neutral-800 rounded-lg cursor-pointer`}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4.745 3A23.933 23.933 0 0 0 3 12c0 3.183.62 6.22 1.745 9M19.5 3c.967 2.78 1.5 5.817 1.5 9s-.533 6.22-1.5 9M8.25 8.885l1.444-.89a.75.75 0 0 1 1.105.402l2.402 7.206a.75.75 0 0 0 1.104.401l1.445-.889m-8.25.75.213.09a1.687 1.687 0 0 0 2.062-.617l4.45-6.676a1.688 1.688 0 0 1 2.062-.618l.213.09" />
               </svg>

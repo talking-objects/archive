@@ -114,7 +114,7 @@ const OverviewView = ({data, clip=false, onClickProgressBar, currentTime, videoR
                       allAnnotation.map((v, idx) => {
                          return <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
                             <div className="w-full h-fit flex flex-col">
-                               <OverViewBox data={v} fakeData={getData} />
+                               <OverViewBox data={v} fakeData={getData} over={true} />
                                <div className="flex gap-1 items-center mt-1">
                                  <div className={`w-[24px] h-[24px] flex justify-center items-center relative bg-none`}>
                                     <div className={`absolute top-0 left-0  w-full h-full rounded-full ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-eva-c2" : " bg-white "}`}></div>

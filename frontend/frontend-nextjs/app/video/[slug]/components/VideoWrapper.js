@@ -100,12 +100,13 @@ const VideoWrapper = () => {
         <LoadingCon ready={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
       )}
       
-     {!isLoading && getVideoData && getLoadingState.hasAnimated && (<MainContainer>
+     {!isLoading && getVideoData && (<MainContainer>
         <>
           <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
             <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} setCurrentTimeForMini={setCurrentTimeForMini} />
           </div>
-          <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo}  />
+          {getLoadingState.hasAnimated && <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo} />}
+          
          
         </>
     </MainContainer>)}

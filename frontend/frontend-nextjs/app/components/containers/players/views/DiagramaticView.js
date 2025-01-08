@@ -671,7 +671,7 @@ const DiagramaticView = ({
         {hoverData && (
           <div className="flex flex-col w-full h-full">
             <div className="w-full h-full">
-              <OverViewBox data={hoverData} fakeData={getData} />
+              <OverViewBox data={hoverData} fakeData={getData} diagramatic={true} />
             </div>
           </div>
         )}
