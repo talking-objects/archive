@@ -51,29 +51,63 @@ function MapUpdate({center, allPlaces}) {
 
 const CustomMarker = ({ICON, ICON2, center, v, content, changeItemTime}) => {
   const markerRef = useRef(null)
+  const map = useMap();
+
+
   const isCenterMarker = center[0] === v.position.lat && center[1] === v.position.long;
+  // useEffect(() => {
+  //   if (markerRef.current) {
+  //     // Set zIndexOffset: higher value for the marker with ICON2
+  //     // markerRef.current.setZIndexOffset(isCenterMarker ? 1000 : 0);
+  //     console.log(markerRef)
+  //   }
+  // }, [isCenterMarker]);
   useEffect(() => {
     if (markerRef.current) {
-      // Set zIndexOffset: higher value for the marker with ICON2
-      markerRef.current.setZIndexOffset(isCenterMarker ? 1000 : 0);
+      if (isCenterMarker) {
+        markerRef.current.bringToFront(); // 중심 마커를 앞으로 가져오기
+      } else {
+        markerRef.current.bringToBack(); // 다른 마커는 뒤로 보내기
+      }
     }
   }, [isCenterMarker]);
+
  
-  return (
-        <Marker
-          eventHandlers={{
-            click: () => {
-              if(content){
-                changeItemTime({data: v})
-              }
-            }
-          }}
-        ref={markerRef} icon={(center[0] === v.position.lat && center[1] === v.position.long) ? ICON2 :ICON} position={[v.position.lat, v.position.long]}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
-  )
+    return <CircleMarker
+    key={`${v.position.lat}-${v.position.long}`} 
+    eventHandlers={{
+      click: () => {
+        if(content){
+          changeItemTime({data: v})
+        }
+      }
+    }}
+    ref={markerRef}
+    center={[v.position.lat, v.position.long]}
+    radius={10}
+    pathOptions={{color: isCenterMarker ? "#EC6735" : "#F1A73D", weight: 4, fillColor: isCenterMarker ? "#3118E8" : "white", fillOpacity: 1}}
+    >
+      <Popup>
+        A pretty CSS3 popup. <br /> Easily customizable.
+      </Popup>
+    </CircleMarker>
+  
+ 
+  // return (
+  //       <Marker
+  //         eventHandlers={{
+  //           click: () => {
+  //             if(content){
+  //               changeItemTime({data: v})
+  //             }
+  //           }
+  //         }}
+  //       ref={markerRef} icon={(center[0] === v.position.lat && center[1] === v.position.long) ? ICON2 :ICON} position={[v.position.lat, v.position.long]}>
+  //         <Popup>
+  //           A pretty CSS3 popup. <br /> Easily customizable.
+  //         </Popup>
+  //       </Marker>
+  // )
 }
 const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeItemTime=false, diagramatic=false}) => {
   const ICON = icon({
@@ -89,7 +123,7 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
 
  
   return (
-    <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={!diagramatic} attributionControl={false} zoom={5} zoomControl={!diagramatic} scrollWheelZoom={false} minZoom={2} maxZoom={12}  dragging={!diagramatic}>
+    <MapContainer className="w-full h-full bg-blue-400 absolute top-0 left-0" center={center} zoomAnimation={!diagramatic} attributionControl={false} zoom={5} zoomControl={!diagramatic} scrollWheelZoom={false} minZoom={2} maxZoom={12} dragging={!diagramatic}>
       <TileLayer
         attribution='&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'
         url="https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png?api_key=1d71d2d1-46eb-44d4-94f7-4fb64e39bc8d"
