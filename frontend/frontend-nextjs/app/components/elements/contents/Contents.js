@@ -153,6 +153,7 @@ const Contents = ({
         >
           <div className="w-full h-full flex flex-col justify-center">
             {/* <div className="text-sm text-neutral-600 font-light">Current Position: {currentBox}</div> */}
+            <div>dd</div>
             <div className="w-full aspect-video relative">
               <MiniVideoPlayerCon
                 getCurrentItem={getCurrentItem}

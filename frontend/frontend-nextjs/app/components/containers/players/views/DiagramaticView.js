@@ -654,6 +654,7 @@ const DiagramaticView = ({
       ref={wrapperRef}
       className="absolute top-0 left-0 w-full h-full bg-none"
     >
+    
       <div
         ref={infoRef}
         className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-0 right-0 z-[30] bg-none text-black w-fit h-fit flex"

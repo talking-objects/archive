@@ -45,6 +45,7 @@ const VideoWrapper = () => {
         duration: data.data.items[0].duration,
         editVersion: false,
       });
+      console.log(data.data.items[0])
       setVideoData(data.data.items[0]);
     }
   }, [data, annotationData]);
