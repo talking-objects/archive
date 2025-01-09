@@ -25,7 +25,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             // }
 
             const itemGroupSize = eventSvgContainerSize
-            itemGroupSize.height = itemGroupSize.height
+            itemGroupSize.height = itemGroupSize.height - 20
             const svg = d3.select(svgRefEvent.current);
        
             svg.selectAll("*").remove()
@@ -34,46 +34,49 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
               ))
             const minDate = new Date(Math.min(...eventData.map((val) => val.startDate.getTime())))
        
-            const scaleTime = d3.scaleTime([minDate, maxDate],[0, itemGroupSize.width - 20])
+            const scaleTime = d3.scaleTime([minDate, maxDate],[0, itemGroupSize.height])
 
             svg
+            // .attr("viewBox", [0, 0, svgContainerSize.width + 10, svgContainerSize.height + 20])
             .style("width", `100%`)
             .style("height", `100%`)
-            .style("background", "#efefef")
+            // .style("width", `${svgContainerSize.width + 10}px`)
+            // .style("height", `${svgContainerSize.height + 20}px`)
+            .style("background", "white")
 
             const bgBarWidth = 50
             const itemBoxWidth = 50
             const bgBar = svg
             .append("rect")
-            .attr("x", 10)
-            .attr("y", itemGroupSize.height/2 - 25)
+            .attr("x", svgContainerSize.width + 5 - bgBarWidth)
+            .attr("y", 5)
             .attr("fill", "blue")
-            .attr("width", itemGroupSize.height -20)
-            .attr("height", bgBarWidth)
+            .attr("width", bgBarWidth)
+            .attr("height", itemGroupSize.height + 10)
             
 
             const timelineBoxG = svg
             .append("g")
-            .attr("transform", `translate(5, ${itemGroupSize.height/2 - 25})`)
+            .attr("transform", `translate(${itemGroupSize.width + 5 - itemBoxWidth}, 5)`)
 
             const timelineBoxs = timelineBoxG
             .selectAll("rect")
             .data(eventData)
             .join("rect")
-            .attr("x", function(d,i){
-              return scaleTime(d.startDate)
-          })
-            .attr("y", 0)
-            .attr("width", function(d, i){
-              // return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
-              const bH = scaleTime(d.endDate) - scaleTime(d.startDate)
-              if((scaleTime(d.startDate) + bH) > itemGroupSize.height){
-                  return 10
-              }
-              return 10
-          })
-            .attr("height", itemBoxWidth)
-            .attr("fill", "rgba(255,100,0,1)")
+            .attr("x", 0)
+            .attr("y", function(d,i){
+                return scaleTime(d.startDate)
+            })
+            .attr("width", itemBoxWidth)
+            .attr("height", function(d, i){
+                // return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
+                const bH = scaleTime(d.endDate) - scaleTime(d.startDate)
+                if((scaleTime(d.startDate) + bH) > itemGroupSize.height){
+                    return 10
+                }
+                return 10
+            })
+            .attr("fill", "rgba(255,100,0,0.9)")
             .on("click", function(d, i){
                 if(i.idx !== currentEventIdx){
                     changeItemTime({data:i})
@@ -160,7 +163,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             })
 
             const yAxisGroup = svg.append("g")
-            .attr("transform", `translate(10, ${itemGroupSize.height/2 - 25})`)
+            .attr("transform", `translate(${itemGroupSize.width + 5 - itemBoxWidth}, 0)`)
 
             const pointerLineWidth = 15
             const gap = 5 + pointerLineWidth
@@ -172,8 +175,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 return `yAItemGroup${d.idx}`
             })
             .attr("transform", function(d, i){
-                return `translate(${scaleTime(d.startDate)}, ${i % 2 === 0 ? `-${pointerLineWidth}` : "50"})`
-                
+                return `translate(${-gap}, ${scaleTime(d.startDate)})`
             })
             .each(function(p, j){
                 const currentG = d3.select(this);
@@ -181,20 +183,21 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 const pointLine = currentG
                 .append("rect")
                 .attr("x", 0)
-                .attr("y", 0)
+                .attr("y", 5)
                 .attr("id", function(d, i){
                     return `yAItemGroupLine${d.idx}`
                 })
-                .attr("width", 1)
-                .attr("height", pointerLineWidth)
+                .attr("width", pointerLineWidth)
+                .attr("height", 1)
                 .attr("fill", "black")
                
+
                 const axisText = currentG
                 .append("text")
-                .attr("x", 5)
+                .attr("x", -5)
                 .attr("y", 5)
                 .text(formatDateToYYYYMMDD(p.startDate))
-                .style("text-anchor", "start")
+                .style("text-anchor", "end")
                 .attr("dy", "0.4em")
                 .style("font-size", "12px")
                 .style("font-weight", "medium")
