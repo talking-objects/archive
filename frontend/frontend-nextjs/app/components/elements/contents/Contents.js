@@ -71,6 +71,7 @@ const Contents = ({
   }, [showContentVideo]);
 
   useEffect(() => {
+
     const boxes = [
       { id: "#context_box", name: "contextBox" },
       { id: "#place_box", name: "placeBox" },
@@ -153,7 +154,11 @@ const Contents = ({
         >
           <div className="w-full h-full flex flex-col justify-center">
             {/* <div className="text-sm text-neutral-600 font-light">Current Position: {currentBox}</div> */}
-            <div>dd</div>
+            <div className="mb-2">
+              <span className="w-full flex overflow-hidden text-black text-[24px] font-ibm_mono_bolditalic transition-all duration-1000">
+                  <span className="leading-tight"><span className="inline bg-[#8BA5F8] leading-[1.2]">{getVideoData.title}</span></span>
+              </span>
+            </div>
             <div className="w-full aspect-video relative">
               <MiniVideoPlayerCon
                 getCurrentItem={getCurrentItem}
