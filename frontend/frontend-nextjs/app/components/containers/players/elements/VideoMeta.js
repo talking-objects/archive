@@ -7,9 +7,9 @@ const VideoMeta = ({ currentVideo, videoBool = true, playToggle = true, currentL
             ? "opacity-100 translate-x-0"
             : "opacity-0 -translate-x-full"
           : "opacity-100 translate-x-0"
-      } text-black text-[14px] w-fit h-fit flex opacity-100  duration-1000 justify-stretch items-stretch  `}
+      } text-black text-[14px] w-fit h-fit flex opacity-100 duration-1000 justify-stretch items-stretch  `}
     >
-      <div className="h-full flex-1 bg-white w-full px-2 lg:px-4"></div>
+      <div className="h-full flex-1 bg-none w-full px-2 lg:px-4"></div>
       <div className="flex flex-col w-full max-w-[280px] px-2 py-2 text-white">
         <div className="w-full flex justify-center items-center">
           <div className="font-eva text-[120px] leading-[1.2]">C</div>
