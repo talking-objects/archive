@@ -164,7 +164,12 @@ const DiagramaticView = ({
           if (d.type === "placeLayer" || d.type === "eventLayer") {
             if (placeAndEventInfoRef) {
               const pAERef = placeAndEventInfoRef.current;
-              pAERef.style.opacity = "1";
+              // pAERef.style.opacity = "1";
+             
+              gsap.to(pAERef, {
+                css: { opacity: 1 },
+                duration: 0.7
+              });
               setHoverData(d);
             }
           } else {
@@ -175,12 +180,9 @@ const DiagramaticView = ({
               const addHeight = wrapperHeight * (2 / 3);
               const infoBoxHeight = infoBox.clientHeight;
               const infoBoxWidth = infoBox.clientWidth;
+            
               setHoverData(d);
-
-              gsap.to(infoBox, {
-                css: { opacity: 1 },
-                duration: 0.5,
-              });
+              
               infoBox.style.top = `${
                 addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin
               }px`;
@@ -193,6 +195,11 @@ const DiagramaticView = ({
                 currentMouseX = 0;
               }
               infoBox.style.left = `${currentMouseX}px`;
+              gsap.to(infoBox, {
+                css: { opacity: 1 },
+                duration: 0.6
+              });
+             
             }
           }
         };
@@ -202,8 +209,8 @@ const DiagramaticView = ({
           if (d.type === "placeLayer" || d.type === "eventLayer") {
             if (placeAndEventInfoRef) {
               const pAERef = placeAndEventInfoRef.current;
-              pAERef.style.opacity = "1";
-              setHoverData(d);
+              // pAERef.style.opacity = "1";
+              // setHoverData(d);
             }
           } else {
             if (wrapperRef && infoRef) {
@@ -213,11 +220,8 @@ const DiagramaticView = ({
               const addHeight = wrapperHeight * (2 / 3);
               const infoBoxHeight = infoBox.clientHeight;
               const infoBoxWidth = infoBox.clientWidth;
-              setHoverData(d);
-              gsap.to(infoBox, {
-                css: { opacity: 1 },
-                duration: 0.5,
-              });
+              // setHoverData(d);
+             
               infoBox.style.top = `${
                 addHeight + mousePos[1] - infoBoxHeight - infoBoxTopMargin
               }px`;
@@ -230,27 +234,50 @@ const DiagramaticView = ({
                 currentMouseX = 0;
               }
               infoBox.style.left = `${currentMouseX}px`;
+              // gsap.to(infoBox, {
+              //   css: { opacity: 1 },
+              //   duration: 0.5,
+              // });
             }
           }
         };
         const onMouseLeave = (e, d) => {
           document.body.style.cursor = "auto";
-          if (infoRef) {
+          if (d.type === "placeLayer" || d.type === "eventLayer") {
+            if (placeAndEventInfoRef) {
+              const pAERef = placeAndEventInfoRef.current;
+              gsap.killTweensOf(pAERef);
+              setHoverData(null);
+              pAERef.style.opacity = "0";
+            }
+          } else{
             const infoBox = infoRef.current;
             gsap.killTweensOf(infoBox);
             setHoverData(null);
             gsap.to(infoBox, {
               css: { opacity: 0 },
-              duration: 0.3,
+              duration: 0.0,
             });
+
             // infoBox.style.display = "none"
           }
-          if (placeAndEventInfoRef) {
-            const pAERef = placeAndEventInfoRef.current;
-            setHoverData(null);
+          // document.body.style.cursor = "auto";
+          // if (infoRef) {
+          //   const infoBox = infoRef.current;
+          //   gsap.killTweensOf(infoBox);
+          //   setHoverData(null);
+          //   gsap.to(infoBox, {
+          //     css: { opacity: 0 },
+          //     duration: 0.0,
+          //   });
+          //   // infoBox.style.display = "none"
+          // }
+          // if (placeAndEventInfoRef) {
+          //   const pAERef = placeAndEventInfoRef.current;
+          //   setHoverData(null);
 
-            pAERef.style.opacity = "0";
-          }
+          //   pAERef.style.opacity = "0";
+          // }
         };
         const onClick = ({ inVlaue, video }) => {
           if (edit) {
@@ -654,27 +681,25 @@ const DiagramaticView = ({
       ref={wrapperRef}
       className="absolute top-0 left-0 w-full h-full bg-none"
     >
-    
+      
       <div
         ref={infoRef}
         className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-0 right-0 z-[30] bg-none text-black w-fit h-fit flex"
       >
-        {hoverData && (
-          <div className="w-full h-full">
+        {hoverData && (hoverData.type !== "eventLayer" && hoverData.type !== "placeLayer") && (
+         
             <OverViewBox data={hoverData} fakeData={getData} />
-          </div>
+          
         )}
       </div>
       <div
         ref={placeAndEventInfoRef}
         className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-4 right-4 z-[30] w-fit h-fit flex"
       >
-        {hoverData && (
-          <div className="flex flex-col w-full h-full">
-            <div className="w-full h-full">
+        {(hoverData && (hoverData.type === "eventLayer" || hoverData.type === "placeLayer")) && (
               <OverViewBox data={hoverData} fakeData={getData} diagramatic={true} />
-            </div>
-          </div>
+          
+       
         )}
       </div>
 
