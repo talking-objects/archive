@@ -25,9 +25,22 @@ const PlaceBox = ({place, allPlaces, diagramatic=false, over=false}) => {
 }
 
 const EventBox = ({event, over=false}) => {
-   return <div className={`w-full h-[360px] ${over ? "" : "max-w-[600px]"} overflow-hidden min-h-[200px] flex flex-col bg-[#3118E8] border-[#F1A73D] text-white rounded-2xl`}>
+   function formatDateToYYYYMMDD(date) {
+      const year = date.getFullYear();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[date.getMonth()]; // Get month as a 3-letter abbreviation
+      const day = String(date.getDate()).padStart(2, '0'); // Add leading zero for single-digit days
+      return `${month}/${day}/${year}`;
+  
+    }
+   return <div className={`w-full h-[360px] ${over ? "" : "max-w-[600px]"} overflow-y-scroll min-h-[200px] flex flex-col bg-[#3118E8] border-[#F1A73D] text-white rounded-2xl`}>
       {/* <div>{event.type}</div> */}
-      <div className="h-full flex-1 flex justify-center items-center w-[600px]">Event</div>
+      <div className="h-full flex-1 flex flex-col w-[600px] px-6 py-6">
+         <div className="flex gap-1 mb-4 font-ibm_mono_semibold">
+            <div>{formatDateToYYYYMMDD(event.startDate)}</div>-<div>{formatDateToYYYYMMDD(event.endDate)}</div>
+         </div>
+         <div className="font-ibm_mono_italic"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type and</div>
+      </div>
    </div>
 }
 
