@@ -9,10 +9,12 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
     const [currentEventData, setCurrentEventData] = useState(null)
     let currentEventIdx = null
     function formatDateToYYYYMMDD(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Add leading zero for single-digit months
-        const day = String(date.getDate()).padStart(2, '0'); // Add leading zero for single-digit days
-        return `${month}/${day}/${year}`;
+      const year = date.getFullYear();
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const month = monthNames[date.getMonth()]; // Get month as a 3-letter abbreviation
+      const day = String(date.getDate()).padStart(2, '0'); // Add leading zero for single-digit days
+      return `${month}/${day}/${year}`;
+  
     }
      // Event
      const createTimeLine = ({eventData, eventSvgContainerSize}) => {
@@ -274,7 +276,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
           <svg ref={svgRefEvent}></svg>
           <div
             ref={eventTextBoxRef}
-            className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-lg border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
+            className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
           >
             {currentEventData && <div className="textbox">
               <div className="textboxTitle text-2xl font-bold">{currentEventData.idx}</div>
