@@ -39,14 +39,14 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             svg
             .style("width", `100%`)
             .style("height", `100%`)
-            .style("background", "#efefef")
+            .style("background", "#fff")
 
             const bgBarWidth = 50
             const itemBoxWidth = 50
             const bgBar = svg
             .append("rect")
             .attr("x", 10)
-            .attr("y", itemGroupSize.height/2 - 25)
+            .attr("y", itemGroupSize.height/1.5 - 25)
             .attr("fill", "blue")
             .attr("width", itemGroupSize.height -20)
             .attr("height", bgBarWidth)
@@ -54,7 +54,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
 
             const timelineBoxG = svg
             .append("g")
-            .attr("transform", `translate(5, ${itemGroupSize.height/2 - 25})`)
+            .attr("transform", `translate(5, ${itemGroupSize.height/1.5 - 25})`)
 
             const timelineBoxs = timelineBoxG
             .selectAll("rect")
@@ -82,21 +82,21 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                     .transition()
                     .duration(300)
                     .attr("transform", function(d, i){
-                        return `translate(${-100}, ${scaleTime(d.startDate)})`
+                        return `translate(${scaleTime(d.startDate)}, 75)rotate(90)`
                     })
                 
                     const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
                     yAxisGroupLine
                     .transition()
                     .duration(300)
-                    .attr("width", 95)
+                    .attr("width", 35)
+                    .attr("x", -25)
 
                     if(eventTextBoxRef){
                         const textBox = eventTextBoxRef.current;
-                        // textBox.style.display = `block`
+                        textBox.style.display = `block`
                         textBox.style.transform = `translate(0,0)`
-                        textBox.style.width = `${itemGroupSize.width - 20 - bgBarWidth - 200}px`
-                        textBox.style.height = `${itemGroupSize.height - 20}px`
+                     
 
                         const textBoxTextWrapper = eventTextBoxRef.current.querySelector(".textbox");
                         const textBoxTextWrappertitle = eventTextBoxRef.current.querySelector(".textboxTitle");
@@ -116,13 +116,14 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                             .transition()
                             .duration(300)
                             .attr("transform", function(d, i){
-                                return `translate(${-20}, ${scaleTime(eventData[j].startDate)})`
+                                return `translate(${scaleTime(eventData[j].startDate)}, 50)rotate(90)`
                             })
                             const yAxisGroupLine = d3.select(`#yAItemGroupLine${eventData[j].idx}`)
                             yAxisGroupLine
                             .transition()
                             .duration(300)
                             .attr("width", 15)
+                            .attr("x", 0)
                         }
                     }
                 }else{
@@ -131,17 +132,19 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                         .transition()
                         .duration(300)
                         .attr("transform", function(d, i){
-                            return `translate(${-20}, ${scaleTime(d.startDate)})`
+                            return `translate(${scaleTime(d.startDate)}, 50)rotate(90)`
                         })
                         const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
                         yAxisGroupLine
                         .transition()
                         .duration(300)
                         .attr("width", 15)
+                        .attr("x", 0)
                        
                         if(eventTextBoxRef){
                             const textBox = eventTextBoxRef.current;
-                            textBox.style.transform = `translate(-${itemGroupSize.width - 20 - bgBarWidth - 200 + 10}px,0)`
+                            textBox.style.transform = `translate(0, calc(-100% - 15px))`;
+
                         
                         
                             // textBox.style.display = `none`
@@ -160,10 +163,10 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             })
 
             const yAxisGroup = svg.append("g")
-            .attr("transform", `translate(10, ${itemGroupSize.height/2 - 25})`)
+            .attr("transform", `translate(10, ${itemGroupSize.height/1.5 - 25})`)
 
             const pointerLineWidth = 15
-            const gap = 5 + pointerLineWidth
+    
             yAxisGroup
             .selectAll("g")
             .data(eventData)
@@ -172,7 +175,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 return `yAItemGroup${d.idx}`
             })
             .attr("transform", function(d, i){
-                return `translate(${scaleTime(d.startDate)}, ${i % 2 === 0 ? `-${pointerLineWidth}` : "50"})`
+                return `translate(${scaleTime(d.startDate)}, 50)rotate(90)`
                 
             })
             .each(function(p, j){
@@ -185,14 +188,14 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 .attr("id", function(d, i){
                     return `yAItemGroupLine${d.idx}`
                 })
-                .attr("width", 1)
-                .attr("height", pointerLineWidth)
+                .attr("width", pointerLineWidth)
+                .attr("height", 1)
                 .attr("fill", "black")
                
                 const axisText = currentG
                 .append("text")
-                .attr("x", 5)
-                .attr("y", 5)
+                .attr("x", pointerLineWidth)
+                .attr("y", 0)
                 .text(formatDateToYYYYMMDD(p.startDate))
                 .style("text-anchor", "start")
                 .attr("dy", "0.4em")
@@ -271,7 +274,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
           <svg ref={svgRefEvent}></svg>
           <div
             ref={eventTextBoxRef}
-            className="absolute top-[10px] min-w-[50px] w-1/2 h-[calc(100%-20px)] left-[10px] bg-white px-2 py-2 rounded-lg border border-black -translate-x-[calc(100%+10px)] transition-all duration-700"
+            className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-lg border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
           >
             {currentEventData && <div className="textbox">
               <div className="textboxTitle text-2xl font-bold">{currentEventData.idx}</div>
