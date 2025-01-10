@@ -29,7 +29,6 @@ const InfiniteScrollingText = () => {
     <div className="tag-reel w-full h-full bg-black overflow-hidden flex items-center text-[16px] font-ibm_mono_italic">
       <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
         <div className="cb-tagreel-item nm_text">This website is currently a prototype version. Some features may be incomplete or subject to change in future updates</div>
-        
       </div>
       <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
         <div className="cb-tagreel-item nm_text">This website is currently a prototype version. Some features may be incomplete or subject to change in future updates</div>
