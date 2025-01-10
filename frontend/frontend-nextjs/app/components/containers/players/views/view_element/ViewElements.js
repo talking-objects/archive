@@ -58,13 +58,26 @@ const ReferenceBox = ({reference, over}) => {
       <div><div className="w-10 aspect-square rounded-full border-[4px] border-[#EC6735]"></div></div>
       {/* <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type and </div> */}
       {<div className="text-[16px] font-ibm_mono_italic">
-         {reference.value?.url && <a target="_blank" href={reference.value?.url} className="px-2 py-1 rounded-md bg-neutral-800 flex w-fit mb-2 font-ibm_mono_semibold"><div className="text-white">Source</div></a>}
+         {reference.value?.url && <div className="w-full h-10 flex items-center">
+            <div className="w-[24px] h-[24px] flex justify-center items-center overflow-hidden relative">
+               <a target="_blank" href={reference.value?.url} className=" flex w-full h-full justify-center items-center bg-white transition-all ">
+                     <div className="text-black transition-all "><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                     </svg>
+                  </div>
+               </a>
+            </div>
+         </div>}
          <div>{reference.value?.text ? reference.value?.text : "no data"}</div>
       </div>}
    </div>
 }
 
 const CategoryBox = ({category}) => {
+
+   if(Array.isArray(category.category)){
+      return <div>ttt</div>
+   }
    return <div className="w-full flex flex-wrap">
       <div style={{backgroundColor: category.category.color}} className="h-full text-4xl text-white font-ibm_mono_bolditalic text-[30px] px-2 py-1 flex w-fit max-w-[480px]">{category.category.value}</div>
    </div>

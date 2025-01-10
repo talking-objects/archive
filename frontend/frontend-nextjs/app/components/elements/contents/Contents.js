@@ -103,9 +103,9 @@ const Contents = ({
             
               // 새로운 GSAP 애니메이션 생성
               activeAnimation = gsap.to("#contentVideoBox", {
-                delay: 1,
+                delay: 0.6,
                 ease: "expo.out",
-                duration: 2.5,
+                duration: 1.5,
                 css: {
                   top: `${pos}px`,
                 },

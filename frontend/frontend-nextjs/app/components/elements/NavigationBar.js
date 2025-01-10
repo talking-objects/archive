@@ -10,7 +10,7 @@ const InfiniteScrollingText = () => {
     const rows = document.querySelectorAll(".cb-tagreel-row");
 
     rows.forEach((row) => {
-      let duration = 8; // 애니메이션 지속 시간 (조절 가능)
+      let duration = 20; // 애니메이션 지속 시간 (조절 가능)
 
       // 무한 반복 애니메이션
       gsap.to(row, {
@@ -27,23 +27,15 @@ const InfiniteScrollingText = () => {
 
   return (
     <div className="tag-reel w-full h-full bg-black overflow-hidden flex items-center text-[16px] font-ibm_mono_italic">
-      <div className="cb-tagreel-row flex gap-5 whitespace-nowrap w-full px-4">
-        <div className="cb-tagreel-item nm_text">Sample Text 1</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 2</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 3</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 4</div>
+      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
+        <div className="cb-tagreel-item nm_text">This website is currently a prototype version. Some features may be incomplete or subject to change in future updates</div>
+        
       </div>
-      <div className="cb-tagreel-row flex gap-5 whitespace-nowrap w-full px-4">
-        <div className="cb-tagreel-item nm_text">Sample Text 1</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 2</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 3</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 4</div>
+      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
+        <div className="cb-tagreel-item nm_text">This website is currently a prototype version. Some features may be incomplete or subject to change in future updates</div>
       </div>
-      <div className="cb-tagreel-row flex gap-5 whitespace-nowrap w-full px-4">
-        <div className="cb-tagreel-item nm_text">Sample Text 1</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 2</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 3</div>
-        <div className="cb-tagreel-item nm_text">Sample Text 4</div>
+      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
+        <div className="cb-tagreel-item nm_text">This website is currently a prototype version. Some features may be incomplete or subject to change in future updates</div>
       </div>
     </div>
   );
