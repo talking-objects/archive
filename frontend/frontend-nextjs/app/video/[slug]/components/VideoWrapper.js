@@ -8,6 +8,7 @@ import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import Contents from "@/app/components/elements/contents/Contents";
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
+import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
 import { createFakeAnnotations } from "@/app/utils/hooks/etc";
 import { getAllAnnotations, getVideo } from "@/app/utils/hooks/pandora_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
@@ -46,7 +47,7 @@ const VideoWrapper = () => {
         editVersion: false,
       });
       console.log(data.data.items[0])
-      setVideoData(data.data.items[0]);
+      setVideoData(fakeVideoDataList[params.slug] ? fakeVideoDataList[params.slug]:  data.data.items[0]);
     }
   }, [data, annotationData]);
 

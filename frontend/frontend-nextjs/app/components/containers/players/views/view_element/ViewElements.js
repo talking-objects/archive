@@ -39,7 +39,7 @@ const EventBox = ({event, over=false}) => {
          <div className="flex gap-1 mb-4 font-ibm_mono_semibold">
             <div>{formatDateToYYYYMMDD(event.startDate)}</div>-<div>{formatDateToYYYYMMDD(event.endDate)}</div>
          </div>
-         <div className="font-ibm_mono_italic"> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type andLorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type and</div>
+         {event.value?.content && <div className="font-ibm_mono_italic">{event.value.content}</div>}
       </div>
    </div>
 }
@@ -48,16 +48,19 @@ const NarrationBox = ({narration, over}) => {
    return <div className={`w-full h-full ${over ? "" : "max-w-[350px]"} border-[#8BA5F8] border-4 rounded-lg flex flex-row min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black`}>
       <div><div className="w-10 aspect-square rounded-full border-[4px] border-[#8BA5F8]"></div></div>
       {/* <div className="text-[16px] font-ibm_mono_italic">{narration.type}</div> */}
-      <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's  </div>
-      {narration.value && <div className="text-[16px] font-ibm_mono_italic">{narration.value}</div>}
+      
+      { <div className="text-[16px] font-ibm_mono_italic">{narration.value ? narration.value : "no data"}</div>}
    </div>
 }
 const ReferenceBox = ({reference, over}) => {
    return <div className={`w-full ${over ? "" : "max-w-[350px]"} h-full border-[#EC6735] border-4 rounded-lg  flex flex-row min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black`}>
       {/* <div><div className="w-10 aspect-square rounded-full border-[#EC6735] border-4 bg-white"></div></div> */}
       <div><div className="w-10 aspect-square rounded-full border-[4px] border-[#EC6735]"></div></div>
-      <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type and </div>
-      {reference.value && <div className="text-[16px] font-ibm_mono_italic">{reference.value}Lorem Text</div>}
+      {/* <div className="text-[16px] font-ibm_mono_italic">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and unknown printer took a galley of type and unknown printer took a galley of type and </div> */}
+      {<div className="text-[16px] font-ibm_mono_italic">
+         {reference.value?.url && <a target="_blank" href={reference.value?.url} className="px-2 py-1 rounded-md bg-neutral-800 flex w-fit mb-2 font-ibm_mono_semibold"><div className="text-white">Source</div></a>}
+         <div>{reference.value?.text ? reference.value?.text : "no data"}</div>
+      </div>}
    </div>
 }
 

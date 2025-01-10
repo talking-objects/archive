@@ -279,8 +279,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
           >
             {currentEventData && <div className="textbox">
-              <div className="textboxTitle text-2xl font-bold">{currentEventData.idx}</div>
-              <div className="textboxInput">{currentEventData.type}</div>
+              <div className="textboxInput">{currentEventData.value.content}</div>
             </div>}
           </div>
           <div className={`${getIsLoading ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}  select-none absolute top-0 left-0 w-full h-full bg-white flex justify-center items-center text-sm duration-300`}><span className="animate-bounce font-ibm_mono_semibold">Resizing...</span></div>
