@@ -98,23 +98,23 @@ export const VideoNavigation = ({onToggleShow, toggleShow, onToggleLegend}) => {
     <div className="px-4 flex items-center gap-4">
       <VideoNavLabel text={"Show:"} />
       <div className="flex items-center gap-2 mr-4">
-         <VideoNavItemBtn text={"Categories(1)"} onToggleShow={() => onToggleShow("category")} toggleShowBool={toggleShow.category} />
-         <VideoNavItemBtn text={"Tags(2)"} onToggleShow={() => onToggleShow("tag")} toggleShowBool={toggleShow.tag} />
-         <VideoNavItemBtn text={"References(3)"} onToggleShow={() => onToggleShow("reference")} toggleShowBool={toggleShow.reference} />
-         <VideoNavItemBtn text={"Narrations(4)"} onToggleShow={() => onToggleShow("narration")} toggleShowBool={toggleShow.narration} />
+         <VideoNavItemBtn text={"Categories"} onToggleShow={() => onToggleShow("category")} toggleShowBool={toggleShow.category} />
+         <VideoNavItemBtn text={"Tags"} onToggleShow={() => onToggleShow("tag")} toggleShowBool={toggleShow.tag} />
+         <VideoNavItemBtn text={"References"} onToggleShow={() => onToggleShow("reference")} toggleShowBool={toggleShow.reference} />
+         <VideoNavItemBtn text={"Narrations"} onToggleShow={() => onToggleShow("narration")} toggleShowBool={toggleShow.narration} />
       </div>
       <div className="flex items-center gap-2">
-         <VideoNavItemBtn text={"Data(5)"} onToggleShow={() => onToggleShow("data")} toggleShowBool={toggleShow.data} />
-         <VideoNavItemBtn text={"Events(6)"} onToggleShow={() => onToggleShow("event")} toggleShowBool={toggleShow.event} />
-         <VideoNavItemBtn text={"Places(7)"} onToggleShow={() => onToggleShow("place")} toggleShowBool={toggleShow.place} />
+         <VideoNavItemBtn text={"Data"} onToggleShow={() => onToggleShow("data")} toggleShowBool={toggleShow.data} />
+         <VideoNavItemBtn text={"Events"} onToggleShow={() => onToggleShow("event")} toggleShowBool={toggleShow.event} />
+         <VideoNavItemBtn text={"Places"} onToggleShow={() => onToggleShow("place")} toggleShowBool={toggleShow.place} />
       </div>
        
     </div>
     <div className="px-4 flex items-center gap-4">
       <VideoNavLabel text={"View:"} />
-      <VideoNavItemBtn text={"Diagramatic(Q)"} onToggleShow={() => onToggleShow("diagramatic", true)} toggleShowBool={toggleShow.view === "diagramatic"} />
-      <VideoNavItemBtn text={"Entangled(W)"} onToggleShow={() => onToggleShow("entangled", true)} toggleShowBool={toggleShow.view === "entangled"} />
-      <VideoNavItemBtn text={"Overview(E)"} onToggleShow={() => onToggleShow("overview", true)} toggleShowBool={toggleShow.view === "overview"} />
+      <VideoNavItemBtn text={"Diagramatic"} onToggleShow={() => onToggleShow("diagramatic", true)} toggleShowBool={toggleShow.view === "diagramatic"} />
+      <VideoNavItemBtn text={"Entangled"} onToggleShow={() => onToggleShow("entangled", true)} toggleShowBool={toggleShow.view === "entangled"} />
+      <VideoNavItemBtn text={"Overview"} onToggleShow={() => onToggleShow("overview", true)} toggleShowBool={toggleShow.view === "overview"} />
     </div>
     <div onClick={() => onToggleLegend(true)} className={`h-full aspect-square cursor-pointer select-none flex bg-[#8BA5F8] hover:bg-opacity-30 hover:bg-white justify-center items-center text-black`}>
        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
