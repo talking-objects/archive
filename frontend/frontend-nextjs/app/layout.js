@@ -14,11 +14,16 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body suppressHydrationWarning={true}>
         <RecoilContextProvider>
-            <NavigationBar />
-            <SmoothScroll>
-            {children}
-            <Footer />
-          </SmoothScroll>
+            <div className="hidden lg:block">
+              <NavigationBar />
+              <SmoothScroll>
+              {children}
+              <Footer />
+              </SmoothScroll>
+            </div>
+            <div className="flex lg:hidden w-screen h-screen justify-center items-center px-4">
+              <div className="font-ibm_mono_regular">This prototype is currently optimized for desktop viewing only. It does not support mobile and tablet devices. For a better experience, please view the prototype on a desktop. Mobile and tablet responsiveness will be implemented in future iterations.</div>
+            </div>
         </RecoilContextProvider>
       </body>
     </html>

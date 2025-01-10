@@ -5,35 +5,63 @@ import { useRecoilState } from "recoil";
 import gsap from "gsap"
 import { useRouter } from "next/navigation";
 
+const InfiniteScrollingText = () => {
+  useEffect(() => {
+    const rows = document.querySelectorAll(".cb-tagreel-row");
+
+    rows.forEach((row) => {
+      let duration = 8; // 애니메이션 지속 시간 (조절 가능)
+
+      // 무한 반복 애니메이션
+      gsap.to(row, {
+        xPercent: -100, // 왼쪽 끝까지 이동
+        ease: "none",
+        duration: duration,
+        repeat: -1, // 무한 반복
+        modifiers: {
+          xPercent: (x) => `${parseFloat(x) % 100}`, // xPercent 값을 0~100으로 반복
+        },
+      });
+    });
+  }, []);
+
+  return (
+    <div className="tag-reel w-full h-full bg-black overflow-hidden flex items-center text-[16px] font-ibm_mono_italic">
+      <div className="cb-tagreel-row flex gap-5 whitespace-nowrap w-full px-4">
+        <div className="cb-tagreel-item nm_text">Sample Text 1</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 2</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 3</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 4</div>
+      </div>
+      <div className="cb-tagreel-row flex gap-5 whitespace-nowrap w-full px-4">
+        <div className="cb-tagreel-item nm_text">Sample Text 1</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 2</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 3</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 4</div>
+      </div>
+      <div className="cb-tagreel-row flex gap-5 whitespace-nowrap w-full px-4">
+        <div className="cb-tagreel-item nm_text">Sample Text 1</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 2</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 3</div>
+        <div className="cb-tagreel-item nm_text">Sample Text 4</div>
+      </div>
+    </div>
+  );
+};
+
+
 const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
   const router = useRouter()
+
   return (
     <>
       { (
-        <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[2000] text-white flex items-center justify-between px-4 gap-8 duration-700`}>
-          <div onClick={() => router.push("/")} className="cursor-pointer">Experimental Video Archive</div>
-          {/* <div className="flex gap-4 items-center text-[14px]">
-            <div>Forest</div>
-            <div>About</div>
-            <div className="px-3 py-[6px] bg-eva-c2 rounded-sm">Annotation Board</div>
-          </div> */}
-          {/* <div onClick={() => router.push("/")}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          </div> */}
+        <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[2000] text-white flex items-center gap-4 justify-between duration-700`}>
+          <div onClick={() => router.push("/")} className="cursor-pointer w-[360px] h-full flex justify-center items-center">
+            <div>Experimental Video Archive</div>
+          </div>
+          <InfiniteScrollingText />
         </div>
       )}
     </>
