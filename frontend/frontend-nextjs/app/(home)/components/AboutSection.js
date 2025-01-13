@@ -6,13 +6,18 @@ import DefaultBG from "/public/assets/logo-full-menu.svg"
 
 const AboutSection = () => {
   const router = useRouter()
+  const textR = {
+    title: `About This Archive`,
+    stitle: `More about the Thoughts and Concepts of this Archive`,
+    text: `“TALKING OBJECTS” is a digital archive for decolonial knowledge production. It is a curated archive and has no claim to completeness. Based on selected objects or collections, the western canon is expanded to include further schools of thought and epistemologies.`
+  }
   return (
       <SectionContainer row={true}>
         <div className="flex-1 bg-eva-c2 flex bg-opacity-[15%] flex-col items-center justify-center ">
           <div className="w-4/5 h-fit flex flex-col gap-4">
-            <SectionHeader text={"About this Archive"} />
-            <SectionSubHeader />
-            <p className="font-ibm_mono_regular text-[16px] leading-snug">A digital archive for decolonial knowledge production. It is a curated archive and has no claim to completeness. Based on selected objects or collections, the Western canon is expanded to include further schools of thought and epistemologies.</p>
+            <SectionHeader text={textR.title} />
+            <SectionSubHeader text={textR.stitle} />
+            <p className="font-ibm_mono_regular text-[16px] leading-snug">{textR.text}</p>
             {/* <div className="flex justify-center">
               <div onClick={() => router.push("/about")} className="cursor-pointer bg-white px-4 py-2 rounded-xl font-ibm_mono_bolditalic text-[16px] leading-tight">Read More</div>
             </div> */}

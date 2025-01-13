@@ -57,7 +57,6 @@ const CurrentStageBox = ({ val, clickFunc, mainVideoId }) => {
           <span className="bg-eva-c2 inline leading-tight">{getCurrentVideo.title}</span>
         </div>
       </div>
-
     </div>
   );
 };
