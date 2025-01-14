@@ -39,7 +39,7 @@ const EventBox = ({event, over=false}) => {
          <div className="flex gap-1 mb-4 font-ibm_mono_semibold">
             <div>{formatDateToYYYYMMDD(event.startDate)}</div>-<div>{formatDateToYYYYMMDD(event.endDate)}</div>
          </div>
-         {event.value?.content && <div className="font-ibm_mono_italic">{event.value.content}</div>}
+         {event.value?.content && <div className="font-ibm_mono_italic whitespace-pre-wrap">{event.value.content}</div>}
       </div>
    </div>
 }
@@ -49,7 +49,7 @@ const NarrationBox = ({narration, over}) => {
       <div><div className="w-10 aspect-square rounded-full border-[4px] border-[#8BA5F8]"></div></div>
       {/* <div className="text-[16px] font-ibm_mono_italic">{narration.type}</div> */}
       
-      { <div className="text-[16px] font-ibm_mono_italic">{narration.value ? narration.value : "no data"}</div>}
+      { <div className="text-[16px] font-ibm_mono_italic whitespace-pre-wrap">{narration.value ? narration.value : "no data"}</div>}
    </div>
 }
 const ReferenceBox = ({reference, over}) => {
@@ -68,7 +68,7 @@ const ReferenceBox = ({reference, over}) => {
                </a>
             </div>
          </div>}
-         <div>{reference.value?.text ? reference.value?.text : "no data"}</div>
+         <div className="whitespace-pre-wrap">{reference.value?.text ? reference.value?.text : "no data"}</div>
       </div>}
    </div>
 }
