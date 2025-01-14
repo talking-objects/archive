@@ -83,8 +83,8 @@ const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
   return (
     <SectionContainer row={false} big={true}>
       <SectionHeader text={"Currently on Stage"} />
-      <div className="w-full flex justify-between items-center gap-4 mt-4">
-        <IndicatorBtn clickFunc={onPrev}></IndicatorBtn>
+      <div className={`w-full flex justify-between items-center gap-4 mt-4 ${itemList.length > 3 ? "px-4" : "px-4"}`}>
+        {itemList.length > 3 && <IndicatorBtn clickFunc={onPrev}></IndicatorBtn>}
         {itemList && (
           <Swiper
             className="flex-1 w-full h-fit bg-white overflow-hidden"
@@ -101,7 +101,7 @@ const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
               }
           </Swiper>
         )}
-        <IndicatorBtn clickFunc={onNext} left={false}></IndicatorBtn>
+        {itemList.length > 3 && <IndicatorBtn clickFunc={onNext} left={false}></IndicatorBtn>}
         
       </div>
       </SectionContainer>

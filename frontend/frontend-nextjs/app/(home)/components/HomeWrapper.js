@@ -15,7 +15,7 @@ import AboutSection2 from "./AboutSection2";
 import { ScrollSmoother } from "gsap/all";
 
 const HomeWrapper = () => {
-  const itemList = ["AL", "G", "AA", "CL", "U", "F"]
+  const itemList = ["AT", "G", "U"]
   const [mainVideoId, setMainVideoId] = useState([...itemList][Math.floor(Math.random() * itemList.length)])
   const { data, isLoading } = getVideo({ pId: mainVideoId });
   const [currentVideo, setCurrentVideo] = useState(null);

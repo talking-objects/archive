@@ -530,16 +530,19 @@ Thanks to its magnificent collections, its educational setting and the biodivers
   },
   U: {
     country: null,
+    place: "Niger, Dakar",
     created: "2023-08-24T20:30:45.114",
     director: null,
     duration: 17.6,
     id: "U",
     language: null,
     modified: "2024-09-11T16:14:10Z",
+    gerne:null,
     posterFrame: 13,
-    summary: "",
+    summary: "An object filmed at the repository of the Musée Théodore Monod in Dakar. The bedpost originates from the Tuareg and comes from Niger.",
     title: "Object_Viyé Diba_Video_5 Bienvenu Seck 20230511",
-    user: "j",
+    user: "Bienvenu Seck",
+    source: "TALKING OBJECTS ARCHIVE",
     nAnnotations: { 
       categoryList: [
         {
