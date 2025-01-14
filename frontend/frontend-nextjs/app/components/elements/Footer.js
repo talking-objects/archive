@@ -21,7 +21,8 @@ const Footer = () => {
                 <div className="flex-[3] flex flex-col gap-8">
                   <div>
                     <div>Info</div>
-                    <div className="w-[90%]">The EXPERIMENTAL VIDEO ARCHIVE has been developed by the TALKING OBJECTS LAB, African Digital Heritage (Nairobi), Visual Intelligence (Berlin) and a variety of thinkers and artists experimenting with text, images, audio, and video, to create their own cosmologies of Objects in the digital space.</div>
+                    <div className="w-[90%]">The EXPERIMENTAL VIDEO ARCHIVE has been developed by the TALKING OBJECTS LAB, African Digital Heritage (Nairobi), Visual Intelligence (Berlin), Erik Stein, and  a variety of thinkers and artists experimenting with text, images, audio, and video, to create their own cosmologies of Objects in the digital space.
+                    </div>
                   </div>
                   <div>
                       <div>Contact</div>
