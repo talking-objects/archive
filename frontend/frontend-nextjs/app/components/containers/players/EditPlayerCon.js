@@ -27,18 +27,18 @@ const EditPlayerCon = ({data, metaData}) => {
       
     })
     const findCurrentVideo = (currentTime) => {
-       console.log("currentTime:", currentTime)
+       
        let getCurrentVideo;
  
        for(let i =0; i < data.length; i++){
           if(data[i].newIn <= currentTime && data[i].newOut >= currentTime){
              getCurrentVideo = data[i]
              setCurrentIndex(i)
-             console.log(i)
+             
              break;
           }
        }
-       console.log(getCurrentVideo)
+       
        if(getCurrentVideo){
           // videoRef.current.src = `${BASE_URL}/${getCurrentVideo.id}/480p1.mp4`
           videoRef.current.currentTime = getCurrentVideo.in
@@ -50,7 +50,7 @@ const EditPlayerCon = ({data, metaData}) => {
      
     }
     useEffect(() => {
-        console.log(data)
+        
        findCurrentVideo(currentTime)
     },[])
  
@@ -73,8 +73,8 @@ const EditPlayerCon = ({data, metaData}) => {
                    // 다음 비디오로 전환
                    videoElement.pause();
                    setPlayToggle(false);
-                   console.log("next");
-                   console.log(currentIndex + 1);
+                   
+                   
     
                    const getNextVideo = data[currentIndex + 1];
                    if (data[currentIndex + 1]) {

@@ -13,7 +13,7 @@ const HomeHeader = ({ currentVideo }) => {
     router.push(`/video/${videoId}`);
   };
   useEffect(() => {
-    console.log(currentVideo);
+    
   }, []);
 
   return (

@@ -12,7 +12,7 @@ const InfoLable = ({children}) => {
 }
 const AnnotationIcon = ({val,layer}) => {
     useEffect(() => {
-        console.log(val)
+        
     },[])
     const getLayerName = (layer) => {
         if(layer === "eventList"){
@@ -133,9 +133,9 @@ const ForestWrapper = () => {
     const maxDurationValue = 10
     useEffect(() => {
         if(!isLoading && !isLoadingClips && !isLoadingAnnotations){
-            console.log(data.data.items)
-            console.log(dataClips.data.items)
-            console.log(dataAnnotations.data.items)
+            
+            
+            
            
             const layerList = [
                 "categoryList",
@@ -238,7 +238,7 @@ const ForestWrapper = () => {
         })
 
         setPreviewVideoData(newData)
-        console.log("Preview Data",newData)
+        
 
 
 

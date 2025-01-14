@@ -95,7 +95,7 @@ const OverviewView = ({data, clip=false, onClickProgressBar, currentTime, videoR
                 
              }
           }
-          console.log(allData)
+          
           allData = allData.sort((a,b) => a.in - b.in)
           setAllAnnotation(allData)
  

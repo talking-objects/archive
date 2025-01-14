@@ -75,7 +75,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
              videoRef.current.currentTime = parseFloat(e.target.value)
              setCurrentTime(e.target.value)
           }else{
-             console.log(parseFloat(e.target.value) + data.in)
+             
              videoRef.current.currentTime = parseFloat(e.target.value) + data.in
              setCurrentTime(e.target.value)
           }
@@ -223,7 +223,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
              }
              if(clip){
                 const newCurrentTime = videoElement?.currentTime
-                // console.log(currentTime - data.in)
+                // 
                 setCurrentTime(newCurrentTime - data.in)
                 // end
                 if(Math.round(newCurrentTime) > data.out){

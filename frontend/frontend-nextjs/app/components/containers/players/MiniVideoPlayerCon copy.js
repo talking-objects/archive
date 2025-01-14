@@ -35,7 +35,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
 
     useEffect(() => {
         if(videoRef){
-          console.log(getVideoData)
+          
             if(!showContentVideo){
                 videoRef.current.pause()
                 setPlaying(false)
@@ -79,11 +79,11 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
             }else if(boxes[currentBox].name === "cateAndTagBox"){
                 
             }else{
-                console.log(getVideoData.nAnnotations[boxes[currentBox].annotationName])
+                
                 setCurrentData(getVideoData.nAnnotations[boxes[currentBox].annotationName])
             }
             // setCurrentData(getVideoData.nAnnotations[])
-            console.log(currentBox)
+            
         }
        
     },[currentBox])
@@ -120,7 +120,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
  
         if(videoRef){
           
-              console.log(parseFloat(e.target.value) + getItemTime)
+              
               videoRef.current.currentTime = parseFloat(e.target.value) + getItemTime
               setCurrentTime(e.target.value)
            

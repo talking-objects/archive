@@ -52,7 +52,7 @@ const SampleVideoWrapper = () => {
       
    ]
        d3.csv("/sample/toa-sample.csv").then(function(data){
-         console.log(data)
+         
         const refLayer = data.filter((val) => {
           if(val.layer.includes("References Layer")){
             return val
@@ -70,13 +70,13 @@ const SampleVideoWrapper = () => {
             return val
           }
         }).map((val) => {
-          // console.log(JSON.parse(val.input))
+          // 
           const obj = val.input.split('\n').reduce((acc, line) => {
             const [key, value] = line.split(':').map(item => item.trim());
             acc[key] = value === 'true'; // 문자열 "true"/"false"를 불리언으로 변환
             return acc;
           }, {});
-          console.log(obj)
+          
           return {
             type: "categoryLayer",
             value: obj,
@@ -117,7 +117,7 @@ const SampleVideoWrapper = () => {
             return val
           }
         }).map((val) => {
-          // console.log(JSON.parse(val.input))
+          // 
           const obj = val.input.split('\n').reduce((acc, line) => {
             if (line.trim()) { // 빈 줄 무시
               const [key, value] = line.split(':').map(item => item.trim());
@@ -197,7 +197,7 @@ const SampleVideoWrapper = () => {
 
    
     if (!isLoading && !annotationLoading && sampleData) {
-      console.log(annotationData)
+      
 
       // 🤡Fake DataData: You can use "annotationData" later.
       /* 
@@ -220,7 +220,7 @@ const SampleVideoWrapper = () => {
       data.data.items[0].language = "French"
       data.data.items[0].user = ["Ibrahima Thiam"]
       data.data.items[0].summary = "Revisiter les objects - As part of the second TALKING OBJECTS LAB residency at the Musée Théodore Monod in Dakar, artist and photographer Ibrahima Thiam engages in a dialogue with the objects in the museum's collection, revisiter les objects."
-      console.log(data.data.items[0])
+      
       setVideoData(data.data.items[0]);
     }
   }, [data, annotationData, sampleData]);

@@ -29,7 +29,7 @@ const ForestPlayerCon = ({data, metaData}) => {
                videoElement.pause();
                setPlayToggle(false);
                
-               console.log("next");
+               
 
                const getNextVideo = data[currentIndex + 1];
                if (data[currentIndex + 1]) {

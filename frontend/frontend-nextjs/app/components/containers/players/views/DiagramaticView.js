@@ -140,7 +140,7 @@ const DiagramaticView = ({
         const onMouseSourceClick = (e, d) => {
           document.body.style.cursor = "auto";
           if (wrapperRef && infoSourceRef) {
-            console.log(d);
+            
             setSourceHoverData(d);
             const bbox = e.target.getBoundingClientRect();
             let currentMouseX = bbox.left;

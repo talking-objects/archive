@@ -44,7 +44,7 @@ const HomeVideoPlayer = ({data, clip=false, showContentVideo=false, setCurrentTi
              videoRef.current.currentTime = parseFloat(e.target.value)
              setCurrentTime(e.target.value)
           }else{
-             console.log(parseFloat(e.target.value) + data.in)
+             
              videoRef.current.currentTime = parseFloat(e.target.value) + data.in
              setCurrentTime(e.target.value)
           }

@@ -167,7 +167,7 @@
 //             const onMouseSourceClick = (e, d) => {
 //                document.body.style.cursor = "auto"
 //                if(wrapperRef && infoSourceRef){
-//                   console.log(d)
+//                   
 //                   setSourceHoverData(d)
 //                   const bbox = e.target.getBoundingClientRect();
 //                   let currentMouseX = bbox.left
@@ -288,7 +288,7 @@
 //                   onClickProgressBar(inVlaue, edit)
 //                }else{
 //                   if(!clip){
-//                      console.log(typeof inVlaue, inVlaue)
+//                      
 //                      videoRef.current.currentTime = inVlaue
 //                      setCurrentTime(inVlaue)
 //                   }else{
@@ -849,7 +849,7 @@
                
 //             }
 //          }
-//          console.log(allData)
+//          
 //          allData = allData.sort((a,b) => a.in - b.in)
 //          setAllFakeData(allData)
 
@@ -973,7 +973,7 @@
                
 //             }
 //          }
-//          console.log(allData)
+//          
 //          allData = allData.sort((a,b) => a.in - b.in)
 //          setAllFakeData(allData)
 
@@ -1086,7 +1086,7 @@
 //             videoRef.current.currentTime = parseFloat(e.target.value)
 //             setCurrentTime(e.target.value)
 //          }else{
-//             console.log(parseFloat(e.target.value) + data.in)
+//             
 //             videoRef.current.currentTime = parseFloat(e.target.value) + data.in
 //             setCurrentTime(e.target.value)
 //          }
@@ -1106,8 +1106,8 @@
 
 //    useEffect(() => {
 //       const fakeData = createFakeAnnotations({duration:data.duration, editVersion: clip})
-//       console.log(data)
-//       console.log(fakeData)
+//       
+//       
 //       setFakeData(fakeData)
 //    },[])
 
@@ -1228,7 +1228,7 @@
 //             }
 //             if(clip){
 //                const newCurrentTime = videoElement?.currentTime
-//                // console.log(currentTime - data.in)
+//                // 
 //                setCurrentTime(newCurrentTime - data.in)
 //                // end
 //                if(Math.round(newCurrentTime) > data.out){
@@ -1342,18 +1342,18 @@
      
 //    })
 //    const findCurrentVideo = (currentTime) => {
-//       console.log("currentTime:", currentTime)
+//       
 //       let getCurrentVideo;
 
 //       for(let i =0; i < data.length; i++){
 //          if(data[i].newIn <= currentTime && data[i].newOut >= currentTime){
 //             getCurrentVideo = data[i]
 //             setCurrentIndex(i)
-//             console.log(i)
+//             
 //             break;
 //          }
 //       }
-//       console.log(getCurrentVideo)
+//       
 //       if(getCurrentVideo){
 //          // videoRef.current.src = `${BASE_URL}/${getCurrentVideo.id}/480p1.mp4`
 //          videoRef.current.currentTime = getCurrentVideo.in
@@ -1387,8 +1387,8 @@
 //                   // 다음 비디오로 전환
 //                   videoElement.pause();
 //                   setPlayToggle(false);
-//                   console.log("next");
-//                   console.log(currentIndex + 1);
+//                   
+//                   
    
 //                   const getNextVideo = data[currentIndex + 1];
 //                   if (data[currentIndex + 1]) {
@@ -1715,7 +1715,7 @@
 //                videoElement.pause();
 //                setPlayToggle(false);
                
-//                console.log("next");
+//                
 
 //                const getNextVideo = data[currentIndex + 1];
 //                if (data[currentIndex + 1]) {

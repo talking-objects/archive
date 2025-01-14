@@ -41,7 +41,7 @@ const LoadingDataCon = ({ ready = false,readyData, comLoader=()=>{} }) => {
           amount: 0.5,
         },
         onComplete: () => {
-          console.log("Yeah");
+          
           setReady2(true);
         },
       });

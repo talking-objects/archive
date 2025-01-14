@@ -41,7 +41,7 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
 
      // categories & tags
      useEffect(() => {
-        console.log(getVideoData)
+        
         const getData = getVideoData.nAnnotations.categoryList.filter((val) => {
             if(val.category.slug === CATEGORY_AND_TAGVALUE[0].slug){
                 return val;

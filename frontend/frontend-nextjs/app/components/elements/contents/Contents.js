@@ -39,9 +39,9 @@ const Contents = ({
   // useEffect(() => {
   //     if(!isLoading){
   //         // if(contentsDummyRef && contentsRef && contentVideoBoxRef){
-  //         //     console.log(contentsRef)
+  //         //     
   //         //     const refHeight = contentsRef.current.clientHeight;
-  //         //     console.log(contentVideoBoxRef.current.clientHeight)
+  //         //     
   //         //     contentsDummyRef.current.style.height = `${Math.floor(refHeight)}px`
   //         //     contentsDummyRef.current.style.transform = `translateY(-${contentVideoBoxRef.current.clientHeight}px)`
   //         // }
@@ -138,7 +138,7 @@ const Contents = ({
     }
   }, [showContentVideo]);
   useEffect(() => {
-    console.log("getCurrentItem", getCurrentItem);
+    
   }, [getCurrentItem]);
 
   return (

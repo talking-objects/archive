@@ -80,11 +80,11 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
             }else if(boxes[currentBox].name === "cateAndTagBox"){
                 
             }else{
-                console.log(getVideoData.nAnnotations[boxes[currentBox].annotationName])
+                
                 setCurrentData(getVideoData.nAnnotations[boxes[currentBox].annotationName])
             }
             // setCurrentData(getVideoData.nAnnotations[])
-            // console.log(currentBox)
+            // 
         }
        
     },[currentBox])

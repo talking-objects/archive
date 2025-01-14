@@ -72,7 +72,7 @@ const CateAndTagWrapper = ({getVideoData, videoId, changeItemTime}) => {
                 }else{
 
                 }
-                // console.log(check)
+                // 
 
 
                 maxIndex += 1

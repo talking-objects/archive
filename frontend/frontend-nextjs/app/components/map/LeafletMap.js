@@ -57,7 +57,7 @@ const CustomMarker = ({ center, v, content, changeItemTime}) => {
   //   if (markerRef.current) {
   //     // Set zIndexOffset: higher value for the marker with ICON2
   //     // markerRef.current.setZIndexOffset(isCenterMarker ? 1000 : 0);
-  //     console.log(markerRef)
+  //     
   //   }
   // }, [isCenterMarker]);
   useEffect(() => {

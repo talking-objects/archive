@@ -37,9 +37,9 @@ const HomeWrapper = () => {
 
     // useEffect(() => {
     //     if(!isLoadingR){
-    //         console.log(dataR)
+    //         
     //         if(dataR.data.items.length > 0){
-    //             console.log(dataR.data.items)
+    //             
     //             setData(dataR.data.items[0])
     //         }
     //     }

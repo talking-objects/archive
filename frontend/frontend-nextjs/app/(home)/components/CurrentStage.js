@@ -29,8 +29,8 @@ const CurrentStageBox = ({ val, clickFunc, mainVideoId }) => {
 
   useEffect(() => {
     if (!isLoading) {
-      console.log(val);
-      console.log(data);
+      
+      
       if (data.data.items[0]) {
         setCurrentVideo(data.data.items[0]);
       }

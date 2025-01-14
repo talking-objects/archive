@@ -9,7 +9,7 @@ const ExploreSection = () => {
 
   useEffect(() => {
     if(!isLoading && !isLoadingC){
-        console.log(data, dataC)
+        
     }
   },[data, dataC])
   return (

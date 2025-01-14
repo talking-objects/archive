@@ -81,7 +81,7 @@ const LoadingCon = ({ ready = false, comLoader=()=>{} }) => {
           amount: 1,
         },
         onComplete: () => {
-          console.log("Yeah");
+          
           setReady2(true);
         },
       });
