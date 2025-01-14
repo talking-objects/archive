@@ -86,13 +86,13 @@ const CustomMarker = ({ center, v, content, changeItemTime}) => {
     radius={10}
     pathOptions={{color: isCenterMarker ? "#EC6735" : "#F1A73D", weight: 4, fillColor: isCenterMarker ? "#3118E8" : "white", fillOpacity: 1}}
     >
-      <Popup className="rounded-none ">
-        <div className="font-ibm_mono_regular max-h-[350px] overflow-y-scroll py-2 flex flex-col">
+      <Popup className="rounded-none" minWidth={400} maxWidth={400}>
+        <div className="font-ibm_mono_regular w-full min-w-[320px] bg-white max-h-[350px] overflow-y-scroll py-4 px-4 flex flex-col ">
           {v.value?.source && <a target="_blank" className="flex w-fit h-fit justify-center items-center font-ibm_mono_bold rounded-md mb-4" href={`${v.value.source}`}><div className="w-[24px] h-[24px] flex justify-center items-center text-black"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                      </svg></div></a>}
-          {v.value?.placeName && <div className="font-ibm_mono_bold">{v.value.placeName}</div>}
-          {v.value?.content && <div>{v.value.content}</div>}
+          {v.value?.placeName && <div className="font-ibm_mono_bold mb-2">{v.value.placeName}</div>}
+          {v.value?.content && <div className="whitespace-pre-wrap">{v.value.content}</div>}
         </div>
       </Popup>
     </CircleMarker>

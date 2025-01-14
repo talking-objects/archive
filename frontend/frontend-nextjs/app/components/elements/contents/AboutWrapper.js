@@ -12,11 +12,11 @@ const ContentTextHtml = ({text}) => {
 
 const AboutWapper = ({getVideoData}) => {
     return <ContentBox title={"Context"} id="context_box" about={true}>
-    <div>
+    {getVideoData.summary && <div>
        <LabelTitle text={"Description"} />
        <ContentTextHtml text={getVideoData.summary} />
        {/* <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div> */}
-    </div>
+    </div>}
     <div className="grid grid-cols-3 mt-4 gap-4">
        {getVideoData.user && <div>
           <LabelTitle text={"Contributors"} />

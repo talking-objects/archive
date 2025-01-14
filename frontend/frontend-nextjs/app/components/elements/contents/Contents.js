@@ -178,7 +178,7 @@ const Contents = ({
         </div>
 
         <div ref={contentsRef} className="w-full flex flex-col gap-10">
-          {getVideoData.summary && <AboutWapper getVideoData={getVideoData} />}
+          <AboutWapper getVideoData={getVideoData} />
           {
             <div className="w-full text-[40px] flex justify-end">
               <div className="w-1/2 px-4 font-ibm_mono_bolditalic text-[48px] leading-[1.1]">

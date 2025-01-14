@@ -35,7 +35,7 @@ const RefWapper = ({getVideoData, changeItemTime}) => {
                          </a>
                       </div>
                   </div>}
-                    {val.value && <div className="text-sm">{val.value.text}</div>}
+                    {val.value && <div className="text-sm whitespace-pre-wrap">{val.value.text}</div>}
                   </div>
                 );
               })}

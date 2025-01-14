@@ -1,3 +1,9 @@
 .leaflet-popup-content-wrapper{
     border-radius: 0;
+    padding: 0 !important; /* 내부 패딩 제거 */
 }
+
+  
+  .leaflet-popup-content {
+    margin: 0 !important; /* 기본 마진 제거 */
+  }

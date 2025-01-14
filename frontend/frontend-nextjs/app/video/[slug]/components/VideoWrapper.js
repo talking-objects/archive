@@ -47,6 +47,7 @@ const VideoWrapper = () => {
         editVersion: false,
       });
       console.log(data.data.items[0])
+      console.log(fakeVideoDataList[params.slug])
       setVideoData(fakeVideoDataList[params.slug] ? fakeVideoDataList[params.slug]:  data.data.items[0]);
     }
   }, [data, annotationData]);
