@@ -40,9 +40,9 @@ const RelatedSection = () => {
   const textObj = {
     title: `Related Resources`,
     sTitle: `Learn more about the Project`,
-    faces: `The TALKING OBJECTS ARCHIVE is the product of collaboration between a large number of participants - living and practising in the global south and global north. Among them are curators, artists and researchers. `,
-    code: `The Talking Objects Archive and its Software was developed over a two year course between 2023 and 2024. The software is based on the GNU GENERAL PUBLIC LICENSE (Version 3, 29 June 2007) and can be found here:`,
-    toa: `The TALKING OBJECTS ARCHIVE is a digital archive for decolonial knowledge production, where Objects are the starting point for polyperspectival narratives that illuminate different aspects of history.`
+    faces: `The TALKING OBJECTS ARCHIVE is the product of collaboration between a large number of participants - living and practising in the global south and global north. Among them are curators, artists and researchers`,
+    code: `The Talking Objects Archive and its Software was developed over a two year course between 2023 and 2024. The software is based on the GNU GENERAL PUBLIC LICENSE (Version 3, 29 June 2007) and can be found here`,
+    toa: `The TALKING OBJECTS ARCHIVE is a digital archive for decolonial knowledge production, where Objects are the starting point for polyperspectival narratives that illuminate different aspects of history`
    }
   return (
     <SectionContainer big={true}>
@@ -53,9 +53,8 @@ const RelatedSection = () => {
         </div>
         <div className="w-full h-fit gap-4 items-start grid grid-cols-1 md:grid-cols-3" >
           <RelationBox path={"https://talkingobjectsarchive.org"} svgPath={"/assets/toa.svg"} text={textObj.toa} />
-          <RelationBox path={"https://talkingobjectslab.org"} svgPath={"/assets/faces.svg"} text={textObj.faces} />
+          <RelationBox path={"https://talkingobjectsarchive.org/team"} svgPath={"/assets/faces.svg"} text={textObj.faces} />
           <RelationBox path={"https://github.com/talking-objects"} svgPath={"/assets/code.svg"} text={textObj.code} />
-          
         </div>
       </div>
     </SectionContainer>

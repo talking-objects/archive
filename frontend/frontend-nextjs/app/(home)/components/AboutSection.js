@@ -33,7 +33,7 @@ const AboutSection = () => {
               </div>
             </div>
             <div className="w-full flex justify-center">
-              <div className="bg-eva-c2 opacity bg-opacity-[15%] font-ibm_mono_regular text-[10px] px-1">This is the image caption of the preview image </div>
+              <div className="bg-eva-c2 opacity bg-opacity-[15%] font-ibm_mono_regular text-[10px] px-1">Workshop for first Annotation Tests in Frankfurt 2024 with the Talking Objects Archive Team</div>
             </div>
           </div>
         </div>

@@ -23,7 +23,6 @@ const Footer = () => {
                     <div>Info</div>
                     <div className="w-[90%]">The EXPERIMENTAL VIDEO ARCHIVE has been developed by the TALKING OBJECTS LAB, African Digital Heritage (Nairobi), Visual Intelligence (Berlin) and a variety of thinkers and artists experimenting with text, images, audio, and video, to create their own cosmologies of Objects in the digital space.</div>
                   </div>
-                  <div>GNU Public License by XXX YYY Beta Version 1.2</div>
                   <div>
                       <div>Contact</div>
                       <div>videoarchive@talkingobjectsarchive.org</div>
@@ -33,10 +32,10 @@ const Footer = () => {
                     <div>Learn More (all outgoing links)</div>
                     <div className="flex flex-col">
                       <ExLink path={"https://talkingobjectsarchive.org"} text={"Talking Objects Archive"} />
-                      <ExLink path={"https://www.talkingobjectslab.org"} text={"Talking Objects Lab"} />
-                      <ExLink path={"https://staging.talkingobjectsarchive.org/manifesto"} text={"Manifesto"} />
+                      <ExLink path={"https://talkingobjectslab.org"} text={"Talking Objects Lab"} />
+                      <ExLink path={"https://talkingobjectsarchive.org/manifesto"} text={"Manifesto"} />
                       <ExLink path={"https://github.com/talking-objects/archive"} text={"Documentation"} />
-                      <ExLink path={"https://staging.talkingobjectsarchive.org/info/legal-notice"} text={"Imprint"} />
+                      <ExLink path={"https://talkingobjectsarchive.org/info/legal-notice"} text={"Imprint"} />
                     </div>
                   </div>
               </div>
