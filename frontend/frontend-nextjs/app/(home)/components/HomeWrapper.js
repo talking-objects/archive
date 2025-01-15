@@ -13,6 +13,7 @@ import LoadingCon from "@/app/components/LoadingCon";
 import CurrentStage from "./CurrentStage";
 import AboutSection2 from "./AboutSection2";
 import { ScrollSmoother } from "gsap/all";
+import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
 
 const HomeWrapper = () => {
   const itemList = ["AT", "G", "U"]
@@ -28,7 +29,7 @@ const HomeWrapper = () => {
     }
     if (!isLoading) {
       setComDataLoadingState(true)
-      setCurrentVideo(data.data.items[0]);
+      setCurrentVideo(fakeVideoDataList[mainVideoId] ? fakeVideoDataList[mainVideoId] : data.data.items[0]);
     }
   }, [data]);
 
