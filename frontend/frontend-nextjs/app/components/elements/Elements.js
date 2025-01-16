@@ -53,30 +53,32 @@ export const LegendContainer = ({onToggleLegend}) => {
             </div>
          </LegendBoxWrapper>
          <LegendBoxWrapper title={"Data"}>
-               
+             <EtcItemBox text={"Coming Soon"}>
+               {/* <div style={{backgroundColor: `${COLORS.c6}`}} className="w-2 h-8 border border-black"></div> */}
+            </EtcItemBox>
          </LegendBoxWrapper>
          <LegendBoxWrapper title={"Tags"}>
-            <EtcItemBox text={"Explanation here Loren Epsom"}>
+            <EtcItemBox text={"Clip tagged with dynamic Keywords"}>
                <div style={{backgroundColor: `${COLORS.c6}`}} className="w-2 h-8 border border-black"></div>
             </EtcItemBox>
          </LegendBoxWrapper>
          <LegendBoxWrapper title={"Events"}>
-            <EtcItemBox text={"Explanation here Loren Epsom"}>
+            <EtcItemBox text={"Clip related to a certain timeframe"}>
                <div style={{backgroundColor: `${COLORS.c6}`, borderColor: `${COLORS.c5}`}} className="w-8 h-8 border-[5px]"></div>
             </EtcItemBox>
          </LegendBoxWrapper>
          <LegendBoxWrapper title={"References"}>
-            <EtcItemBox text={"Explanation here Loren Epsom"}>
+            <EtcItemBox text={"Clip tagged with References to other Sources"}>
                <div style={{backgroundColor: `${COLORS.c0}`, borderColor: `${COLORS.c4}`}} className="w-8 h-8 border-[5px] rounded-full"></div>
             </EtcItemBox>
          </LegendBoxWrapper>
          <LegendBoxWrapper title={"Places"}>
-            <EtcItemBox text={"Explanation here Loren Epsom"}>
+            <EtcItemBox text={"Clip related to a Location"}>
                <div style={{backgroundColor: `${COLORS.c6}`, borderColor: `${COLORS.c4}`}} className="w-8 h-8 border-[5px] rounded-full"></div>
             </EtcItemBox>
          </LegendBoxWrapper>
          <LegendBoxWrapper title={"Narrations"}>
-            <EtcItemBox text={"Explanation here Loren Epsom"}>
+            <EtcItemBox text={"Clip tagged with own thoughts, ideas or longer texts"}>
                <div style={{backgroundColor: `${COLORS.c2}`}} className="w-8 h-8 border-black border rounded-full"></div>
             </EtcItemBox>
          </LegendBoxWrapper>
