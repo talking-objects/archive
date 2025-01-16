@@ -43,7 +43,7 @@ const Footer = () => {
               </div>
               <div className="flex-[3] h-full flex flex-col jjust">
                   <div className="mb-4">The TALKING OBJECTS ARCHIVE is funded by</div>
-                  <div className="w-[90%] h-full bg-white relative">
+                  <div className="w-full h-full max-w-[250px] max-h-[130px] bg-white relative">
                     <Image 
                       src={`/assets/footer/b.png`}
                       fill
