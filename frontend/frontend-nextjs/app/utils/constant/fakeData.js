@@ -766,12 +766,753 @@ Viyé tests strategies of mediation and visualization of historical and contempo
     source: "courtesy of the artist",
     place: "",
     nAnnotations: { 
-      categoryList: [],
+      categoryList: [
+        {
+          type: "categoryLayer",
+          in: 360,
+          out: 390,
+          category: {
+            color: "#8BA5F8",
+            slug: "knowledge",
+            value: "Knowledgey",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 420,
+          out: 450,
+          category: {
+            color: "#8BA5F8",
+            slug: "knowledge",
+            value: "Knowledgey",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 430,
+          out: 460,
+          category: {
+            color: "#9E21E8",
+            slug: "identity",
+            value: "Identity",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 600,
+          out: 630,
+          category: {
+            color: "#9E21E8",
+            slug: "identity",
+            value: "Identity",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 750,
+          out: 780,
+          category: {
+            color: "#EC6735",
+            slug: "restitution",
+            value: "Restitution",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 870,
+          out: 900,
+          category: {
+            color: "#EC6735",
+            slug: "restitution",
+            value: "Restitution",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1050,
+          out: 1080,
+          category: {
+            color: "#691220",
+            slug: "artistic_reflections",
+            value: "Artistic Reflections",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1080,
+          out: 1110,
+          category: {
+            color: "#691220",
+            slug: "artistic_reflections",
+            value: "Artistic Reflections",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1090,
+          out: 1120,
+          category: {
+            color: "#F1A73D",
+            slug: "memory",
+            value: "Memory and The Imaginary",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1230,
+          out: 1260,
+          category: {
+            color: "#F1A73D",
+            slug: "memory",
+            value: "Memory and The Imaginary",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1320,
+          out: 1350,
+          category: {
+            color: "#F1A73D",
+            slug: "memory",
+            value: "Memory and The Imaginary",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1330,
+          out: 1360,
+          category: {
+            color: "#8BA5F8",
+            slug: "knowledge",
+            value: "Knowledge",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1380,
+          out: 1410,
+          category: {
+            color: "#8BA5F8",
+            slug: "knowledge",
+            value: "Knowledge",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1390,
+          out: 1420,
+          category: {
+            color: "#691220",
+            slug: "artistic_reflections",
+            value: "Artistic Reflections",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1680,
+          out: 1710,
+          category: {
+            color: "#F1A73D",
+            slug: "memory",
+            value: "Memory and The Imaginary",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1800,
+          out: 1830,
+          category: {
+            color: "#EC6735",
+            slug: "restitution",
+            value: "Restitution",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1860,
+          out: 1890,
+          category: {
+            color: "#EC6735",
+            slug: "restitution",
+            value: "Restitution",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1870,
+          out: 1900,
+          category: {
+            color: "#9E21E8",
+            slug: "identity",
+            value: "Identity",
+          },
+        },
+        {
+          type: "categoryLayer",
+          in: 1920,
+          out: 1950,
+          category: {
+            color: "#F1A73D",
+            slug: "memory",
+            value: "Memory and The Imaginary",
+          },
+        },
+      ],
       eventList: [],
-      narrationList: [],
+      narrationList: [
+        {
+          type: "narrationLayer",
+          in: 0,
+          out: 30,
+          value: `visual representation as a tool of power`
+        },
+        {
+          type: "narrationLayer",
+          in: 30,
+          out: 60,
+          value: `masked eyes: they are constantly hidden because they don't want to see the outside`
+        },
+        {
+          type: "narrationLayer",
+          in: 60,
+          out: 90,
+          value: `rough camera angle to reveal the truth!`
+        },
+        {
+          type: "narrationLayer",
+          in: 180,
+          out: 210,
+          value: `SCREAMING`
+        },
+        {
+          type: "narrationLayer",
+          in: 270,
+          out: 300,
+          value: `strange animal`
+        },
+        {
+          type: "narrationLayer",
+          in: 390,
+          out: 420,
+          value: `what is wealth really and who defines that?`
+        },
+        {
+          type: "narrationLayer",
+          in: 420,
+          out: 450,
+          value: `Spirituality & Protective Power of Objects: is it still alive?`
+        },
+        {
+          type: "narrationLayer",
+          in: 480,
+          out: 510,
+          value: `objects are not allowed to return (to africa), but people are not allowed to enter (to europe)`
+        },
+        {
+          type: "narrationLayer",
+          in: 540,
+          out: 570,
+          value: `Gendered Objects`
+        },
+        {
+          type: "narrationLayer",
+          in: 600,
+          out: 630,
+          value: `reminds me of raffia material for rituals`
+        },
+        {
+          type: "narrationLayer",
+          in: 630,
+          out: 660,
+          value: `connection between narration and music`
+        },
+        {
+          type: "narrationLayer",
+          in: 720,
+          out: 750,
+          value: `they never look at you, because they are not meant to look back at you, because when you look at each other you exchange spirits.`
+        },
+        {
+          type: "narrationLayer",
+          in: 750,
+          out: 780,
+          value: `the objects are not interested in seeing you.`
+        },
+        {
+          type: "narrationLayer",
+          in: 840,
+          out: 870,
+          value: `Imperialism as foundation of our data driven society?`
+        },
+        {
+          type: "narrationLayer",
+          in: 1020,
+          out: 1050,
+          value: `scars, wounds, traces and damages of objects`
+        },
+        {
+          type: "narrationLayer",
+          in: 1050,
+          out: 1080,
+          value: `weapon or tool?`
+        },
+        {
+          type: "narrationLayer",
+          in: 1140,
+          out: 1170,
+          value: `the constellation reminds me of how much museums are recreating human zoos`
+        },
+        {
+          type: "narrationLayer",
+          in: 1170,
+          out: 1200,
+          value: `knowledge in objects`
+        },
+        {
+          type: "narrationLayer",
+          in: 1230,
+          out: 1260,
+          value: `visual representation as a tool of power!`
+        },
+        {
+          type: "narrationLayer",
+          in: 1240,
+          out: 1260,
+          value: `Obsession with Categorisation!`
+        },
+        {
+          type: "narrationLayer",
+          in: 1260,
+          out: 1290,
+          value: `Imperialism as foundation of a date driven society?`
+        },
+        {
+          type: "narrationLayer",
+          in: 1270,
+          out: 1290,
+          value: `I think of all the trauma that connects us, divides us and lives in us.`
+        },
+        {
+          type: "narrationLayer",
+          in: 1290,
+          out: 1320,
+          value: `Palestine is not on the map: therefore no plundered objects or related to Palestine in the Museums collections`
+        },
+        {
+          type: "narrationLayer",
+          in: 1320,
+          out: 1350,
+          value: `»you see it if you want to see it«`
+        },
+        {
+          type: "narrationLayer",
+          in: 1380,
+          out: 1410,
+          value: `very painful to watch…`
+        },
+        {
+          type: "narrationLayer",
+          in: 1440,
+          out: 1470,
+          value: `»a map is like a census«`
+        },
+        {
+          type: "narrationLayer",
+          in: 1470,
+          out: 1500,
+          value: `public funueral like a spectacle without celebrating, more re-creating a »human zoo«`
+        },
+        {
+          type: "narrationLayer",
+          in: 1480,
+          out: 1500,
+          value: `visual representation as a tool of power!`
+        },
+        {
+          type: "narrationLayer",
+          in: 1500,
+          out: 1530,
+          value: `what is told and what is being silenced? (and by whom)`
+        },
+        {
+          type: "narrationLayer",
+          in: 1590,
+          out: 1620,
+          value: `»sometimes plunder is described as a gift«`
+        },
+        {
+          type: "narrationLayer",
+          in: 1600,
+          out: 1620,
+          value: `»plunder as a gift« that makes me so sad how western history often continues the realities of exploitation, pain, violence and traumas`
+        },
+        {
+          type: "narrationLayer",
+          in: 1680,
+          out: 1710,
+          value: `maps as census »instruction of empire«`
+        },
+        {
+          type: "narrationLayer",
+          in: 1740,
+          out: 1770,
+          value: `»museums pretends to ask difficult questions«`
+        },
+        {
+          type: "narrationLayer",
+          in: 1860,
+          out: 1890,
+          value: `what do they owe us?`
+        },
+        {
+          type: "narrationLayer",
+          in: 1890,
+          out: 1920,
+          value: `Black Bodies being violated`
+        },
+        {
+          type: "narrationLayer",
+          in: 1980,
+          out: 2010,
+          value: `»Even the Body is not ours«`
+        },
+      ],
       placeList: [],
-      refList: [],
-      tagList: []
+      refList: [
+        {
+          type: "referenceLayer",
+          in: 0,
+          out: 30,
+          value: {
+            text: `»You hide me« (1970) dir: Nii Kware Owoa`,
+            url: null,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 60,
+          out: 90,
+          value: {
+            text: `»»Spirits of Exile« performance`,
+            url: null,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 300,
+          out: 330,
+          value: {
+            text: `»What are you apologising« Chigumadzi`,
+            url: `https://africasacountry.com/2023/10/with-what-are-you-apologizing`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 360,
+          out: 390,
+          value: {
+            text: `»Since we met your people 500 years ago, all you do is take, take, take…« (Amo Ata Aidoo)`,
+            url: `https://www.youtube.com/watch?v=BDIXLZaC7ws`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 420,
+          out: 450,
+          value: {
+            text: `MTM.38`,
+            url: null,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 480,
+          out: 510,
+          value: {
+            text: `»Where is your Fire? (Nathalie Anguezomo Bikoro)`,
+            url: `https://talkingobjectslab.org/nathalie-anguezomo-mba-bikoro`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 810,
+          out: 840,
+          value: {
+            text: `Museum Fatigue`,
+            url: `https://en.wikipedia.org/wiki/Museum_fatigue`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1110,
+          out: 1140,
+          value: {
+            text: `»Unvergleichlich«`,
+            url: `https://www.youtube.com/watch?v=5LmFcQK-s0s`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1170,
+          out: 1200,
+          value: {
+            text: `first german colonial exhibition`,
+            url: `https://www.berlin.de/en/tickets/exhibitions/looking-back-looking-back-762faba2-ad7c-43f5-a32e-35c72db90fed/#:~:text=125%20years%20ago%2C%20from%20May,in%20this%20large%2Dscale%20event.`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1290,
+          out: 1320,
+          value: {
+            text: `Current War in Gaza`,
+            url: `https://www.aljazeera.com/tag/gaza/`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1470,
+          out: 1500,
+          value: {
+            text: `human zoos in europe`,
+            url: `https://www.dw.com/en/how-colonial-powers-presented-people-in-human-zoos/a-60356531`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1560,
+          out: 1590,
+          value: {
+            text: `Christoph Columbus`,
+            url: `https://museosdelbancocentral.org/wp-content/uploads/2021/10/La-conformacion-historica-del-territorio-de-Costa-Rica.pdf`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1740,
+          out: 1770,
+          value: {
+            text: `»Not our work to decolonise the western museum«`,
+            url: `https://www.youtube.com/watch?v=BEPpp5IuZOA`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1890,
+          out: 1920,
+          value: {
+            text: `#SAY THEIR NAMES`,
+            url: `https://sayevery.name`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1920,
+          out: 1950,
+          value: {
+            text: `Les Statues Meurent Aussi – Alain Renais & Chris Marker`,
+            url: `https://www.youtube.com/watch?v=tJcEbW9j1N8`,
+          },
+        },
+        {
+          type: "referenceLayer",
+          in: 1930,
+          out: 1950,
+          value: {
+            text: `Black Girl (1966) – Ousmane Senbėne`,
+            url: `https://www.youtube.com/watch?v=ojfaATzCvd4`,
+          },
+        },
+      ],
+      tagList: [
+        {
+          type: "tagLayer",
+          in: 30,
+          out: 60,
+          value: ["AriellaAichaAzoulay"],
+        },
+        {
+          type: "tagLayer",
+          in: 60,
+          out: 90,
+          value: ["privacy"],
+        },
+        {
+          type: "tagLayer",
+          in: 90,
+          out: 120,
+          value: ["inscription"],
+        },
+        {
+          type: "tagLayer",
+          in: 120,
+          out: 150,
+          value: ["violence"],
+        },
+        {
+          type: "tagLayer",
+          in: 150,
+          out: 180,
+          value: ["screaming"],
+        },
+        {
+          type: "tagLayer",
+          in: 180,
+          out: 210,
+          value: ["hate"],
+        },
+        {
+          type: "tagLayer",
+          in: 240,
+          out: 270,
+          value: ["prisons", "pain"],
+        },
+        {
+          type: "tagLayer",
+          in: 330,
+          out: 360,
+          value: ["wound"],
+        },
+        {
+          type: "tagLayer",
+          in: 570,
+          out: 600,
+          value: ["Restitution"],
+        },
+        {
+          type: "tagLayer",
+          in: 600,
+          out: 630,
+          value: ["sword", "weapon"],
+        },
+        {
+          type: "tagLayer",
+          in: 630,
+          out: 660,
+          value: ["beauty"],
+        },
+        {
+          type: "tagLayer",
+          in: 810,
+          out: 840,
+          value: ["resistence", "pattern"],
+        },
+        {
+          type: "tagLayer",
+          in: 840,
+          out: 870,
+          value: ["protection"],
+        },
+        {
+          type: "tagLayer",
+          in: 870,
+          out: 900,
+          value: ["stolenlifes"],
+        },
+        {
+          type: "tagLayer",
+          in: 900,
+          out: 930,
+          value: ["stolenworlds", "anthropology"],
+        },
+        {
+          type: "tagLayer",
+          in: 960,
+          out: 990,
+          value: ["cosmologies"],
+        },
+        {
+          type: "tagLayer",
+          in: 1050,
+          out: 1080,
+          value: ["beauty", "aesthetics"],
+        },
+        {
+          type: "tagLayer",
+          in: 1140,
+          out: 1170,
+          value: ["globaltrade"],
+        },
+        {
+          type: "tagLayer",
+          in: 1170,
+          out: 1200,
+          value: ["decolonisation", "oralknowledge", "bodyasarchive"],
+        },
+        {
+          type: "tagLayer",
+          in: 1200,
+          out: 1230,
+          value: ["exploitation", "trade"],
+        },
+        {
+          type: "tagLayer",
+          in: 1230,
+          out: 1260,
+          value: ["mapvisualisation"],
+        },
+        {
+          type: "tagLayer",
+          in: 1320,
+          out: 1350,
+          value: ["grief", "mourning"],
+        },
+        {
+          type: "tagLayer",
+          in: 1350,
+          out: 1380,
+          value: ["colonialviolence"],
+        },
+        {
+          type: "tagLayer",
+          in: 1440,
+          out: 1470,
+          value: ["imperialism"],
+        },
+        {
+          type: "tagLayer",
+          in: 1500,
+          out: 1530,
+          value: ["cyprus", "bagdad", "map"],
+        },
+        {
+          type: "tagLayer",
+          in: 1560,
+          out: 1590,
+          value: ["themuseum"],
+        },
+        {
+          type: "tagLayer",
+          in: 1620,
+          out: 1650,
+          value: ["islamicart"],
+        },
+        {
+          type: "tagLayer",
+          in: 1680,
+          out: 1710,
+          value: ["imaginarydislocation"],
+        },
+        {
+          type: "tagLayer",
+          in: 1800,
+          out: 1830,
+          value: ["motherhood", "gender"],
+        },
+        {
+          type: "tagLayer",
+          in: 1980,
+          out: 2010,
+          value: ["weapon"],
+        },
+        {
+          type: "tagLayer",
+          in: 2070,
+          out: 2100,
+          value: ["birdperson", "animal"],
+        },
+      
+      ]
     }
   },
   DEFAULT: {

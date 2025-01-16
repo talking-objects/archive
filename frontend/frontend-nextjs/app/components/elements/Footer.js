@@ -45,7 +45,7 @@ const Footer = () => {
                   <div className="mb-4">The TALKING OBJECTS ARCHIVE is funded by</div>
                   <div className="w-[90%] h-full bg-white relative">
                     <Image 
-                      src={`/assets/footer/2560px-Beauftragte-der-Bundesregierung-für-Kultur-und-Medien-Logo.svg.png`}
+                      src={`/assets/footer/b.png`}
                       fill
                       objectFit="contain"
                       alt=""

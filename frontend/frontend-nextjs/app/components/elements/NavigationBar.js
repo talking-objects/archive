@@ -27,13 +27,13 @@ const InfiniteScrollingText = () => {
 
   return (
     <div className="tag-reel w-full h-full bg-black overflow-hidden flex items-center text-[16px] font-ibm_mono_italic">
-      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
+      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-fit px-4">
         <div className="cb-tagreel-item nm_text">This Website is a Preview of the Video Archive. The final Video Archive will be launched in March 2025.</div>
       </div>
-      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
+      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-fit px-4">
         <div className="cb-tagreel-item nm_text">This Website is a Preview of the Video Archive. The final Video Archive will be launched in March 2025.</div>
       </div>
-      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-full px-4">
+      <div className="cb-tagreel-row flex gap-1 whitespace-nowrap w-fit px-4">
         <div className="cb-tagreel-item nm_text">This Website is a Preview of the Video Archive. The final Video Archive will be launched in March 2025.</div>
       </div>
     </div>
