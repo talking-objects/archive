@@ -32,9 +32,12 @@ export default async function RootLayout({ children }) {
               <Footer />
               </SmoothScroll>
             </div>
-            <div className="flex flex-col md:hidden w-screen h-screen justify-center items-center px-4">
-              <div className="font-ibm_mono_semibold text-xl mb-8">„optmized for Desktop, please open in desktop“ </div>
-              <div className="font-ibm_mono_regular text-base">This prototype is currently optimized for desktop viewing only. It does not support mobile and tablet devices. For a better experience, please view the prototype on a desktop. Mobile and tablet responsiveness will be implemented in future iterations.</div>
+            <div className="flex flex-col md:hidden w-screen h-screen justify-between items-center px-4 py-4">
+              <div className="font-eva text-4xl">Experimental video archive</div>
+              <div className="w-full h-full flex justify-center items-center flex-col p-8">
+                <div className="font-ibm_mono_semibold text-xl mb-8 w-full">Desktop Experience Recommended</div>
+                <div className="font-ibm_mono_regular w-full text-xl">Our site is currently optimized for larger screens. For the best performance and user experience, please visit us on a desktop or laptop.</div>
+              </div>
             </div>
         </RecoilContextProvider>
       </body>
