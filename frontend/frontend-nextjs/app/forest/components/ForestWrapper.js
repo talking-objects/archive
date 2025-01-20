@@ -1,10 +1,14 @@
 
 import ContentContainer from "@/app/components/containers/ContentContainer";
 import ForestPlayerCon from "@/app/components/containers/players/ForestPlayerCon";
+import LoadingCon from "@/app/components/LoadingCon";
+import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { BASE_URL, COLORS } from "@/app/utils/constant/etc";
 import { getAllAnnotations, getAllAnnotationsCounts, getAllClips, getAllVideos, getAllVideosCounts } from "@/app/utils/hooks/pandora_api";
+import { loadingState } from "@/app/utils/recoillib/state/state";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useRecoilValue } from "recoil";
 
 
 const InfoLable = ({children}) => {
@@ -131,6 +135,8 @@ const ForestWrapper = () => {
 
     const [previewVideoData, setPreviewVideoData] = useState(null)
     const maxDurationValue = 10
+     const getLoadingState = useRecoilValue(loadingState);
+     const [isReady, setIsReady] = useState(false)
     useEffect(() => {
         if(!isLoading && !isLoadingClips && !isLoadingAnnotations){
             
@@ -243,8 +249,17 @@ const ForestWrapper = () => {
 
 
     },[allData])
+
+    if((getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady))){
+        return <div className="w-full h-[100svh]">
+          <LoadingDataCon ready={isReady} readyData={Boolean(previewVideoData)} comLoader={() => setIsReady(true)} />
+        </div>
+      }
     
     return <>
+        {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
+        <LoadingCon ready={Boolean(previewVideoData)} comLoader={() => setIsReady(true)} />
+      )}
         <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
             {(previewVideoData && previewVideoData.length > 0) && <ForestPlayerCon data={previewVideoData} />}

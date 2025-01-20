@@ -18,9 +18,9 @@ const AboutSection = () => {
             <SectionHeader text={textR.title} />
             <SectionSubHeader text={textR.stitle} />
             <p className="font-ibm_mono_regular text-[16px] leading-snug">{textR.text}</p>
-            {/* <div className="flex justify-center">
+            <div className="flex justify-center">
               <div onClick={() => router.push("/about")} className="cursor-pointer bg-white px-4 py-2 rounded-xl font-ibm_mono_bolditalic text-[16px] leading-tight">Read More</div>
-            </div> */}
+            </div>
           </div>
         </div>
         <div className="flex-1 flex justify-center items-center flex-col">
