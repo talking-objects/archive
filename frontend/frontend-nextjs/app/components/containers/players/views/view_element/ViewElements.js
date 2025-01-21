@@ -45,7 +45,7 @@ const EventBox = ({event, over=false}) => {
 }
 const DataBox = ({over=false}) => {
   
-   return <div className={`w-full h-[360px] ${over ? "" : "max-w-[600px]"} overflow-y-scroll min-h-[200px] flex flex-col bg-[#3118E8] border-[#F1A73D] text-white rounded-2xl`}>
+   return <div className={`w-full h-[360px] ${over ? "" : "max-w-[600px]"} overflow-y-scroll min-h-[200px] flex flex-col bg-[#000] border-4 border-white text-white rounded-2xl`}>
       {/* <div>{event.type}</div> */}
       <div className="h-full flex-1 flex flex-col w-[600px] px-6 py-6">
          test
