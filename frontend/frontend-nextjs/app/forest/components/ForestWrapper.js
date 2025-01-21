@@ -268,18 +268,18 @@ const ForestWrapper = () => {
         {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
         <LoadingCon ready={Boolean(previewVideoData)} comLoader={() => setIsReady(true)} />
       )}
-        <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
+        {<div className="w-full h-full flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
             {(previewVideoData && previewVideoData.length > 0) && <ForestPlayerCon data={previewVideoData} />}
-            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-0 left-0 z-[40]"></div>
-                <ContentContainer>
+            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40]"></div>
+               {getLoadingState.hasAnimated &&  <ContentContainer>
                     <ForestContentsContainer isLoading={(isLoading || isLoadingClips || isLoadingAnnotations)} allData={allData} />
               
                     {(!isLoading || !isLoadingClips || !isLoadingAnnotations) && <div className="w-full py-4 flex justify-center items-center">
                         <div onClick={() => setPagination((prev) => prev + 1)} className="py-4 px-4 w-fit h-fit border border-black rounded-full cursor-pointer">Load More</div>
                     </div>}
-                </ContentContainer>
-        </div>
+                </ContentContainer>}
+        </div>}
     </>
 }
 

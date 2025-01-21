@@ -66,6 +66,7 @@ const DiagramaticView = ({
     const narration = d3.select("#narrationGroup");
     const event = d3.select("#eventGroup");
     const place = d3.select("#placeGroup");
+    const dataG = d3.select("#dataGroup");
 
     const svg = d3.select(svgRef.current);
     if (toggleShow.view === "diagramatic") {
@@ -111,6 +112,13 @@ const DiagramaticView = ({
       } else {
         place.style("display", "none");
       }
+      // data toggle
+      if (toggleShow.data) {
+        dataG.style("display", "block");
+      } else {
+        dataG.style("display", "none");
+      }
+     
     } else {
       // svg.style("display", "none")
     }
@@ -314,7 +322,8 @@ const DiagramaticView = ({
        
 
         let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width])
-        const annotationRowHeight = canvasSize.height / 4
+        const annotationRowHeight = canvasSize.height / 10
+        const circleRadius = annotationRowHeight / 2
 
         // edit video divider
         if (edit) {
@@ -378,12 +387,12 @@ const DiagramaticView = ({
           .attr("width", function (d) {
             return `${scaleLinear(d.out - d.in)}px`;
           })
-          .attr("height", annotationRowHeight)
+          .attr("height", annotationRowHeight * 2)
           .attr("x", function (d) {
             return `${scaleLinear(d.in)}px`;
           })
           .attr("y", function (d, i) {
-            return `${canvasSize.height - annotationRowHeight}px`;
+            return `${canvasSize.height - (annotationRowHeight * 2)}px`;
           })
           .attr("fill", function (d, i) {
             return `${d.category.color}`;
@@ -409,12 +418,12 @@ const DiagramaticView = ({
           .attr("width", function (d) {
             return `${scaleLinear(d.out - d.in)}px`;
           })
-          .attr("height", annotationRowHeight)
+          .attr("height", annotationRowHeight * 2)
           .attr("x", function (d) {
             return `${scaleLinear(d.in)}px`;
           })
           .attr("y", function (d, i) {
-            return `${canvasSize.height - annotationRowHeight * 2}px`;
+            return `${canvasSize.height - (annotationRowHeight * 2) * 2}px`;
           })
           .attr("fill", "#3118E8")
           .style("stroke", "black")
@@ -433,18 +442,19 @@ const DiagramaticView = ({
           .selectAll("circle")
           .data(getData.refList)
           .join("circle")
-          .attr("r", annotationRowHeight / 3 / 2)
+          .attr("r", circleRadius)
           .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
+            return `${scaleLinear(d.in) + circleRadius / 2}px`;
           })
           .attr("cy", function (d, i) {
             return `${
-              canvasSize.height - annotationRowHeight * 2 - (annotationRowHeight / 3 / 2)
+              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius)
             }px`;
           })
           .attr("fill", "#FFFFFF")
           .style("stroke", "#EC6735")
-          .style("stroke-width", "4.5px")
+          .style("stroke-width", "0px")
+          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -458,18 +468,19 @@ const DiagramaticView = ({
           .selectAll("circle")
           .data(getData.narrationList)
           .join("circle")
-          .attr("r", annotationRowHeight / 3 / 2)
+          .attr("r", circleRadius)
           .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
+            return `${scaleLinear(d.in) + circleRadius / 2}px`;
           })
           .attr("cy", function (d, i) {
             return `${
-              canvasSize.height - annotationRowHeight * 2 - (annotationRowHeight / 3 / 2) * 4
+              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 2)
             }px`;
           })
           .attr("fill", "#8BA5F8")
           .style("stroke", "#000")
-          .style("stroke-width", "0.5px")
+          .style("stroke-width", "0.0px")
+          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -485,20 +496,21 @@ const DiagramaticView = ({
           .data(getData.eventList)
           .join("rect")
           .attr("width", function (d) {
-            return `${annotationRowHeight / 3}px`;
+            return `${circleRadius * 2}px`;
           })
-          .attr("height", annotationRowHeight / 3)
+          .attr("height", circleRadius * 2)
           .attr("x", function (d) {
             return `${scaleLinear(d.in)}px`;
           })
           .attr("y", function (d, i) {
             return `${
-              canvasSize.height - (annotationRowHeight * 4 - annotationRowHeight / 2)
+              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 3) - annotationRowHeight
             }px`;
           })
           .attr("fill", "#3118E8")
           .style("stroke", "#F1A73D")
-          .style("stroke-width", "4.5px")
+          .style("stroke-width", "0px")
+          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -512,45 +524,47 @@ const DiagramaticView = ({
           .selectAll("circle")
           .data(getData.placeList)
           .join("circle")
-          .attr("r", annotationRowHeight / 3 / 2)
+          .attr("r", circleRadius)
           // .attr("width", function(d){
           //    return `${annotationRowHeight/3}px`
           // })
           // .attr("height", annotationRowHeight/3)
           .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
+            return `${scaleLinear(d.in) + circleRadius}px`;
           })
           .attr("cy", function (d, i) {
             return `${
-              canvasSize.height - (annotationRowHeight * 4 - annotationRowHeight / 3 / 2 )
+              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 4) - annotationRowHeight
             }px`;
           })
           .attr("fill", "#3118E8")
           .style("stroke", "#EC6735")
-          .style("stroke-width", "4.5px")
+          .style("stroke-width", "0px")
+          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
           .on("click", function (event, value) {
             onClick({ inVlaue: value.in, video: videoRef });
           });
-
+          // Datagroup
         globalGourp
           .append("g")
           .attr("id", "dataGroup")
           .selectAll("circle")
           .data(getData.placeList)
           .join("circle")
-          .attr("r", annotationRowHeight / 3 / 2)
+          .attr("r", circleRadius)
           .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
+            return `${scaleLinear(d.in) + circleRadius}px`;
           })
           .attr("cy", function (d, i) {
-            return `${canvasSize.height - (annotationRowHeight * 4) - ((annotationRowHeight / 3 / 2) * 2 )}px`;
+            return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 6) - annotationRowHeight}px`;
           })
           .attr("fill", "#000")
           .style("stroke", "#fff")
-          .style("stroke-width", "4.5px")
+          .style("stroke-width", "0px")
+          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
