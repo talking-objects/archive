@@ -43,6 +43,16 @@ const EventBox = ({event, over=false}) => {
       </div>
    </div>
 }
+const DataBox = ({over=false}) => {
+  
+   return <div className={`w-full h-[360px] ${over ? "" : "max-w-[600px]"} overflow-y-scroll min-h-[200px] flex flex-col bg-[#3118E8] border-[#F1A73D] text-white rounded-2xl`}>
+      {/* <div>{event.type}</div> */}
+      <div className="h-full flex-1 flex flex-col w-[600px] px-6 py-6">
+         test
+         
+      </div>
+   </div>
+}
 
 const NarrationBox = ({narration, over}) => {
    return <div className={`w-full h-full ${over ? "" : "max-w-[350px]"} border-[#8BA5F8] border-4 rounded-lg flex flex-row min-h-[200px] overflow-hidden px-2 py-2 bg-white gap-4 text-black`}>
@@ -97,6 +107,8 @@ export const OverViewBox = ({data, fakeData=false, over=false, diagramatic=false
          return <EventBox event={data} over={over} />
       case "narrationLayer":
          return <NarrationBox narration={data} over={over} />
+      case "dataLayer":
+         return <DataBox event={data} over={over} />
       default:
          return <div>Error: Invalid Layer Type</div>;
    }

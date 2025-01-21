@@ -523,9 +523,26 @@ Thanks to its magnificent collections, its educational setting and the biodivers
           value: ["africanmusic", "rhythm", "dance"],
         },
       ],
-      // "dataList": [
-
-      // ]
+      "dataList": [
+        {
+          type: "dataLayer",
+          in: 0,
+          out: 30,
+          value: ""
+        },
+        {
+          type: "dataLayer",
+          in: 150,
+          out: 180,
+          value: ""
+        },
+        {
+          type: "dataLayer",
+          in: 210,
+          out: 240,
+          value: ""
+        },
+      ]
     },
   },
   U: {

@@ -170,7 +170,7 @@ const DiagramaticView = ({
           document.body.style.cursor = "pointer";
           const mousePos = d3.pointer(e);
 
-          if (d.type === "placeLayer" || d.type === "eventLayer") {
+          if (d.type === "placeLayer" || d.type === "eventLayer" || d.type === "dataLayer") {
             if (placeAndEventInfoRef) {
               const pAERef = placeAndEventInfoRef.current;
               // pAERef.style.opacity = "1";
@@ -215,7 +215,7 @@ const DiagramaticView = ({
         const onMouseMove = (e, d) => {
           const mousePos = d3.pointer(e);
 
-          if (d.type === "placeLayer" || d.type === "eventLayer") {
+          if (d.type === "placeLayer" || d.type === "eventLayer" || d.type === "dataLayer") {
             if (placeAndEventInfoRef) {
               const pAERef = placeAndEventInfoRef.current;
               // pAERef.style.opacity = "1";
@@ -252,7 +252,7 @@ const DiagramaticView = ({
         };
         const onMouseLeave = (e, d) => {
           document.body.style.cursor = "auto";
-          if (d.type === "placeLayer" || d.type === "eventLayer") {
+          if (d.type === "placeLayer" || d.type === "eventLayer" || d.type === "dataLayer") {
             if (placeAndEventInfoRef) {
               const pAERef = placeAndEventInfoRef.current;
               gsap.killTweensOf(pAERef);
@@ -439,22 +439,40 @@ const DiagramaticView = ({
         globalGourp
           .append("g")
           .attr("id", "refGroup")
-          .selectAll("circle")
+          .selectAll("g")
           .data(getData.refList)
-          .join("circle")
-          .attr("r", circleRadius)
-          .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + circleRadius / 2}px`;
+          .join("g")
+          .each(function(d){
+            const g = d3.select(this)
+
+            g.append("circle")
+            .attr("class", "outer-circle")
+            .attr("r", circleRadius)
+            .attr("cx", function (d) {
+              return `${scaleLinear(d.in) + circleRadius / 2}px`;
+            })
+            .attr("cy", function (d, i) {
+              return `${
+                canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius)
+              }px`;
+            })
+            .attr("fill", "#EC6735")
+
+            // inside
+            g.append("circle")
+            .attr("class", "inner-circle")
+            .attr("r", circleRadius - 3)
+            .attr("cx", function (d) {
+              return `${scaleLinear(d.in) + circleRadius / 2}px`;
+            })
+            .attr("cy", function (d, i) {
+              return `${
+                canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius)
+              }px`;
+            })
+            .attr("fill", "#FFFFFF")
+  
           })
-          .attr("cy", function (d, i) {
-            return `${
-              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius)
-            }px`;
-          })
-          .attr("fill", "#FFFFFF")
-          .style("stroke", "#EC6735")
-          .style("stroke-width", "0px")
-          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -465,22 +483,39 @@ const DiagramaticView = ({
         globalGourp
           .append("g")
           .attr("id", "narrationGroup")
-          .selectAll("circle")
+          .selectAll("g")
           .data(getData.narrationList)
-          .join("circle")
-          .attr("r", circleRadius)
-          .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + circleRadius / 2}px`;
+          .join("g")
+          .each(function(d){
+            const g = d3.select(this)
+
+            g.append("circle")
+            .attr("class", "outer-circle")
+            .attr("r", circleRadius)
+            .attr("cx", function (d) {
+              return `${scaleLinear(d.in) + circleRadius / 2}px`;
+            })
+            .attr("cy", function (d, i) {
+              return `${
+                canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 2)
+              }px`;
+            })
+            .attr("fill", "#000")
+
+            //inside
+            g.append("circle")
+            .attr("class", "inner-circle")
+            .attr("r", circleRadius - 0.5)
+            .attr("cx", function (d) {
+              return `${scaleLinear(d.in) + circleRadius / 2}px`;
+            })
+            .attr("cy", function (d, i) {
+              return `${
+                canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 2)
+              }px`;
+            })
+            .attr("fill", "#8BA5F8")
           })
-          .attr("cy", function (d, i) {
-            return `${
-              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 2)
-            }px`;
-          })
-          .attr("fill", "#8BA5F8")
-          .style("stroke", "#000")
-          .style("stroke-width", "0.0px")
-          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -492,25 +527,38 @@ const DiagramaticView = ({
         globalGourp
           .append("g")
           .attr("id", "eventGroup")
-          .selectAll("rect")
+          .selectAll("g")
           .data(getData.eventList)
-          .join("rect")
-          .attr("width", function (d) {
-            return `${circleRadius * 2}px`;
+          .join("g")
+          .each(function(d){
+            const g = d3.select(this)
+            // outside
+            g.append("rect")
+            .attr("class", "outer-circle")
+            .attr("width", function (d) {
+              return `${circleRadius * 2}px`;
+            })
+            .attr("height", circleRadius * 2)
+            .attr("x", `${scaleLinear(d.in)}px`)
+            .attr("y", `${
+                canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 3) - annotationRowHeight
+              }px`)
+            .attr("fill", "#F1A73D")
+
+            // inside
+            g.append("rect")
+            .attr("class", "inner-circle")
+            .attr("width", function (d) {
+              return `${circleRadius * 2 - 6}px`;
+            })
+            .attr("height", circleRadius * 2 - 6)
+            .attr("x", `${scaleLinear(d.in) + 3}px`)
+            .attr("y", `${
+                canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 3) - annotationRowHeight + 3
+              }px`)
+            .attr("fill", "#3118E8")
+           
           })
-          .attr("height", circleRadius * 2)
-          .attr("x", function (d) {
-            return `${scaleLinear(d.in)}px`;
-          })
-          .attr("y", function (d, i) {
-            return `${
-              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 3) - annotationRowHeight
-            }px`;
-          })
-          .attr("fill", "#3118E8")
-          .style("stroke", "#F1A73D")
-          .style("stroke-width", "0px")
-          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -521,26 +569,26 @@ const DiagramaticView = ({
         globalGourp
           .append("g")
           .attr("id", "placeGroup")
-          .selectAll("circle")
+          .selectAll("g")
           .data(getData.placeList)
-          .join("circle")
-          .attr("r", circleRadius)
-          // .attr("width", function(d){
-          //    return `${annotationRowHeight/3}px`
-          // })
-          // .attr("height", annotationRowHeight/3)
-          .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + circleRadius}px`;
-          })
-          .attr("cy", function (d, i) {
-            return `${
-              canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 4) - annotationRowHeight
-            }px`;
-          })
-          .attr("fill", "#3118E8")
-          .style("stroke", "#EC6735")
-          .style("stroke-width", "0px")
-          .attr("stroke-alignment", "inner")
+          .join("g")
+          .each(function(d){
+            const g = d3.select(this)
+            //outside
+            g.append("circle")
+            .attr("class", "outer-circle")
+            .attr("r", circleRadius)
+            .attr("cx", `${scaleLinear(d.in) + circleRadius}px`)
+            .attr("cy", `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 4) - annotationRowHeight}px`)
+            .attr("fill", "#EC6735")
+            //inside
+            g.append("circle")
+            .attr("class", "inner-circle")
+            .attr("r", circleRadius - 3)
+            .attr("cx", `${scaleLinear(d.in) + circleRadius}px`)
+            .attr("cy", `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 4) - annotationRowHeight}px`)
+            .attr("fill", "#3118E8")
+            })
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -551,20 +599,26 @@ const DiagramaticView = ({
         globalGourp
           .append("g")
           .attr("id", "dataGroup")
-          .selectAll("circle")
-          .data(getData.placeList)
-          .join("circle")
-          .attr("r", circleRadius)
-          .attr("cx", function (d) {
-            return `${scaleLinear(d.in) + circleRadius}px`;
+          .selectAll("g")
+          .data(getData.dataList)
+          .join("g")
+          .each(function (d) {
+            const g = d3.select(this);
+            // outside
+            g.append("circle")
+            .attr("class", "outer-circle")
+              .attr("r", circleRadius)
+              .attr("cx", `${scaleLinear(d.in) + circleRadius}px`)
+              .attr("cy", `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 6) - annotationRowHeight}px`)
+              .attr("fill", "#fff")
+              // inside
+              g.append("circle")
+              .attr("class", "inner-circle")
+              .attr("r", circleRadius - 3)  // 원 크기를 줄여 안쪽에 위치
+              .attr("cx", `${scaleLinear(d.in) + circleRadius}px`)
+              .attr("cy", `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 6) - annotationRowHeight}px`)
+              .attr("fill", "#000");
           })
-          .attr("cy", function (d, i) {
-            return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 6) - annotationRowHeight}px`;
-          })
-          .attr("fill", "#000")
-          .style("stroke", "#fff")
-          .style("stroke-width", "0px")
-          .attr("stroke-alignment", "inner")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)
           .on("mousemove", onMouseMove)
@@ -585,7 +639,8 @@ const DiagramaticView = ({
         height: svgContainer.clientHeight / 3,
       };
       let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width]);
-      const annotationRowHeight = canvasSize.height / 4;
+      const annotationRowHeight = canvasSize.height / 10
+      const circleRadius = annotationRowHeight / 2
 
       if (edit) {
         d3.select("#divideGroupBar")
@@ -614,12 +669,12 @@ const DiagramaticView = ({
         .attr("width", function (d) {
           return `${scaleLinear(d.out - d.in)}px`;
         })
-        .attr("height", annotationRowHeight)
+        .attr("height", annotationRowHeight * 2)
         .attr("x", function (d) {
           return `${scaleLinear(d.in)}px`;
         })
         .attr("y", function (d, i) {
-          return `${canvasSize.height - annotationRowHeight}px`;
+          return `${canvasSize.height - (annotationRowHeight * 2)}px`;
         })
         .attr("fill", function (d, i) {
           return `${d.category.color}`;
@@ -632,75 +687,134 @@ const DiagramaticView = ({
         .attr("width", function (d) {
           return `${scaleLinear(d.out - d.in)}px`;
         })
-        .attr("height", annotationRowHeight)
+        .attr("height", annotationRowHeight * 2)
         .attr("x", function (d) {
           return `${scaleLinear(d.in)}px`;
         })
         .attr("y", function (d, i) {
-          return `${canvasSize.height - annotationRowHeight * 2}px`;
+          return `${canvasSize.height - (annotationRowHeight * 2) * 2}px`;
         });
 
       //  ref Resize
-      globalGroup
+      const refGroup = globalGroup
         .select("#refGroup")
-        .selectAll("circle")
-        .attr("r", annotationRowHeight / 3 / 2)
-        .attr("cx", function (d) {
-          return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
-        })
-        .attr("cy", function (d, i) {
-          return `${
-            canvasSize.height -
-            annotationRowHeight * 2 -
-            annotationRowHeight / 3 / 2
-          }px`;
-        });
+       
+      refGroup
+      .selectAll(".outer-circle")
+      .attr("r", circleRadius)
+      .attr("cx", function (d) {
+        return `${scaleLinear(d.in) + circleRadius / 2}px`;
+      })
+      .attr("cy", function (d, i) {
+        return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius)}px`;
+      });
+      refGroup
+      .selectAll(".inner-circle")
+      .attr("r", circleRadius - 3)
+      .attr("cx", function (d) {
+        return `${scaleLinear(d.in) + circleRadius / 2}px`;
+      })
+      .attr("cy", function (d, i) {
+        return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius)}px`;
+      });
+
       //  narration Resize
-      globalGroup
+      const narrationGroup = globalGroup
         .select("#narrationGroup")
-        .selectAll("circle")
-        .attr("r", annotationRowHeight / 3 / 2)
+
+        narrationGroup
+        .selectAll(".outer-circle")
+        .attr("r", circleRadius)
         .attr("cx", function (d) {
-          return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
+          return `${scaleLinear(d.in) + circleRadius / 2}px`
         })
         .attr("cy", function (d, i) {
-          return `${
-            canvasSize.height -
-            annotationRowHeight * 2 -
-            (annotationRowHeight / 3 / 2) * 4
-          }px`;
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 2)}px`;
+        });
+        narrationGroup
+        .selectAll(".inner-circle")
+        .attr("r", circleRadius - 0.5)
+        .attr("cx", function (d) {
+          return `${scaleLinear(d.in) + circleRadius / 2}px`
+        })
+        .attr("cy", function (d, i) {
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 2)}px`;
         });
 
+
       //  Event Resize
-      globalGroup
+      const eventGroup = globalGroup
         .select("#eventGroup")
-        .selectAll("rect")
+
+        eventGroup
+        .selectAll(".outer-circle")
         .attr("width", function (d) {
-          return `${annotationRowHeight / 3}px`;
+          return `${circleRadius * 2}px`;
         })
-        .attr("height", annotationRowHeight / 3)
+        .attr("height", circleRadius * 2)
         .attr("x", function (d) {
           return `${scaleLinear(d.in)}px`;
         })
         .attr("y", function (d, i) {
-          return `${
-            canvasSize.height -
-            (annotationRowHeight * 4 - annotationRowHeight / 2)
-          }px`;
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 3) - annotationRowHeight}px`;
         });
+        eventGroup
+        .selectAll(".inner-circle")
+        .attr("width", function (d) {
+          return `${circleRadius * 2 - 6}px`;
+        })
+        .attr("height", `${circleRadius * 2 - 6}px`)
+        .attr("x", function (d) {
+          return `${scaleLinear(d.in) + 3}px`;
+        })
+        .attr("y", function (d, i) {
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 3) - annotationRowHeight + 3}px`;
+        });
+
       //  Place Resize
-      globalGroup
+      const placeGroup = globalGroup
         .select("#placeGroup")
-        .selectAll("circle")
-        .attr("r", annotationRowHeight / 3 / 2)
+
+        placeGroup
+        .selectAll(".outer-circle")
+        .attr("r", circleRadius)
         .attr("cx", function (d) {
-          return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
+          return `${scaleLinear(d.in) + circleRadius}px`;
         })
         .attr("cy", function (d, i) {
-          return `${
-            canvasSize.height -
-            (annotationRowHeight * 4 - annotationRowHeight / 3 / 2 - 2.25)
-          }px`;
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 4) - annotationRowHeight}px`;
+        });
+        placeGroup
+        .selectAll(".inner-circle")
+        .attr("r", circleRadius - 3)
+        .attr("cx", function (d) {
+          return `${scaleLinear(d.in) + circleRadius}px`;
+        })
+        .attr("cy", function (d, i) {
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 4) - annotationRowHeight}px`;
+        });
+
+      //  data Resize
+      const dataGroup = globalGroup
+        .select("#dataGroup")
+
+        dataGroup
+        .selectAll(".outer-circle")
+        .attr("r", circleRadius)
+        .attr("cx", function (d) {
+          return `${scaleLinear(d.in) + circleRadius}px`;
+        })
+        .attr("cy", function (d, i) {
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 6) - annotationRowHeight}px`;
+        });
+        dataGroup
+        .selectAll(".inner-circle")
+        .attr("r", circleRadius - 3)
+        .attr("cx", function (d) {
+          return `${scaleLinear(d.in) + circleRadius}px`;
+        })
+        .attr("cy", function (d, i) {
+          return `${canvasSize.height - ((annotationRowHeight * 2) * 2) - (circleRadius) - (circleRadius * 6) - annotationRowHeight}px`;
         });
     };
 
@@ -721,7 +835,7 @@ const DiagramaticView = ({
         ref={infoRef}
         className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-0 right-0 z-[30] bg-none text-black w-fit h-fit flex"
       >
-        {hoverData && (hoverData.type !== "eventLayer" && hoverData.type !== "placeLayer") && (
+        {hoverData && (hoverData.type !== "eventLayer" && hoverData.type !== "placeLayer" && hoverData.type !== "dataLayer") && (
          
             <OverViewBox data={hoverData} fakeData={getData} />
           
@@ -731,7 +845,7 @@ const DiagramaticView = ({
         ref={placeAndEventInfoRef}
         className="absolute opacity-0 pointer-events-none select-none overflow-hidden top-4 right-4 z-[30] w-fit h-fit flex"
       >
-        {(hoverData && (hoverData.type === "eventLayer" || hoverData.type === "placeLayer")) && (
+        {(hoverData && (hoverData.type === "eventLayer" || hoverData.type === "placeLayer" || hoverData.type === "dataLayer")) && (
               <OverViewBox data={hoverData} fakeData={getData} diagramatic={true} />
           
        
