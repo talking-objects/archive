@@ -28,7 +28,8 @@ const nextConfig = {
         fileLoaderRule.exclude = /\.svg$/i
     
         return config
-      },    
+      },   
+    
     images: {
         remotePatterns: [
             {
@@ -37,7 +38,9 @@ const nextConfig = {
                 port: "",
                 pathname: "/*/*"
             }
-        ]
+        ],
+        // domains: ["talkingobjects.0x2620.org"],
+        formats: ['image/webp'], 
     }
 };
 

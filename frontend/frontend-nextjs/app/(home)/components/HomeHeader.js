@@ -1,6 +1,7 @@
 import VideoMeta from "@/app/components/containers/players/elements/VideoMeta";
 import VideoTitle from "@/app/components/containers/players/elements/VideoTitle";
 import { BASE_URL } from "@/app/utils/constant/etc";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -25,13 +26,15 @@ const HomeHeader = ({ currentVideo }) => {
       >
         <div className="absolute top-0 left-0 w-full h-full bg-black pointer-events-none select-none bg-opacity-30"></div>
         <div
-          style={{
-            backgroundImage: `url(${BASE_URL}/${currentVideo.id}/480p${
-              currentVideo.posterFrame ? currentVideo.posterFrame : 0
-            }.jpg)`,
-          }}
-          className="w-full h-full bg-no-repeat bg-center bg-cover"
-        ></div>
+          className="w-full h-full relative bg-white"
+        >
+          <Image
+            src={`${BASE_URL}/${currentVideo.id}/480p${currentVideo.posterFrame ? currentVideo.posterFrame : 0}.jpg`}
+            alt=""
+            fill
+            style={{objectFit: "cover"}}
+          />  
+        </div>
         <div
           onClick={() => moveToVideo({ videoId: currentVideo.id })}
           className="absolute z-[45] w-[180px] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer opacity-0 group-hover:opacity-100 bg-black bg-opacity-0 rounded-full text-white transition-all duration-300"

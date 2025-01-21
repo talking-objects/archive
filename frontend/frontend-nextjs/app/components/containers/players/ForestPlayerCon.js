@@ -1,4 +1,5 @@
 import { BASE_URL } from "@/app/utils/constant/etc"
+import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 
 
@@ -177,10 +178,14 @@ const ForestPlayerCon = ({data, metaData}) => {
                   data.map((v, idx) => {
                      return <div 
                      key={idx} 
-                     style={{
-                        backgroundImage: `url(${BASE_URL}/${data[idx].videoId}/480p${data[idx].in}.jpg)`
-                     }}
-                     className="w-full h-full bg-white bg-cover bg-center bg-no-repeat"></div>
+                     className="w-full h-full bg-white relative">
+                        <Image
+                           src={`${BASE_URL}/${data[idx].videoId}/480p${data[idx].in}.jpg`}
+                           alt=""
+                           fill
+                           style={{objectFit: "cover"}}
+                        />
+                     </div>
                   })
                }
             </div>

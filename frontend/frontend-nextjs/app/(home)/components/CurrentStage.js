@@ -5,6 +5,7 @@ import { BASE_URL } from "@/app/utils/constant/etc";
 import SectionContainer from "./elements/SectionContainer";
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
+import Image from "next/image";
 
 const IndicatorBtn = ({ left=true, clickFunc}) => {
   return <div onClick={clickFunc} className="flex w-[30px] lg:w-[50px] opacity-50 hover:opacity-100 bg-white border-0 border-black rounded-full cursor-pointer aspect-square justify-center items-center">
@@ -46,11 +47,17 @@ const CurrentStageBox = ({ val, clickFunc, mainVideoId }) => {
   return (
     <div
       onClick={clickFunc}
-      style={{
-        backgroundImage: `url(${BASE_URL}/${getCurrentVideo.id}/480p${getCurrentVideo.posterFrame}.jpg)`,
-      }}
+      // style={{
+      //   backgroundImage: `url(${BASE_URL}/${getCurrentVideo.id}/480p${getCurrentVideo.posterFrame}.jpg)`,
+      // }}
       className={`relative w-full aspect-video bg-cover bg-center bg-no-repeat cursor-pointer group overflow-hidden`}
     >
+      <Image
+        src={`${BASE_URL}/${getCurrentVideo.id}/480p${getCurrentVideo.posterFrame}.jpg`}
+        alt=""
+        fill
+        style={{objectFit: "cover"}}
+      /> 
       <div className={`w-full h-full absolute top-0 left-0 bg-black ${val === mainVideoId ? "bg-opacity-0" : "bg-opacity-40"} group-hover:bg-opacity-0 transition-all`}></div>
       <div className={`w-full  absolute top-0 left-0 ${val === mainVideoId ? "bg-opacity-0" : "bg-opacity-40"} opacity-0 group-hover:opacity-100 transition-all flex p-2`}>
         <div className="text-[24px] font-ibm_mono_bolditalic text-black flex">

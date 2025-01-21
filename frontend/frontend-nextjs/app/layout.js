@@ -27,10 +27,10 @@ export default async function RootLayout({ children }) {
         <RecoilContextProvider>
             <div className="hidden md:block">
               <NavigationBar />
-              <SmoothScroll>
+              {/* <SmoothScroll> */}
               {children}
               <Footer />
-              </SmoothScroll>
+              {/* </SmoothScroll> */}
             </div>
             <div className="flex flex-col md:hidden w-screen h-screen justify-between items-center px-4 py-4">
               <div className="font-eva text-4xl">Experimental video archive</div>

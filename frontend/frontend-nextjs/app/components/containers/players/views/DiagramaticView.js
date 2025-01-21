@@ -69,7 +69,8 @@ const DiagramaticView = ({
 
     const svg = d3.select(svgRef.current);
     if (toggleShow.view === "diagramatic") {
-      svg.style("display", "block");
+      svg.style("display", "block")
+    
 
       // Category toggle
       if (toggleShow.category) {
@@ -298,19 +299,22 @@ const DiagramaticView = ({
           .attr("width", "100%")
           .attr("height", "100%")
           .attr("preserveAspectRatio", "xMidYMid meet")
-          .attr("id", "mainSVG");
+          .attr("id", "mainSVG")
+        
 
         const canvasSize = {
           width: svg.node().clientWidth,
-          height: svg.node().clientHeight / 3,
+          height: svg.node().clientHeight / 3
         };
+
         const globalGourp = svg.append("g");
         globalGourp
           .attr("id", "mainG")
-          .attr("transform", `translate(0,${canvasSize.height * 2})`);
+          .attr("transform", `translate(0,${canvasSize.height * 2})`)
+       
 
-        let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width]);
-        const annotationRowHeight = canvasSize.height / 4;
+        let scaleLinear = d3.scaleLinear([0, duration], [0, canvasSize.width])
+        const annotationRowHeight = canvasSize.height / 4
 
         // edit video divider
         if (edit) {
@@ -435,9 +439,7 @@ const DiagramaticView = ({
           })
           .attr("cy", function (d, i) {
             return `${
-              canvasSize.height -
-              annotationRowHeight * 2 -
-              annotationRowHeight / 3 / 2
+              canvasSize.height - annotationRowHeight * 2 - (annotationRowHeight / 3 / 2)
             }px`;
           })
           .attr("fill", "#FFFFFF")
@@ -462,9 +464,7 @@ const DiagramaticView = ({
           })
           .attr("cy", function (d, i) {
             return `${
-              canvasSize.height -
-              annotationRowHeight * 2 -
-              (annotationRowHeight / 3 / 2) * 4
+              canvasSize.height - annotationRowHeight * 2 - (annotationRowHeight / 3 / 2) * 4
             }px`;
           })
           .attr("fill", "#8BA5F8")
@@ -493,8 +493,7 @@ const DiagramaticView = ({
           })
           .attr("y", function (d, i) {
             return `${
-              canvasSize.height -
-              (annotationRowHeight * 4 - annotationRowHeight / 2)
+              canvasSize.height - (annotationRowHeight * 4 - annotationRowHeight / 2)
             }px`;
           })
           .attr("fill", "#3118E8")
@@ -523,12 +522,34 @@ const DiagramaticView = ({
           })
           .attr("cy", function (d, i) {
             return `${
-              canvasSize.height -
-              (annotationRowHeight * 4 - annotationRowHeight / 3 / 2 - 2.25)
+              canvasSize.height - (annotationRowHeight * 4 - annotationRowHeight / 3 / 2 )
             }px`;
           })
           .attr("fill", "#3118E8")
           .style("stroke", "#EC6735")
+          .style("stroke-width", "4.5px")
+          .on("mouseenter", onMouseEnter)
+          .on("mouseleave", onMouseLeave)
+          .on("mousemove", onMouseMove)
+          .on("click", function (event, value) {
+            onClick({ inVlaue: value.in, video: videoRef });
+          });
+
+        globalGourp
+          .append("g")
+          .attr("id", "dataGroup")
+          .selectAll("circle")
+          .data(getData.placeList)
+          .join("circle")
+          .attr("r", annotationRowHeight / 3 / 2)
+          .attr("cx", function (d) {
+            return `${scaleLinear(d.in) + annotationRowHeight / 3 / 2}px`;
+          })
+          .attr("cy", function (d, i) {
+            return `${canvasSize.height - (annotationRowHeight * 4) - ((annotationRowHeight / 3 / 2) * 2 )}px`;
+          })
+          .attr("fill", "#000")
+          .style("stroke", "#fff")
           .style("stroke-width", "4.5px")
           .on("mouseenter", onMouseEnter)
           .on("mouseleave", onMouseLeave)

@@ -6,6 +6,7 @@ import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { BASE_URL, COLORS } from "@/app/utils/constant/etc";
 import { getAllAnnotations, getAllAnnotationsCounts, getAllClips, getAllVideos, getAllVideosCounts } from "@/app/utils/hooks/pandora_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
@@ -83,9 +84,16 @@ const ForestContentsImageBox = ({val}) => {
         }
     },[])
     return <div 
-    style={{backgroundImage: `url(${BASE_URL}/${getId}/480p${getPostFrame}.jpg)`}} 
-    className="w-full aspect-video bg-neutral-200 rounded-md overflow-hidden bg-no-repeat bg-cover bg-center flex justify-center items-center">
-        {val.layer === "placeList" && <div className="bg-white text-black">Place</div>}
+    // style={{backgroundImage: `url(${BASE_URL}/${getId}/480p${getPostFrame}.jpg)`}} 
+    className="w-full aspect-video bg-neutral-200 rounded-md overflow-hidden flex justify-center items-center relative">
+        <Image
+            src={`${BASE_URL}/${getId}/480p${getPostFrame}.jpg`}
+            alt=""
+            fill
+            style={{objectFit: "cover"}}
+        />
+        {val.layer === "placeList" &&  <div className="bg-white text-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">Place</div>}
+        
     </div>
 }
 

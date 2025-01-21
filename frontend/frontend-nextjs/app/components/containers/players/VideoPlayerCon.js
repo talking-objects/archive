@@ -280,6 +280,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                 <div className={`${(!playToggle) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} duration-1000 flex`}>
                   <VideoTitle text={data.title} playToggle={playToggle} />
                 </div>
+
                 <VideoMeta playToggle={playToggle} currentVideo={data} />
                 {/* <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                    <div>Author: {Boolean(data.director) && Boolean(data.director.length > 0) && data.director.map((v) => `${v},`)} {data.user}</div>
@@ -292,6 +293,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                       <div>{data.modified}</div>
                    </div>
                 </div> */}
+                
                 {clip && <div onClick={() => route.push(`/video/${data.id}`)} className={`text-black bg-white w-fit px-2 py-2 cursor-pointer ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 19.5-15-15m0 0v11.25m0-11.25h11.25" />
