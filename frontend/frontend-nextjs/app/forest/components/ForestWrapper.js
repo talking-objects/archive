@@ -13,7 +13,7 @@ import { useRecoilValue } from "recoil";
 
 
 const InfoLable = ({children}) => {
-    return <div className="group-hover:opacity-100 group-hover:left-[28px] flex opacity-0 absolute top-0 left-[16px] bg-neutral-800 px-1 py-1 border-[0.5px] border-neutral-300 text-white rounded-md w-fit text-xs whitespace-nowrap pointer-events-none select-none transition-all duration-150">{children}</div>
+    return <div className="group-hover:opacity-100 group-hover:left-[28px] z-[50] flex opacity-0 absolute top-0 left-[16px] bg-neutral-800 px-1 py-1 border-[0.5px] border-neutral-300 text-white rounded-md w-fit text-xs whitespace-nowrap pointer-events-none select-none transition-all duration-150">{children}</div>
 }
 const AnnotationIcon = ({val,layer}) => {
     useEffect(() => {
