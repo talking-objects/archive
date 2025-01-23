@@ -1,9 +1,13 @@
 import { MainContainer } from "@/app/components/containers/Containers";
 import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
+import LoadingCon from "@/app/components/LoadingCon";
+import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { createFakeAnnotations } from "@/app/utils/hooks/etc";
 import { getClip } from "@/app/utils/hooks/pandora_api";
+import { loadingState } from "@/app/utils/recoillib/state/state";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
 
 const ClipWrapper = () => {
   const searchParams = useSearchParams();
@@ -12,6 +16,8 @@ const ClipWrapper = () => {
     originId: searchParams.get("clipId"),
   });
   const [getVideoData, setVideoData] = useState(null);
+  const [isReady, setIsReady] = useState(false)
+  const getLoadingState = useRecoilValue(loadingState);
 
   useEffect(() => {
     if (!isLoading) {
@@ -42,16 +48,28 @@ const ClipWrapper = () => {
     }
   }, [data]);
 
+
+  if((getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady))){
+    return <div className="w-full h-[100svh]">
+      <LoadingDataCon ready={isReady} readyData={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
+    </div>
+  }
+
   return (
-    <MainContainer>
-      {!isLoading && getVideoData && (
+    <>
+    {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
+        <LoadingCon ready={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
+      )}
+    {!isLoading && getVideoData && <MainContainer>
+      {(
         <>
-          <div ref={videoContainerRef} className="w-full h-[100svh] relative">
+          <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
             <VideoPlayerCon data={getVideoData} clip={true} />
           </div>
         </>
       )}
-    </MainContainer>
+    </MainContainer>}
+    </>
   );
 };
 
