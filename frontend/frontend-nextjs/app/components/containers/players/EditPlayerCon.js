@@ -290,8 +290,8 @@ const EditPlayerCon = ({data, metaData}) => {
           document.removeEventListener("keydown", onSpaceScroll)
        }
     },[])
-    return (<div className="w-full h-[100svh] relative">
-       <div className="w-full h-[100svh] overflow-hidden flex flex-col">
+    return (<div className="w-full h-[calc(100svh-56px)] relative">
+       <div className="w-full h-[calc(100svh-56px)] overflow-hidden flex flex-col">
           {/* Video Container */}
           <div className="w-full h-full flex flex-col overflow-hidden relative">
              {/* Video */}
@@ -356,7 +356,7 @@ const EditPlayerCon = ({data, metaData}) => {
                    <progress value={currentTime} max={data.totalDuration} className="absolute bg-red-400 w-full h-full select-none pointer-events-none"></progress>
                 </div>
              </div>
-             <div className="w-[140px] text-center text-xs">{formatTime(currentTime)} / {formatTime(data.totalDuration)}</div>
+             <div className="w-fit text-center text-[12px] whitespace-nowrap font-ibm_mono_regular px-2">{formatTime(currentTime)} / {formatTime(data.totalDuration)}</div>
           </div>}
           {/* video navigation */}
           <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
