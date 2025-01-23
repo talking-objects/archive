@@ -1,0 +1,28 @@
+version: "3"
+services: 
+  toa_eva:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: toa_eva
+    restart: always
+    # ports:
+    #   - "3000:3000"  # Remove After Deployment
+    expose:
+      - "3000" # After Deployment
+    env_file:
+      - .env.local
+    environment:
+      - VIRTUAL_HOST=eva.talkingobjectsarchive.org    # Nginx Proxy
+      # - VIRTUAL_HOST=talkingobjectsarchive.org,www.talkingobjectsarchive.org    # Nginx Proxy
+      - VIRTUAL_PORT=3000
+      # - LETSENCRYPT_HOST=talkingobjectsarchive.org,www.talkingobjectsarchive.org   # SSL Domain
+      - LETSENCRYPT_HOST=eva.talkingobjectsarchive.org   # SSL Domain
+      - LETSENCRYPT_EMAIL=dain-p@visual-intelligence.org # SSL Email
+    networks:
+      - shared_network
+ 
+
+networks:
+  shared_network:
+    external: true
