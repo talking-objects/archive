@@ -89,7 +89,7 @@ const EditWrapper = () => {
       <div className="w-full h-[100svh]">
         <LoadingDataCon
           ready={isReady}
-          readyData={Boolean(getVideoData)}
+          readyData={Boolean(editData)}
           comLoader={() => setIsReady(true)}
         />
       </div>

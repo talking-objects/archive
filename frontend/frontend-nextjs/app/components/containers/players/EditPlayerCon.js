@@ -5,6 +5,7 @@ import { formatTime } from "@/app/utils/hooks/etc"
 import DiagramaticView from "./views/DiagramaticView"
 import EntangledView from "./views/EntangledView"
 import OverviewView from "./views/OverviewView"
+import Image from "next/image"
 
 const EditPlayerCon = ({data, metaData}) => {
     const videoRef = useRef(null)
@@ -181,9 +182,11 @@ const EditPlayerCon = ({data, metaData}) => {
           if(videoRef.current.paused){
              videoRef.current.play()
              setPlayToggle(true)
+             setPlayToggleReal(true)
           }else{
              videoRef.current.pause()
              setPlayToggle(false)
+             setPlayToggleReal(false)
           }
           
        }
@@ -321,10 +324,15 @@ const EditPlayerCon = ({data, metaData}) => {
                    data.map((v, idx) => {
                       return <div 
                       key={idx} 
-                      style={{
-                         backgroundImage: `url(${BASE_URL}/${data[idx].id}/480p${data[idx].in}.jpg)`
-                      }}
-                      className="w-full h-full bg-red-400 bg-cover bg-center bg-no-repeat"></div>
+                      className="w-full h-full relative">
+                        <Image
+                           src={`${BASE_URL}/${data[idx].id}/480p${data[idx].in}.jpg`}
+                           fill
+                           alt=""
+                           style={{objectFit: "cover"}}
+                        />
+
+                      </div>
                    })
                 }
              </div>
