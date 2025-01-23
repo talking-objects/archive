@@ -596,7 +596,8 @@ const DiagramaticView = ({
             onClick({ inVlaue: value.in, video: videoRef });
           });
           // Datagroup
-        globalGourp
+        if(getData.dataList){
+          globalGourp
           .append("g")
           .attr("id", "dataGroup")
           .selectAll("g")
@@ -625,6 +626,8 @@ const DiagramaticView = ({
           .on("click", function (event, value) {
             onClick({ inVlaue: value.in, video: videoRef });
           });
+        }
+       
       }
     }
   }, [getData]);

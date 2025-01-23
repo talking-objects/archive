@@ -561,6 +561,9 @@ Thanks to its magnificent collections, its educational setting and the biodivers
     user: "Bienvenu Seck",
     source: "TALKING OBJECTS ARCHIVE",
     nAnnotations: { 
+      "dataList": [
+       
+      ],
       categoryList: [
         {
           type: "categoryLayer",
@@ -783,6 +786,9 @@ Viyé tests strategies of mediation and visualization of historical and contempo
     source: "courtesy of the artist",
     place: "",
     nAnnotations: { 
+      "dataList": [
+       
+      ],
       categoryList: [
         {
           type: "categoryLayer",
