@@ -6,6 +6,10 @@ import DiagramaticView from "./views/DiagramaticView"
 import EntangledView from "./views/EntangledView"
 import OverviewView from "./views/OverviewView"
 import Image from "next/image"
+import VideoController from "./elements/VideoController"
+import VideoTitle from "./elements/VideoTitle"
+import VideoMeta from "./elements/VideoMeta"
+import VideoPlayerContainer from "./elements/VideoPlayerContainer"
 
 const EditPlayerCon = ({data, metaData}) => {
     const videoRef = useRef(null)
@@ -293,86 +297,56 @@ const EditPlayerCon = ({data, metaData}) => {
           document.removeEventListener("keydown", onSpaceScroll)
        }
     },[])
-    return (<div className="w-full h-[calc(100svh-56px)] relative">
-       <div className="w-full h-[calc(100svh-56px)] overflow-hidden flex flex-col">
-          {/* Video Container */}
-          <div className="w-full h-full flex flex-col overflow-hidden relative">
-             {/* Video */}
-             {<video ref={videoRef} src={`${BASE_URL}/${currentVideo && currentVideo.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && (playToggleReal)) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
-               <source type="video/mp4" />
-               Your browser does not support the video tag.
-             </video>}
-             {/* Video Info */}
-             {
-                <div className={`absolute z-[40] top-0 left-0 w-full h-full ${!playToggleReal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000 flex flex-col`}>
-                   <div className="w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic">{metaData.title}</div>
-                   <div className="bg-white text-black w-fit px-2 py-1 mt-4">
-                      <div>Author: {Boolean(metaData.director) && Boolean(metaData.director.length > 0) && metaData.director.map((v) => `${v},`)} {metaData.user}</div>
-                         <div className="flex items-center gap-2">
-                            <div>Created:</div>
-                            <div>{metaData.created}</div>
-                         </div>
-                         <div className="flex items-center gap-2">
-                            <div>Modified:</div>
-                            <div>{metaData.modified}</div>
-                         </div>
-                      </div>
-                </div>
-                }
-             <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex pointer-events-none ${playToggleReal ? "opacity-0" : "opacity-100"} transition-all duration-1000`}>
-                {
-                   data.map((v, idx) => {
-                      return <div 
-                      key={idx} 
-                      className="w-full h-full relative">
-                        <Image
-                           src={`${BASE_URL}/${data[idx].id}/480p${data[idx].in}.jpg`}
-                           fill
-                           alt=""
-                           style={{objectFit: "cover"}}
-                        />
+    return (<VideoPlayerContainer toggleLegend={toggleLegend} onToggleLegend={onToggleLegend}>
+               {/* Video Container */}
+               <div className="w-full h-full flex flex-col overflow-hidden relative">
+                  {<video ref={videoRef} src={`${BASE_URL}/${currentVideo && currentVideo.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && (playToggleReal)) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
+                    <source type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>}
+                  {/* Video Info */}
+                  {
+                     <div className={`absolute z-[40] top-0 left-0 w-full h-full ${!playToggleReal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000 flex flex-col`}>
+                        {/* <div className="w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic">{metaData.title}</div> */}
+                        <div className={`${(!playToggle) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} duration-1000 flex`}>
+                          <VideoTitle text={metaData.title} playToggle={playToggle} /> 
+                        </div>
+                        <VideoMeta playToggle={playToggle} currentVideo={metaData} />
 
-                      </div>
-                   })
-                }
-             </div>
-             {/* Video Data Visualization */}
-             {/* - Diagramatic View */}
-             {(videoRef && data) && <DiagramaticView onClickProgressBar={onClickProgressBar} edit={true} data={data} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggleReal} duration={data.totalDuration} annotationData={data} annotationLoading={!Boolean(data)} />}
-             {/* - Entangled View */}
-             {(videoRef && data) && <EntangledView edit={true} toggleShow={toggleShow} playToggle={playToggleReal} currentTime={currentTime} annotationData={data} />}
-             {/* - Overview View */}
-             {(videoRef && data) && <OverviewView onClickProgressBar={onClickProgressBar} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggleReal} annotationData={data} edit={true} />}
-          </div>
-          {/* video controller */}
-          {(videoRef && currentVideo) && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
-             <div onClick={togglePlay} className="cursor-pointer px-2">
-                {!playToggle && <div>
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                   <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                   </svg>
-                </div>}
-                {playToggle && <div>
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
-                   </svg>
-                </div>}
-             </div>
-             <div className="w-full px-2">
-                <div className="w-full h-1 rounded-full relative">
-                   <input  onChange={(e) => onClickProgressBar(e)} step={0.1} min={0} max={data.totalDuration} defaultValue={0} type="range" className="w-full bg-red-400 range-custom" />
-                   <progress value={currentTime} max={data.totalDuration} className="absolute bg-red-400 w-full h-full select-none pointer-events-none"></progress>
-                </div>
-             </div>
-             <div className="w-fit text-center text-[12px] whitespace-nowrap font-ibm_mono_regular px-2">{formatTime(currentTime)} / {formatTime(data.totalDuration)}</div>
-          </div>}
-          {/* video navigation */}
-          <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
-       </div>
+                     </div>
+                     }
+                  <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex pointer-events-none ${playToggleReal ? "opacity-0" : "opacity-100"} transition-all duration-1000`}>
+                     {
+                        data.map((v, idx) => {
+                           return <div 
+                           key={idx} 
+                           className="w-full h-full relative">
+                             <Image
+                                src={`${BASE_URL}/${data[idx].id}/480p${data[idx].in}.jpg`}
+                                fill
+                                alt=""
+                                style={{objectFit: "cover"}}
+                             />
+
+                           </div>
+                        })
+                     }
+                  </div>
+         
+                  {/* - Diagramatic View */}
+                  {(videoRef && data) && <DiagramaticView onClickProgressBar={onClickProgressBar} edit={true} data={data} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggleReal} duration={data.totalDuration} annotationData={data} annotationLoading={!Boolean(data)} />}
+                  {/* - Entangled View */}
+                  {(videoRef && data) && <EntangledView edit={true} toggleShow={toggleShow} playToggle={playToggleReal} currentTime={currentTime} annotationData={data} />}
+                  {/* - Overview View */}
+                  {(videoRef && data) && <OverviewView onClickProgressBar={onClickProgressBar} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggleReal} annotationData={data} edit={true} />}
+               </div>
+
+               {/* video controller */}
+               {(videoRef && currentVideo) && <VideoController togglePlay={togglePlay} playToggle={playToggle} currentTime={currentTime} maxDuration={data.totalDuration} clip={false} onClickProgressBar={onClickProgressBar} />}
+               <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
+          </VideoPlayerContainer>
       
-        {/* video Legend */}
-        {toggleLegend && <LegendContainer onToggleLegend={onToggleLegend} />}
-    </div>
+      
  
     )
  }

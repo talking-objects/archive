@@ -8,6 +8,8 @@ import EntangledView from "./views/EntangledView"
 import OverviewView from "./views/OverviewView"
 import VideoTitle from "./elements/VideoTitle"
 import VideoMeta from "./elements/VideoMeta"
+import VideoController from "./elements/VideoController"
+import VideoPlayerContainer from "./elements/VideoPlayerContainer"
 
 
 
@@ -18,6 +20,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
     const [currentTime, setCurrentTime] = useState(0)
     const [getNAnnotations, setNAnnotations] = useState(null)
     const route = useRouter()
+
     const [toggleShow, setToggleShow] = useState({
        category: true,
        tag: true,
@@ -243,8 +246,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
           };
        }
     },[playToggle])
-    return <div className="w-full h-[calc(100svh-56px)] relative">
-        <div className="w-full h-[calc(100svh-56px)] overflow-hidden flex flex-col">
+    return <VideoPlayerContainer toggleLegend={toggleLegend} onToggleLegend={onToggleLegend}>
          <div className="w-full h-full flex flex-col overflow-hidden relative group">
              <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
                <source type="video/mp4" />
@@ -282,17 +284,6 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                 </div>
 
                 <VideoMeta playToggle={playToggle} currentVideo={data} />
-                {/* <div className={`text-black bg-white w-fit px-2 py-1 ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
-                   <div>Author: {Boolean(data.director) && Boolean(data.director.length > 0) && data.director.map((v) => `${v},`)} {data.user}</div>
-                   <div>
-                      <div>Created:</div>
-                      <div>{data.created}</div>
-                   </div>
-                   <div>
-                      <div>Modified:</div>
-                      <div>{data.modified}</div>
-                   </div>
-                </div> */}
                 
                 {clip && <div onClick={() => route.push(`/video/${data.id}`)} className={`text-black bg-white w-fit px-2 py-2 cursor-pointer ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
@@ -307,37 +298,14 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
              {(videoRef && getNAnnotations) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} annotationData={getNAnnotations} />}
              {/* Video Data Visualization : Overview View */}
              {(videoRef && getNAnnotations) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} annotationData={getNAnnotations} />}
-         </div>
-         {/* video controller */}
-         {videoRef && <div className="w-full h-[40px] bg-black border-t-[0.5px] border-neutral-500 text-white flex justify-between items-center">
-             <div onClick={togglePlay} className="cursor-pointer px-2">
-                {!playToggle && <div>
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                   <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                   </svg>
-                </div>}
-                {playToggle && <div>
-                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
-                   </svg>
-                </div>}
-             </div>
-             <div className="w-full px-2">
-                <div className="w-full h-1 rounded-full relative">
-                   <input  onChange={(e) => onClickProgressBar(e)} step={clip? 0.01 :0.1} min={0} max={data.duration} defaultValue={0} type="range" className="w-full bg-red-400 range-custom" />
-                   <progress value={currentTime} max={data.duration} className="absolute bg-red-400 w-full h-full select-none pointer-events-none"></progress>
-                </div>
-             </div>
-             <div className="w-fit text-center text-[12px] whitespace-nowrap font-ibm_mono_regular px-2">{formatTime(currentTime)} / {formatTime(data.duration)}</div>
-      
-         </div>}
-         {/* video navigation */}
-         <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
-       </div>
-       
-       {/* video Legend */}
-        {toggleLegend && <LegendContainer onToggleLegend={onToggleLegend} />}
-    </div>
+            </div>
+            
+            {/* video controller */}
+            {videoRef && <VideoController togglePlay={togglePlay} playToggle={playToggle} currentTime={currentTime} maxDuration={data.duration} clip={clip} onClickProgressBar={onClickProgressBar} />}
+            {/* video navigation */}
+            <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
+         </VideoPlayerContainer>
+    
  }
 
 export default VideoPlayerCon
