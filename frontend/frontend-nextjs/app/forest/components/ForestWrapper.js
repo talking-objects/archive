@@ -134,7 +134,7 @@ const ForestWrapper = () => {
         return <div className="w-full h-[100svh]">
           <LoadingDataCon ready={isReady} readyData={Boolean(previewVideoData)} comLoader={() => setIsReady(true)} />
         </div>
-      }
+    }
     
     return <>
         {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
