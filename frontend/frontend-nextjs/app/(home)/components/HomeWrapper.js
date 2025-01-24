@@ -14,28 +14,11 @@ import CurrentStage from "./CurrentStage";
 import AboutSection2 from "./AboutSection2";
 import { ScrollSmoother } from "gsap/all";
 import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
-import SectionContainer from "./elements/SectionContainer";
-import SectionHeader from "./elements/SectionHeader";
-import SectionSubHeader from "./elements/SectionSubHeader";
-import Link from "next/link";
+import ExploreSection from "./ExploreSection";
 
-const ForestSection = () => {
-  const exText = {
-    title: `Explore our Archive`,
-    subTitle: `Explore Manyfolded Knowlegde and Relations`
-  }
-  return  <SectionContainer big={true}>
-    <div className="flex flex-col w-full px-4 items-center">
-      <SectionHeader text={exText.title} />
-      <SectionSubHeader text={exText.subTitle} />
-      <div className="w-full h-[60svh] bg-red-400 mt-12">
-        <Link href="/forest"><div className="text-black">Forest</div></Link>
-      </div>
-      <div className="w-full h-[60svh] bg-red-400 mt-12"></div>
-      <div className="w-full h-[60svh] bg-red-400 mt-12"></div>
-    </div>
-  </SectionContainer>
-}
+
+
+
 
 
 const HomeWrapper = () => {
@@ -70,7 +53,7 @@ const HomeWrapper = () => {
               <CurrentStage itemList={itemList} setMainVideoId={setMainVideoId} mainVideoId={mainVideoId} />
               <AboutSection />
               <AboutSection2 />
-              <ForestSection />
+              <ExploreSection />
               <RelatedSection />
             </ContentContainer>
           )}
