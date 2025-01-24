@@ -278,11 +278,11 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                       <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                    </svg>
                 </div>
+
                 {clip && <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-fit text-black px-2 py-1 bg-[#9E21E8] text-4xl font-bold italic transition-all duration-1000`}>Clip</div>}
                 <div className={`${(!playToggle) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} duration-1000 flex`}>
-                  <VideoTitle text={data.title} playToggle={playToggle} />
+                  <VideoTitle text={data.title} />
                 </div>
-
                 <VideoMeta playToggle={playToggle} currentVideo={data} />
                 
                 {clip && <div onClick={() => route.push(`/video/${data.id}`)} className={`text-black bg-white w-fit px-2 py-2 cursor-pointer ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
@@ -290,16 +290,15 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                       <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 19.5-15-15m0 0v11.25m0-11.25h11.25" />
                    </svg>
                 </div>}
-                
              </div>
-             {/* Video Data Visualization : Diagramatic View */}
-             {(videoRef && getNAnnotations) && <DiagramaticView data={data} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={getNAnnotations} annotationLoading={!Boolean(getNAnnotations)} />}
-             {/* Video Data Visualization : Entangled View */}
-             {(videoRef && getNAnnotations) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} annotationData={getNAnnotations} />}
-             {/* Video Data Visualization : Overview View */}
-             {(videoRef && getNAnnotations) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} annotationData={getNAnnotations} />}
+               {/* Video Data Visualization : Diagramatic View */}
+               {(videoRef && getNAnnotations) && <DiagramaticView data={data} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={getNAnnotations} annotationLoading={!Boolean(getNAnnotations)} />}
+               {/* Video Data Visualization : Entangled View */}
+               {(videoRef && getNAnnotations) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} annotationData={getNAnnotations} />}
+               {/* Video Data Visualization : Overview View */}
+               {(videoRef && getNAnnotations) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} annotationData={getNAnnotations} />}
             </div>
-            
+
             {/* video controller */}
             {videoRef && <VideoController togglePlay={togglePlay} playToggle={playToggle} currentTime={currentTime} maxDuration={data.duration} clip={clip} onClickProgressBar={onClickProgressBar} />}
             {/* video navigation */}

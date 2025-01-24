@@ -305,33 +305,23 @@ const EditPlayerCon = ({data, metaData}) => {
                     Your browser does not support the video tag.
                   </video>}
                   {/* Video Info */}
-                  {
-                     <div className={`absolute z-[40] top-0 left-0 w-full h-full ${!playToggleReal ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000 flex flex-col`}>
-                        {/* <div className="w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic">{metaData.title}</div> */}
-                        <div className={`${(!playToggle) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} duration-1000 flex`}>
-                          <VideoTitle text={metaData.title} playToggle={playToggle} /> 
-                        </div>
-                        <VideoMeta playToggle={playToggle} currentVideo={metaData} />
-
+                  
+                  
+                  <div className={`absolute top-0 left-0 z-[40] overflow-hidden w-full h-fit flex flex-col gap-4`}>
+                     <div onClick={togglePlay} className={`${playToggleReal ? "opacity-100 translate-x-0 pointer-events-auto" : "opacity-0 -translate-x-full pointer-events-none"} cursor-pointer w-[76px] absolute top-0 left-0 flex justify-center items-center aspect-square text-black bg-[#8BA5F8] transition-all duration-1000`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                           <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                        </svg>
                      </div>
-                     }
-                  <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex pointer-events-none ${playToggleReal ? "opacity-0" : "opacity-100"} transition-all duration-1000`}>
-                     {
-                        data.map((v, idx) => {
-                           return <div 
-                           key={idx} 
-                           className="w-full h-full relative">
-                             <Image
-                                src={`${BASE_URL}/${data[idx].id}/480p${data[idx].in}.jpg`}
-                                fill
-                                alt=""
-                                style={{objectFit: "cover"}}
-                             />
-
-                           </div>
-                        })
-                     }
+                     {/* <div className="w-full lg:w-2/3 text-black px-2 py-1 bg-[#8BA5F8] text-4xl font-bold italic">{metaData.title}</div> */}
+                     <div className={`${(!playToggleReal) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} duration-1000 flex`}>
+                       <VideoTitle text={metaData.title} /> 
+                     </div>
+                     <VideoMeta playToggle={playToggleReal} currentVideo={metaData} />
                   </div>
+                     
+
+                  <EditPauseView data={data} playToggleReal={playToggleReal} />
          
                   {/* - Diagramatic View */}
                   {(videoRef && data) && <DiagramaticView onClickProgressBar={onClickProgressBar} edit={true} data={data} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggleReal} duration={data.totalDuration} annotationData={data} annotationLoading={!Boolean(data)} />}
@@ -350,4 +340,25 @@ const EditPlayerCon = ({data, metaData}) => {
  
     )
  }
+
+
+const EditPauseView = ({data,playToggleReal }) => {
+   return <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex pointer-events-none ${playToggleReal ? "opacity-0" : "opacity-100"} transition-all duration-1000`}>
+   {
+      data.map((v, idx) => {
+         return <div 
+         key={idx} 
+         className="w-full h-full relative">
+           <Image
+              src={`${BASE_URL}/${data[idx].id}/480p${data[idx].in}.jpg`}
+              fill
+              alt=""
+              style={{objectFit: "cover"}}
+           />
+
+         </div>
+      })
+   }
+</div>
+}
 export default EditPlayerCon;
