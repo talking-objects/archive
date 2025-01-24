@@ -20,8 +20,8 @@ const ForestWrapper = () => {
 
     const [previewVideoData, setPreviewVideoData] = useState(null)
     const maxDurationValue = 10
-     const getLoadingState = useRecoilValue(loadingState);
-     const [isReady, setIsReady] = useState(false)
+    const getLoadingState = useRecoilValue(loadingState);
+    const [isReady, setIsReady] = useState(false)
 
     useEffect(() => {
         if(!isLoading && !isLoadingClips && !isLoadingAnnotations){
@@ -138,8 +138,8 @@ const ForestWrapper = () => {
     
     return <>
         {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
-        <LoadingCon ready={Boolean(previewVideoData)} comLoader={() => setIsReady(true)} />
-      )}
+            <LoadingCon ready={Boolean(previewVideoData)} comLoader={() => setIsReady(true)} />
+        )}
         {<div className="w-full h-full flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
             {(previewVideoData && previewVideoData.length > 0) && <ForestPlayerCon data={previewVideoData} />}
