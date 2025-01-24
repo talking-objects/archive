@@ -3,6 +3,7 @@
 import ForestPlayerCon from "@/app/components/containers/players/ForestPlayerCon";
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
+import LeafletMap from "@/app/components/map/Map";
 import { getAllAnnotations } from "@/app/utils/hooks/pandora_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
 import { useEffect, useState } from "react";
@@ -54,7 +55,7 @@ const ForestPlaceWrapper = () => {
         },
       ];
 
-      dataAnnotations.data.items.map((v) => {
+      dataAnnotations.data.items.map((v, idx) => {
         const randomIndex = Math.floor(Math.random() * layerList.length);
         const maxDuration =
             v.out - v.in > maxDurationValue ? v.in + maxDurationValue : v.out;
@@ -67,7 +68,7 @@ const ForestPlaceWrapper = () => {
             }
             v.value = {
                 source: `https://www.saintlouisdusenegal.com/histoire-de-saint-louis-du-senegal/`,
-                placeName: `Saint-Louis, Senegal`,
+                placeName: `Place ${v.videoId}-${idx}`,
                 content: `Saint-louis, named after the King of France, Louis IX, under the regency of Louis XIV, was founded in 1659 by Louis Caullier. The local name Ndar or N'dar is Wolof for a kind of island and has been borne by the island since before the French settlement.
 
 The French were already present in Saint-Louis in 1638. The oldest French colony in Africa, Saint-Louis du Sénégal enjoyed two centuries of glory.
@@ -120,12 +121,18 @@ The heart of the old colonial city is located on a narrow island. The city with 
         />
       )}
       {
-        <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
+       allData && allData.length > 0 && <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
           {/* Forest Video Player */}
-          {allData && allData.length > 0 && <ForestPlayerCon data={allData} />}
+          { <ForestPlayerCon data={allData} />}
           <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40]"></div>
-          <div className="w-full h-[calc(100svh-62px-56px)]">
+          <div className="w-full h-[calc(100svh-62px-56px)] relative">
+            <LeafletMap
+                allPlaces={allData}
+                content={true}
+                forest={true}
+             
 
+            />
           </div>
         </div>
       }
