@@ -19,7 +19,7 @@ import SectionHeader from "./elements/SectionHeader";
 import SectionSubHeader from "./elements/SectionSubHeader";
 import Link from "next/link";
 
-const ExploreSection = () => {
+const ForestSection = () => {
   const exText = {
     title: `Explore our Archive`,
     subTitle: `Explore Manyfolded Knowlegde and Relations`
@@ -70,7 +70,7 @@ const HomeWrapper = () => {
               <CurrentStage itemList={itemList} setMainVideoId={setMainVideoId} mainVideoId={mainVideoId} />
               <AboutSection />
               <AboutSection2 />
-              <ExploreSection />
+              <ForestSection />
               <RelatedSection />
             </ContentContainer>
           )}
