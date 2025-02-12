@@ -178,7 +178,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         <div className="w-full bg-black flex items-center justify-center h-[50vh]">
           <video
             ref={videoRef}
-            src={`${BASE_URL}/${getVideoData.id}/480p1.mp4`}
+            src={`${BASE_URL}/${getVideoData.pandora_id}/480p1.mp4`}
             className={`w-full h-full `}
             controls={false}
             aria-label="video player"

@@ -49,7 +49,7 @@ const EntangledView = ({
           allData = [...annotations, ...allData];
         }
       }
-      console.log(allData)
+     
       allData = allData.sort((a, b) => parseFloat(a.start) - parseFloat(b.start));
 
       setAllAnnotation(allData);

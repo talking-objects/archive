@@ -293,7 +293,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                {/* Video Data Visualization : Entangled View */}
                {(videoRef) && <EntangledView annotationData={data.annotations} clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} />}
                {/* Video Data Visualization : Overview View */}
-               {/* {(videoRef) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} />} */}
+               {(videoRef) && <OverviewView annotationData={data.annotations} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} />}
             </div>
 
             {/* video controller */}

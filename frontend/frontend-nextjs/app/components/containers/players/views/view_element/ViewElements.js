@@ -158,6 +158,12 @@ export const FilterBox = ({children, type, toggleShow}) => {
    if(!toggleShow.place && type === "placeLayer"){
       return <></>
    }
+   if(toggleShow.data && type === "dataLayer"){
+      return <>{children}</>
+   }
+   if(!toggleShow.data && type === "dataLayer"){
+      return <></>
+   }
    
    return <>{children}</>
 }

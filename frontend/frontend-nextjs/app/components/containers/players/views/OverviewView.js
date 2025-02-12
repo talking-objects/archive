@@ -77,12 +77,18 @@ const OverviewView = ({data, clip=false, onClickProgressBar, currentTime, videoR
           setData(allData)
        }
        if(!edit){
-          let allData = []
-          for(let i =0; i < Object.keys(annotationData).length; i++){
-             allData = [...annotationData[Object.keys(annotationData)[i]],...allData]
-          }
-          allData = allData.sort((a,b) => a.in - b.in)
- 
+         let allData = [];
+         const keys = Object.keys(annotationData);
+         for (let i = 0; i < keys.length; i++) {
+           const key = keys[i];
+           const annotations = annotationData[key];
+           if (Array.isArray(annotations)) {
+             allData = [...annotations, ...allData];
+           }
+         }
+        
+         allData = allData.sort((a, b) => parseFloat(a.start) - parseFloat(b.start));
+   
           setAllAnnotation(allData)
        }else{
           let allData = []
@@ -114,19 +120,19 @@ const OverviewView = ({data, clip=false, onClickProgressBar, currentTime, videoR
                       allAnnotation.map((v, idx) => {
                          return <FilterBox key={idx} type={v.type} toggleShow={toggleShow}>
                             <div className="w-full h-fit flex flex-col">
-                               <OverViewBox data={v} fakeData={getData} over={true} />
+                               <OverViewBox data={v} allPlaces={annotationData.place_annotations} over={true} />
                                <div className="flex gap-1 items-center mt-1">
                                  <div className={`w-[24px] h-[24px] flex justify-center items-center relative bg-none`}>
-                                    <div className={`absolute top-0 left-0  w-full h-full rounded-full ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "bg-eva-c2" : " bg-white "}`}></div>
-                                    <div className={`absolute top-0 left-0  w-full h-full rounded-full ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "animate-custom-ping bg-eva-c2" : "animate-none bg-white "}`}></div>
-                                    <div onClick={() => onJumpTo(v.in)} className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer ${(Math.floor(currentTime) >= Math.floor(v.in) && (currentTime) <= Math.floor(v.out ? v.out : v.in + 5)) ? "text-white" : "text-black"}`}>
+                                    <div className={`absolute top-0 left-0  w-full h-full rounded-full ${(Math.floor(currentTime) >= Math.floor(parseFloat(v.start) - 5) && (currentTime) <= Math.floor(parseFloat(v.end) + 5)) ? "bg-eva-c2" : " bg-white "}`}></div>
+                                    <div className={`absolute top-0 left-0  w-full h-full rounded-full ${(Math.floor(currentTime) >= Math.floor(parseFloat(v.start) - 5) && (currentTime) <= Math.floor(parseFloat(v.end) + 5)) ? "animate-custom-ping bg-eva-c2" : "animate-none bg-white "}`}></div>
+                                    <div onClick={() => onJumpTo(parseFloat(v.start))} className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer ${(Math.floor(currentTime) >= Math.floor(parseFloat(v.start) - 5) && (currentTime) <= Math.floor(parseFloat(v.end) + 5)) ? "text-white" : "text-black"}`}>
                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
                                           <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                                        </svg>
                                     </div>
                                  </div> 
-                                 <div className="text-[11px] font-ibm_mono_regular flex justify-center items-center px-1 py-[1px] gap-1"><span>{formatTime(v.in)}</span> <span>{v.out && "~"}</span> <span>{v.out && formatTime(v.out)}</span></div>
-                               </div>
+                                 <div className="text-[11px] font-ibm_mono_regular flex justify-center items-center px-1 py-[1px] gap-1"><span>{formatTime(parseFloat(v.start))}</span> <span>{parseFloat(v.end) && "~"}</span> <span>{parseFloat(v.end) && formatTime(parseFloat(v.end))}</span></div>
+                               </div>  
                             </div>
                           </FilterBox>                         
                       })
