@@ -289,9 +289,9 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                 </div>}
              </div>
                {/* Video Data Visualization : Diagramatic View */}
-               {(videoRef) && <DiagramaticView data={data.annotations} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} />}
+               {(videoRef) && <DiagramaticView data={data.annotations} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={parseFloat(data.duration)} />}
                {/* Video Data Visualization : Entangled View */}
-               {/* {(videoRef) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} />} */}
+               {(videoRef) && <EntangledView annotationData={data.annotations} clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} />}
                {/* Video Data Visualization : Overview View */}
                {/* {(videoRef) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} />} */}
             </div>
