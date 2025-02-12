@@ -29,6 +29,7 @@ const Contents = ({
   const changeItemTime = ({ data }) => {
     if (data) {
       setCurrentItem(data);
+      console.log(parseFloat(data.start))
       setItemTime(parseFloat(data.start));
     } else {
       setCurrentItem(null);
@@ -161,7 +162,6 @@ const Contents = ({
             </div>
             <div className="w-full aspect-video relative">
               <MiniVideoPlayerCon
-                getCurrentItem={getCurrentItem}
                 currentBox={currentBox}
                 getItemTime={getItemTime}
                 getCurrentTimeForMini={getCurrentTimeForMini}
@@ -171,7 +171,7 @@ const Contents = ({
             </div>
             {getCurrentItem && (
               <div className="w-full">
-                {(getCurrentItem.start && getCurrentItem.end) && <div className="text-[11px] font-ibm_mono_regular flex items-center px-1 py-1 gap-1"><span>{formatTime(getCurrentItem.in)}</span> <span>{getCurrentItem.out && "~"}</span> <span>{getCurrentItem.out && formatTime(getCurrentItem.out)}</span></div>}
+                {(getCurrentItem.start && getCurrentItem.end) && <div className="text-[11px] font-ibm_mono_regular flex items-center px-1 py-1 gap-1"><span>{formatTime(parseFloat(getCurrentItem.start))}</span> <span>{getCurrentItem.end && "~"}</span> <span>{getCurrentItem.end && formatTime(parseFloat(getCurrentItem.end))}</span></div>}
               </div>
             )}
           </div>
@@ -186,43 +186,43 @@ const Contents = ({
               </div>
             </div>
           }
-          {/* {getVideoData.annotations.place_annotations &&
+          {getVideoData.annotations.place_annotations &&
             getVideoData.annotations.place_annotations.length > 0 && (
               <PlaceWrapper
-                getVideoData={getVideoData}
+                getVideoData={getVideoData.annotations.place_annotations}
                 changeItemTime={changeItemTime}
               />
-            )} */}
-          {/* {getVideoData.annotations.event_annotations &&
+            )}
+          {getVideoData.annotations.event_annotations &&
             getVideoData.annotations.event_annotations.length > 0 && (
               <EventWrapper
-                getVideoData={getVideoData}
+                getVideoData={getVideoData.annotations.event_annotations}
                 isLoading={isLoading}
                 changeItemTime={changeItemTime}
               />
-            )} */}
-          {/* {getVideoData.annotations.category_annotations &&
+            )}
+          {getVideoData.annotations.category_annotations &&
             getVideoData.annotations.category_annotations.length > 0 && (
               <CateAndTagWrapper2
                 getVideoData={getVideoData}
                 videoId={videoId}
                 changeItemTime={changeItemTime}
               />
-            )} */}
-          {/* {getVideoData.annotations.reference_annotations &&
+            )}
+          {getVideoData.annotations.reference_annotations &&
             getVideoData.annotations.reference_annotations.length > 0 && (
               <RefWapper
-                getVideoData={getVideoData}
+                getVideoData={getVideoData.annotations.reference_annotations}
                 changeItemTime={changeItemTime}
               />
-            )} */}
-          {/* {getVideoData.annotations.narration_annotations &&
+            )}
+          {getVideoData.annotations.narration_annotations &&
             getVideoData.annotations.narration_annotations.length > 0 && (
               <NarrationWrapper
-                getVideoData={getVideoData}
+                getVideoData={getVideoData.annotations.narration_annotations}
                 changeItemTime={changeItemTime}
               />
-            )} */}
+            )}
           {/* Related Objects */}
           {/* <div className="w-full h-fit bg-white flex flex-col justify-stretch">
             <div className="mb-4">Related Objects</div>

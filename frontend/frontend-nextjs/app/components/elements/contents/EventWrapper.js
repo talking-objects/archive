@@ -32,9 +32,9 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
        
             svg.selectAll("*").remove()
             const maxDate = new Date(Math.max(
-                ...eventData.map((val) => new Date(val.startDate).getTime()) // eventData에서 가장 큰 startDate 계산
+                ...eventData.map((val) => new Date(val.value.value.startDate).getTime()) // eventData에서 가장 큰 startDate 계산
               ))
-            const minDate = new Date(Math.min(...eventData.map((val) => val.startDate.getTime())))
+            const minDate = new Date(Math.min(...eventData.map((val) => new Date(val.value.value.startDate).getTime())))
        
             const scaleTime = d3.scaleTime([minDate, maxDate],[0, itemGroupSize.width - 20])
 
@@ -63,13 +63,13 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             .data(eventData)
             .join("rect")
             .attr("x", function(d,i){
-              return scaleTime(d.startDate)
+              return scaleTime(new Date(d.value.value.startDate))
           })
             .attr("y", 0)
             .attr("width", function(d, i){
               // return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
-              const bH = scaleTime(d.endDate) - scaleTime(d.startDate)
-              if((scaleTime(d.startDate) + bH) > itemGroupSize.height){
+              const bH = scaleTime(new Date(d.value.value.endDate)) - scaleTime(new Date(d.value.value.startDate))
+              if((scaleTime(new Date(d.value.value.startDate)) + bH) > itemGroupSize.height){
                   return 10
               }
               return 10
@@ -84,7 +84,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                     .transition()
                     .duration(300)
                     .attr("transform", function(d, i){
-                        return `translate(${scaleTime(d.startDate)}, 75)rotate(90)`
+                        return `translate(${scaleTime(new Date(d.value.value.startDate))}, 75)rotate(90)`
                     })
                 
                     const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
@@ -118,7 +118,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                             .transition()
                             .duration(300)
                             .attr("transform", function(d, i){
-                                return `translate(${scaleTime(eventData[j].startDate)}, 50)rotate(90)`
+                                return `translate(${scaleTime(new Date(eventData[j].value.value.startDate))}, 50)rotate(90)`
                             })
                             const yAxisGroupLine = d3.select(`#yAItemGroupLine${eventData[j].idx}`)
                             yAxisGroupLine
@@ -134,7 +134,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                         .transition()
                         .duration(300)
                         .attr("transform", function(d, i){
-                            return `translate(${scaleTime(d.startDate)}, 50)rotate(90)`
+                            return `translate(${scaleTime(new Date(d.value.value.startDate))}, 50)rotate(90)`
                         })
                         const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
                         yAxisGroupLine
@@ -177,7 +177,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 return `yAItemGroup${d.idx}`
             })
             .attr("transform", function(d, i){
-                return `translate(${scaleTime(d.startDate)}, 50)rotate(90)`
+                return `translate(${scaleTime(new Date(d.value.value.startDate))}, 50)rotate(90)`
                 
             })
             .each(function(p, j){
@@ -198,7 +198,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                 .append("text")
                 .attr("x", pointerLineWidth)
                 .attr("y", 0)
-                .text(formatDateToYYYYMMDD(p.startDate))
+                .text(formatDateToYYYYMMDD(new Date(p.value.value.startDate)))
                 .style("text-anchor", "start")
                 .attr("dy", "0.4em")
                 .style("font-size", "12px")
@@ -218,7 +218,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                   width: eventSvgContainer.current.clientWidth,
                   height: eventSvgContainer.current.clientHeight
               }
-                createTimeLine({eventData: getVideoData.nAnnotations.eventList, eventSvgContainerSize: svgContainerSize}) 
+                createTimeLine({eventData: getVideoData, eventSvgContainerSize: svgContainerSize}) 
             }
         }
     
@@ -247,7 +247,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
                       height: eventSvgContainer.current?.clientHeight ,
                     };
                
-                    createTimeLine({eventData: getVideoData.nAnnotations.eventList, eventSvgContainerSize: eventSvgContainerSize}) 
+                    createTimeLine({eventData: getVideoData, eventSvgContainerSize: eventSvgContainerSize}) 
               }
            
             }, 1000); // 1초 대기
@@ -279,7 +279,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
           >
             {currentEventData && <div className="textbox">
-              <div className="textboxInput whitespace-pre-wrap font-ibm_mono_regular">{currentEventData.value?.content}</div>
+              <div className="textboxInput whitespace-pre-wrap font-ibm_mono_regular">{currentEventData.value?.value?.text}</div>
             </div>}
           </div>
           <div className={`${getIsLoading ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}  select-none absolute top-0 left-0 w-full h-full bg-white flex justify-center items-center text-sm duration-300`}><span className="animate-bounce font-ibm_mono_semibold">Resizing...</span></div>

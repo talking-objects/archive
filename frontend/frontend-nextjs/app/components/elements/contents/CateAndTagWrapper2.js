@@ -8,6 +8,25 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
     const [currentCatAndTagData, setCurrentCatAndTagData] = useState(null)
     const [currentColor, setCurrentColor] = useState(CATEGORY_AND_TAGVALUE[0].color)
 
+    const getAllData = () => {
+        const clonedData = JSON.parse(JSON.stringify(getVideoData));
+        const categoires = [...clonedData.annotations.category_annotations]
+        const tag = [...clonedData.annotations.tag_annotations].map((val) => {
+            const value = {
+                text: val.value.value,
+                slug: "tag",
+                value: "Tag",
+                color: "#3118E8",
+                tBG: "bg-eva-c6",
+                tBGHover: "hover:bg-eva-c6"
+
+            }
+            val.value.value = value
+            return val
+        })
+        const getData = [...categoires, ...tag]
+        return getData
+}
     // categories & tags
     const onClickCatAndTag = (idx) => {
         const changeData = (dataList, tag) => {
@@ -15,11 +34,12 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
                 if(tag){
                     return val
                 }else{
-                    if(val.category.slug === CATEGORY_AND_TAGVALUE[idx].slug){
+                    if(val.value.value.slug === CATEGORY_AND_TAGVALUE[idx].slug){
                         return val;
                     }
                 }
             })
+        
             if(CATEGORY_AND_TAGVALUE[idx]){
                 setCurrentColor(CATEGORY_AND_TAGVALUE[idx].color)
 
@@ -29,26 +49,39 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
         if(CATEGORY_AND_TAGVALUE[idx] && currentCatAndTag.slug !== CATEGORY_AND_TAGVALUE[idx].slug){
             setCurrentCatAndTag(CATEGORY_AND_TAGVALUE[idx])
             if(CATEGORY_AND_TAGVALUE[idx].slug === "tag"){
-                changeData(getVideoData.nAnnotations.tagList, true)
+                const clonedData = JSON.parse(JSON.stringify(getVideoData));
+                const tag = [...clonedData.annotations.tag_annotations].map((val) => {
+                    const value = {
+                        text: val.value.value,
+                        slug: "tag",
+                        value: "Tag",
+                        color: "#3118E8",
+                        tBG: "bg-eva-c6",
+                        tBGHover: "hover:bg-eva-c6"
+        
+                    }
+                    val.value.value = value
+                    return val
+                })
+                changeData(tag, true)
             }else{
-                changeData(getVideoData.nAnnotations.categoryList, false)
+                changeData([...getVideoData.annotations.category_annotations], false)
             }
         }else{
             setCurrentCatAndTag({slug: "All"})
-            changeData([...getVideoData.nAnnotations.tagList, ...getVideoData.nAnnotations.categoryList], true)
+            const getData = getAllData()
+         
+            changeData(getData, true)
         }
     }
+    
+
 
      // categories & tags
      useEffect(() => {
-        
-        const getData = getVideoData.nAnnotations.categoryList.filter((val) => {
-            if(val.category.slug === CATEGORY_AND_TAGVALUE[0].slug){
-                return val;
-            }
-        })
-        setCurrentCatAndTagData(getData)
-        onClickCatAndTag(100)
+        if(!getVideoData) return;
+        setCurrentCatAndTagData(getAllData())
+        onClickCatAndTag()
     },[])
 
     return (
@@ -58,10 +91,10 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime}) => {
                 {CATEGORY_AND_TAGVALUE.map((val, idx) => {
                     return <div onClick={() => onClickCatAndTag(idx)} key={idx} className={`text-[12px] px-2 py-1 text-white ${(currentCatAndTag && currentCatAndTag.slug === val.slug) ? `${val.tBG} ` : `bg-neutral-400 text-black`} ${val.tBGHover} rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>{val.value}</div>
                 })}
-                <div onClick={() => onClickCatAndTag(100)} className={`text-[12px] px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === "All") ? "bg-black" : "bg-neutral-400"} hover:bg-black text-white rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>All</div>
+                <div onClick={() => onClickCatAndTag()} className={`text-[12px] px-2 py-1 ${(currentCatAndTag && currentCatAndTag.slug === "All") ? "bg-black" : "bg-neutral-400"} hover:bg-black text-white rounded-xl select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold`}>All</div>
                
             </div>
-            {currentCatAndTagData && <CTVis changeItemTime={changeItemTime} totalDuration={getVideoData.duration} data={currentCatAndTagData} bgColor={currentColor} videoId={videoId} />}
+            {currentCatAndTagData && <CTVis changeItemTime={changeItemTime} totalDuration={parseFloat(getVideoData.duration)} data={currentCatAndTagData} bgColor={currentColor} videoId={videoId} />}
         </div>
     </ContentBox>)
 }
