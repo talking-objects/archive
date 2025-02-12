@@ -8,6 +8,9 @@ import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import Contents from "@/app/components/elements/contents/Contents";
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
+import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
+import { createFakeAnnotations } from "@/app/utils/hooks/etc";
+import { getAllAnnotations, getVideo } from "@/app/utils/hooks/pandora_api";
 import { getEvaVideo } from "@/app/utils/hooks/eva_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
 import { useQuery } from "@tanstack/react-query";
@@ -17,9 +20,9 @@ import { useRecoilValue } from "recoil";
 
 const VideoWrapper = () => {
   const params = useParams();
-  const { data: video, isLoading: isLoadingVideo, error: isVideoNotFound } = useQuery({
+  const { data: video, isLoading: isLoadingVideo } = useQuery({
     queryKey: ["video", params.slug],
-    queryFn: () => getEvaVideo(params.slug)
+    queryFn: () => getEvaVideo( params.slug)
   })
   const [getVideoData, setVideoData] = useState(null);
   const videoContainerRef = useRef(null);
@@ -29,8 +32,9 @@ const VideoWrapper = () => {
   const getLoadingState = useRecoilValue(loadingState);
  
   useEffect(() => {
-    if (!isLoadingVideo && !isVideoNotFound) {
+    if (!isLoadingVideo) {
       console.log(video)
+      
       setVideoData(video);
     }
   }, [video, isLoadingVideo]);
@@ -60,15 +64,7 @@ const VideoWrapper = () => {
 
   if((getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady))){
     return <div className="w-full h-[100svh]">
-      <LoadingDataCon ready={isReady} readyData={Boolean(!isLoadingVideo)} comLoader={() => setIsReady(true)} />
-    </div>
-  }
-
-  if(isVideoNotFound){
-    return <div className="w-full h-[100svh]">
-      <div className="w-full h-full flex justify-center items-center">
-        <div className="text-black text-[24px] font-ibm_mono_bolditalic">Video Not Found</div>
-      </div>
+      <LoadingDataCon ready={isReady} readyData={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
     </div>
   }
 
@@ -76,7 +72,7 @@ const VideoWrapper = () => {
     <>
     
       {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
-        <LoadingCon ready={Boolean(!isLoadingVideo)} comLoader={() => setIsReady(true)} />
+        <LoadingCon ready={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
       )}
       
      {getVideoData && !isLoadingVideo && (<MainContainer>

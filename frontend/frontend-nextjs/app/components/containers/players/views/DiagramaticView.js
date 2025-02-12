@@ -13,8 +13,6 @@ const DiagramaticView = ({
   toggleShow,
   setCurrentTime,
   duration,
-  annotationData,
-  annotationLoading,
   videoRef,
 }) => {
   const [getData, setData] = useState(null);
@@ -30,7 +28,7 @@ const DiagramaticView = ({
 
   // the data of annotations of this video
   useEffect(() => {
-    if (!annotationLoading) {
+   
       const getDuration = duration;
 
       if (edit) {
@@ -54,10 +52,11 @@ const DiagramaticView = ({
         }
         setData(allData);
       } else {
-        setData(annotationData);
+        console.log("dd",data)
+        setData(data);
       }
-    }
-  }, [annotationData]);
+    
+  }, [data]);
 
   useEffect(() => {
     const category = d3.select("#cateGroup");
@@ -382,20 +381,20 @@ const DiagramaticView = ({
           .append("g")
           .attr("id", "cateGroup")
           .selectAll("rect")
-          .data(getData.categoryList.sort((a, b) => a.in - b.in))
+          .data(getData.category_annotations.sort((a, b) => parseFloat(a.start) - parseFloat(b.start)))
           .join("rect")
           .attr("width", function (d) {
-            return `${scaleLinear(d.out - d.in)}px`;
+            return `${scaleLinear(parseFloat(d.end) - parseFloat(d.start))}px`;
           })
           .attr("height", annotationRowHeight * 2)
           .attr("x", function (d) {
-            return `${scaleLinear(d.in)}px`;
+            return `${scaleLinear(parseFloat(d.start))}px`;
           })
           .attr("y", function (d, i) {
             return `${canvasSize.height - (annotationRowHeight * 2)}px`;
           })
           .attr("fill", function (d, i) {
-            return `${d.category.color}`;
+            return `${d.value.value.color}`;
           })
           // .style("mix-blend-mode", "multiply")
           .attr("opacity", 1)
@@ -413,7 +412,7 @@ const DiagramaticView = ({
           .append("g")
           .attr("id", "tagGroup")
           .selectAll("rect")
-          .data(getData.tagList)
+          .data(getData.tag_annotations)
           .join("rect")
           .attr("width", function (d) {
             return `${scaleLinear(d.out - d.in)}px`;
@@ -440,7 +439,7 @@ const DiagramaticView = ({
           .append("g")
           .attr("id", "refGroup")
           .selectAll("g")
-          .data(getData.refList)
+          .data(getData.reference_annotations)
           .join("g")
           .each(function(d){
             const g = d3.select(this)
@@ -484,7 +483,7 @@ const DiagramaticView = ({
           .append("g")
           .attr("id", "narrationGroup")
           .selectAll("g")
-          .data(getData.narrationList)
+          .data(getData.narration_annotations)
           .join("g")
           .each(function(d){
             const g = d3.select(this)
@@ -528,7 +527,7 @@ const DiagramaticView = ({
           .append("g")
           .attr("id", "eventGroup")
           .selectAll("g")
-          .data(getData.eventList)
+          .data(getData.event_annotations)
           .join("g")
           .each(function(d){
             const g = d3.select(this)
@@ -570,7 +569,7 @@ const DiagramaticView = ({
           .append("g")
           .attr("id", "placeGroup")
           .selectAll("g")
-          .data(getData.placeList)
+          .data(getData.place_annotations)
           .join("g")
           .each(function(d){
             const g = d3.select(this)
@@ -596,12 +595,12 @@ const DiagramaticView = ({
             onClick({ inVlaue: value.in, video: videoRef });
           });
           // Datagroup
-        if(getData.dataList){
+        if(getData.data_annotations){
           globalGourp
           .append("g")
           .attr("id", "dataGroup")
           .selectAll("g")
-          .data(getData.dataList)
+          .data(getData.data_annotations)
           .join("g")
           .each(function (d) {
             const g = d3.select(this);
@@ -825,7 +824,7 @@ const DiagramaticView = ({
     return () => window.removeEventListener("resize", updateViewBox);
   }, []);
 
-  if (annotationLoading || !Boolean(getData)) {
+  if (!Boolean(getData)) {
     return;
   }
   return (

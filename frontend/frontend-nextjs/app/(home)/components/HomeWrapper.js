@@ -15,6 +15,8 @@ import AboutSection2 from "./AboutSection2";
 import { ScrollSmoother } from "gsap/all";
 import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
 import ExploreSection from "./ExploreSection";
+import { useQuery } from "@tanstack/react-query";
+import { getVideos } from "@/app/utils/hooks/eva_api";
 
 
 
@@ -22,6 +24,10 @@ import ExploreSection from "./ExploreSection";
 
 
 const HomeWrapper = () => {
+  const { data: videos, isLoading: isLoadingVideos } = useQuery({
+    queryKey: ["videos"],
+    queryFn: getVideos
+  })
   const itemList = ["AT", "G", "U"]
   const [mainVideoId, setMainVideoId] = useState([...itemList][Math.floor(Math.random() * itemList.length)])
   const { data, isLoading } = getVideo({ pId: mainVideoId });
@@ -39,6 +45,11 @@ const HomeWrapper = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    if(videos){
+     console.log(videos)
+    }
+  }, [videos])
   return (
     <>
        

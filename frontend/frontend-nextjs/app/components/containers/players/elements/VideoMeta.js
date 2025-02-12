@@ -15,37 +15,18 @@ const VideoMeta = ({ currentVideo, videoBool = true, playToggle = true, currentL
           <div className="font-eva text-[120px] leading-[1.2]">C</div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <BoxLabel text={"Author:"} />
+          {(currentVideo.author || currentVideo.contributors) && <BoxLabel text={"Author:"} />}
           <BoxValue
-            text={[
-              currentVideo.user &&
-                (Array.isArray(currentVideo.user)
-                  ? currentVideo.user
-                      .map((val) => `${val[0].toUpperCase()}${val.slice(1)}`)
-                      .join(", ")
-                  : `${currentVideo.user[0].toUpperCase()}${currentVideo.user.slice(
-                      1
-                    )}`),
-              currentVideo.director &&
-                (Array.isArray(currentVideo.director)
-                  ? currentVideo.director
-                      .map((val) => `${val[0].toUpperCase()}${val.slice(1)}`)
-                      .join(", ")
-                  : `${currentVideo.director[0].toUpperCase()}${currentVideo.director.slice(
-                      1
-                    )}`),
-            ]
-              .filter(Boolean) // null, undefined 또는 빈 값을 제거
-              .join(", ")} // 쉼표로 연결
+            text={`${currentVideo.author}${currentVideo.author && ","} ${currentVideo.contributors}`} 
           />
         </div>
         {currentVideo.created && <div className="flex flex-wrap gap-2">
           <BoxLabel text={"Created:"} />
-          <BoxValue text={`${new Date(currentVideo.created.split("T", 1)[0]).toLocaleDateString(currentLanguage)}`} />
+          <BoxValue text={`${new Date(currentVideo.created).toLocaleDateString(currentLanguage)}`} />
         </div>}
-        {currentVideo.modified && <div className="flex flex-wrap gap-2">
-          <BoxLabel text={"Modified:"} />
-          <BoxValue text={`${new Date(currentVideo.modified.split("T", 1)[0]).toLocaleDateString(currentLanguage)}`} />
+        {currentVideo.updated && <div className="flex flex-wrap gap-2">
+          <BoxLabel text={"Updated:"} />
+          <BoxValue text={`${new Date(currentVideo.updated).toLocaleDateString(currentLanguage)}`} />
         </div>}
       </div>
     </div>

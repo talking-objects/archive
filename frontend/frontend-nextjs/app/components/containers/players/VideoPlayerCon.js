@@ -18,7 +18,6 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
     const videoRef = useRef(null)
     const [playToggle, setPlayToggle] = useState(false)
     const [currentTime, setCurrentTime] = useState(0)
-    const [getNAnnotations, setNAnnotations] = useState(null)
     const route = useRouter()
 
     const [toggleShow, setToggleShow] = useState({
@@ -96,9 +95,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
        }
     },[])
  
-    useEffect(() => {
-       setNAnnotations(data.nAnnotations)
-    },[])
+ 
 
    //  For MiniVideo Player
     useEffect(() => {
@@ -248,7 +245,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
     },[playToggle])
     return <VideoPlayerContainer toggleLegend={toggleLegend} onToggleLegend={onToggleLegend}>
          <div className="w-full h-full flex flex-col overflow-hidden relative group">
-             <video ref={videoRef} src={`${BASE_URL}/${data.id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
+             <video ref={videoRef} src={`${BASE_URL}/${data.pandora_id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
                <source type="video/mp4" />
                Your browser does not support the video tag.
              </video>
@@ -292,11 +289,11 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
                 </div>}
              </div>
                {/* Video Data Visualization : Diagramatic View */}
-               {(videoRef && getNAnnotations) && <DiagramaticView data={data} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} annotationData={getNAnnotations} annotationLoading={!Boolean(getNAnnotations)} />}
+               {(videoRef) && <DiagramaticView data={data.annotations} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={data.duration} />}
                {/* Video Data Visualization : Entangled View */}
-               {(videoRef && getNAnnotations) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} annotationData={getNAnnotations} />}
+               {/* {(videoRef) && <EntangledView clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} />} */}
                {/* Video Data Visualization : Overview View */}
-               {(videoRef && getNAnnotations) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} annotationData={getNAnnotations} />}
+               {/* {(videoRef) && <OverviewView data={data} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} />} */}
             </div>
 
             {/* video controller */}
