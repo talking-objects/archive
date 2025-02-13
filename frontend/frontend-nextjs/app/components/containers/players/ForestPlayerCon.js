@@ -7,12 +7,13 @@ const ForestPlayerCon = ({data, metaData}) => {
    const videoRef = useRef(null)
    const [playToggle, setPlayToggle] = useState(false)
    const [playToggleReal, setPlayToggleReal] = useState(false)
-   const [currentTime, setCurrentTime] = useState(0)
+
    const [currentIndex, setCurrentIndex] = useState(0)
 
 
    // change Current Time and Next Video
    useEffect(() => {
+      const averageTime = 60 * 2
       const videoElement = videoRef.current;
       let isUpdating = false; // 중복 방지 플래그 추가
 
@@ -20,9 +21,10 @@ const ForestPlayerCon = ({data, metaData}) => {
          const handleTimeUpdate = (e) => {
             if (isUpdating) return; // 이미 업데이트 중이라면 실행하지 않음
 
-            const getCurrentTime = videoElement?.currentTime - data[currentIndex].in;
+            const getCurrentTime = videoElement?.currentTime
+            console.log(getCurrentTime)
 
-            if (Math.round(getCurrentTime) > (data[currentIndex].out - data[currentIndex].in)) {
+            if (Math.round(getCurrentTime) > (parseFloat(data[currentIndex].end) - 1)) {
                // 중복 실행 방지를 위해 플래그 설정
                isUpdating = true;
                
@@ -33,12 +35,13 @@ const ForestPlayerCon = ({data, metaData}) => {
                
 
                const getNextVideo = data[currentIndex + 1];
-               if (data[currentIndex + 1]) {
-                  videoRef.current.src = `${BASE_URL}/${data[currentIndex + 1].videoId}/480p1.mp4`
-                  videoRef.current.currentTime = getNextVideo.in
+               if (getNextVideo) {
+                  videoRef.current.src = `${BASE_URL}/${getNextVideo.pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = 0 // getNextVideo.in
                   setCurrentIndex((prev) => prev + 1);
                   // videoRef.current.currentTime = getNextVideo.in;
-                  setCurrentTime(getNextVideo.newIn);
+               
+                  // setCurrentTime(getNextVideo.newIn);
 
                   // 0.5초 후 플래그 해제
                   if(playToggle){
@@ -50,24 +53,74 @@ const ForestPlayerCon = ({data, metaData}) => {
                   }
                   
                }else{
-                  videoRef.current.src = `${BASE_URL}/${data[0].videoId}/480p1.mp4`
-                  videoRef.current.currentTime = data[0].in
+                  videoRef.current.src = `${BASE_URL}/${data[0].pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = 0
+                  // videoRef.current.currentTime = data[0].in
                   setCurrentIndex(0);
-                  setCurrentTime(0);
+               
                       // 0.5초 후 플래그 해제
-               if(playToggle){
-                  setTimeout(() => {
-                     isUpdating = false;
-                     setPlayToggle(false);
-                     setPlayToggleReal(false)
-                  }, 500);
-               }
+                  if(playToggle){
+                     setTimeout(() => {
+                        isUpdating = false;
+                        setPlayToggle(false);
+                        setPlayToggleReal(false)
+                     }, 500);
+                  }
                }
 
             } else {
                // Update the video current time
-               const newCurrentTime = videoElement?.currentTime - data[currentIndex].in
-               setCurrentTime(data[currentIndex].newIn + (newCurrentTime));
+               const newCurrentTime = videoElement?.currentTime
+               // const newCurrentTime = videoElement?.currentTime - data[currentIndex].in
+               if (newCurrentTime > averageTime) {
+               //   next video
+               console.log("next video")
+                  // 중복 실행 방지를 위해 플래그 설정
+               isUpdating = true;
+               
+               // 다음 비디오로 전환
+               videoElement.pause();
+               setPlayToggle(false);
+               
+               
+
+               const getNextVideo = data[currentIndex + 1];
+               if (getNextVideo) {
+                  videoRef.current.src = `${BASE_URL}/${getNextVideo.pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = 0 // getNextVideo.in
+                  setCurrentIndex((prev) => prev + 1);
+                  // videoRef.current.currentTime = getNextVideo.in;
+               
+                  // setCurrentTime(getNextVideo.newIn);
+
+                  // 0.5초 후 플래그 해제
+                  if(playToggle){
+                     setTimeout(() => {
+                        isUpdating = false;
+                        videoElement.play();
+                        setPlayToggle(true);
+                     }, 500);
+                  }
+                  
+               }else{
+                  videoRef.current.src = `${BASE_URL}/${data[0].pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = 0
+                  // videoRef.current.currentTime = data[0].in
+                  setCurrentIndex(0);
+               
+                      // 0.5초 후 플래그 해제
+                  if(playToggle){
+                     setTimeout(() => {
+                        isUpdating = false;
+                        setPlayToggle(false);
+                        setPlayToggleReal(false)
+                     }, 500);
+                  }
+               }
+               }else{
+                  // current video
+                  console.log("current video")
+               }
            
             }
          };
@@ -107,8 +160,6 @@ const ForestPlayerCon = ({data, metaData}) => {
                }
             }
           }
-      
-     
       }
 
       // event = keyup & keydown
@@ -124,7 +175,6 @@ const ForestPlayerCon = ({data, metaData}) => {
    const onPlay = (toggle) => {
       if(videoRef){
          if(toggle){
-            
             videoRef.current.play()
             setPlayToggle(true)
             setPlayToggleReal(true)
@@ -137,14 +187,12 @@ const ForestPlayerCon = ({data, metaData}) => {
    }
    const findCurrentVideo = (data) => {
       if(videoRef){
-         videoRef.current.src = `${BASE_URL}/${data[currentIndex].videoId}/480p1.mp4`
-         videoRef.current.currentTime = data[currentIndex].in
+         videoRef.current.src = `${BASE_URL}/${data[currentIndex].pandora_id}/480p1.mp4`
+         videoRef.current.currentTime = 0
       }
     }
     useEffect(() => {
-   
           findCurrentVideo(data)
-       
     },[])
    
    return (<div className="w-full h-[calc(100svh-56px)] relativer">
@@ -178,9 +226,9 @@ const ForestPlayerCon = ({data, metaData}) => {
                   data.map((v, idx) => {
                      return <div 
                      key={idx} 
-                     className="w-full h-full bg-white relative">
+                     className="w-full h-full bg-white relative border-r-2 border-black last:border-r-0">
                         <Image
-                           src={`${BASE_URL}/${data[idx].videoId}/480p${data[idx].in}.jpg`}
+                           src={`${BASE_URL}/${data[idx].pandora_id}/480p${data[idx].poster}.jpg`}
                            alt=""
                            fill
                            style={{objectFit: "cover"}}

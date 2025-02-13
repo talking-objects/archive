@@ -175,12 +175,12 @@ const ForestContentsBox = ({ allData }) => {
   const router = useRouter();
 
   const onPush = (value) => {
-    if (value.type === "R") {
-      router.push(`/video/${value.id}`);
+    if (value.type === "raw") {
+      router.push(`/video/${value.pk}`);
     }
-    if (value.type === "C") {
-      const id = value.id.split("/")[0];
-      router.push(`/clip/${id}?clipId=${value.id}&id=${id}`);
+    if (value.type === "clip") {
+    
+      router.push(`/clip/${value.pk}`);
     }
   };
 

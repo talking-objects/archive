@@ -77,8 +77,8 @@ const ForestWrapper = () => {
         )}
         {getLoadingState.hasAnimated && forestData && <div className="w-full h-full  flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
-            {/* {<ForestPlayerCon data={videos.data} />} */}
-            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40]"></div>
+            {<ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />}
+            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40]">Filter Nav</div>
             <ContentContainer>
                 <ForestContentsBox allData={forestData} />
                 <div className="w-full flex justify-center mt-4">
