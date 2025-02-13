@@ -15,6 +15,7 @@ const instance = axios.create({
 })
 
 export const getVideos = ({random=false, page=1, page_limit=5} = {}) => instance.get(`videos/`, {params: {random, page, page_limit}}).then((response) => response.data);
+export const getVideosSearch = ({page=1, page_limit=5, query=null} = {}) => instance.get(`videos/search`, {params: {page, page_limit, query}}).then((response) => response.data);
+export const getClipsSearch = ({page=1, page_limit=5, query=null} = {}) => instance.get(`clips/search`, {params: {page, page_limit, query}}).then((response) => response.data);   
 export const getEvaVideo = (id) => instance.get(`videos/${id}`).then((response) => response.data);
-
 export const getClips = ({random=false, page=1, page_limit=5} = {}) => instance.get(`clips/`, {params: {random, page, page_limit}}).then((response) => response.data);

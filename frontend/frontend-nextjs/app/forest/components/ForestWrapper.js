@@ -3,20 +3,22 @@ import ForestContentsBox from "@/app/components/containers/forest/ForestContents
 import ForestPlayerCon from "@/app/components/containers/players/ForestPlayerCon";
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
-import { getClips, getVideos } from "@/app/utils/hooks/eva_api";
+import { getClips, getVideos, getVideosSearch, getClipsSearch } from "@/app/utils/hooks/eva_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-
+import { useForm } from "react-hook-form";
 
 const ForestWrapper = () => {
     const [isReady, setIsReady] = useState(false)
     const getLoadingState = useRecoilValue(loadingState);
     const [page, setPage] = useState(1);    
     const [forestData, setForestData] = useState([]);  
-   
-
+    const [toggleSearch, setToggleSearch] = useState(false)
+    const [query, setQuery] = useState(null)
+    const [searchTimestamp, setSearchTimestamp] = useState(0);
+    const {register, handleSubmit, getValues, setValue} = useForm()
     // Get Videos
     const {data: videos, isLoading: isLoadingVideos} = useQuery({
         queryKey: ["videos", page],
@@ -33,11 +35,27 @@ const ForestWrapper = () => {
             return getClips({page: page, page_limit: 4, random: false})
         },
         keepPreviousData: true 
-    })          
+    })       
+    
+    const {data: videosSearch, isLoading: isLoadingVideosSearch} = useQuery({
+        queryKey: ["videosSearch", page, query],
+        queryFn: () => {
+            return getVideosSearch({page: page, page_limit: 4, query: query})
+        },
+        keepPreviousData: true,
+        enabled: toggleSearch && query !== null
+    })  
 
-    // Get Forest Data
-    useEffect(() => {
-       console.log(videos)
+    const {data: clipsSearch, isLoading: isLoadingClipsSearch} = useQuery({
+        queryKey: ["clipsSearch", page, query],
+        queryFn: () => {
+            return getClipsSearch({page: page, page_limit: 4, query: query})
+        },
+        keepPreviousData: true,
+        enabled: toggleSearch && query !== null
+    })  
+    
+    const getForestData = () => {
         if(videos && !isLoadingVideos && clips && !isLoadingClips){
             let newForestDataClips = []
             // Check videos data
@@ -56,12 +74,54 @@ const ForestWrapper = () => {
                 setForestData(prev => [...prev, ...newForestDataClips])
             }
         }
-    }, [videos, clips, page])
+    }
+
+    const getForestDataSearch = () => {
+        if(videosSearch && !isLoadingVideosSearch && clipsSearch && !isLoadingClipsSearch){
+            let newForestDataClips = []
+            // Check videos data
+            if(videosSearch && !isLoadingVideosSearch && videosSearch.data){
+                newForestDataClips = [...videosSearch.data] 
+            }
+            // Check clips data
+            if(clipsSearch && !isLoadingClipsSearch && clipsSearch.data){
+                newForestDataClips = [...newForestDataClips, ...clipsSearch.data]
+            }
+            // Only proceed if we have data to add
+            if(newForestDataClips.length > 0) {
+                setForestData(prev => [...prev, ...newForestDataClips])
+            }
+        }
+    }
+    // Get Forest Data
+    useEffect(() => {
+        if(!toggleSearch){
+            getForestData()
+        }else{
+            getForestDataSearch()
+        }
+    }, [videos, clips, page, videosSearch, clipsSearch, query, searchTimestamp])
+
+  
 
    
 
     const onLoadMore = () => {
         setPage(page + 1)
+    }
+    const onSubmit = (data) => {
+        setToggleSearch(true)
+        setForestData([])
+        setPage(1)
+        setQuery(getValues("search"))
+        setSearchTimestamp(Date.now())
+    }
+    const onCancelSearch = () => {
+        setToggleSearch(false)
+        setForestData([])
+        setPage(1)
+        setQuery(null)
+        setValue("search", "")
     }
 
 
@@ -75,11 +135,37 @@ const ForestWrapper = () => {
         {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
             <LoadingCon ready={Boolean((!isLoadingVideos && !isLoadingClips))} comLoader={() => setIsReady(true)} />
         )}
-        {getLoadingState.hasAnimated && forestData && <div className="w-full h-full  flex flex-col items-center relative pt-[56px]">
+        {forestData && <div className="w-full h-full  flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
-            {<ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />}
-            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40]">Filter Nav</div>
-            <ContentContainer>
+            {/* {<ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />} */}
+            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40] flex items-center px-4">
+
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <input 
+                        {...register("search")}
+                        type="text" 
+                        placeholder="Search"
+                        className="px-4 py-2 rounded-md mr-2" 
+                    />
+                    <button 
+                        type="submit"
+                        className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
+                    >
+                        Search
+                    </button>
+                </form>
+                {toggleSearch && (
+                    <div className="flex items-center ml-4">
+                        <button
+                            onClick={onCancelSearch}
+                            className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
+                    >
+                        Cancel Search
+                        </button>
+                    </div>
+                )}
+            </div>
+            {forestData.length > 0 && <ContentContainer>
                 <ForestContentsBox allData={forestData} />
                 <div className="w-full flex justify-center mt-4">
                     <button 
@@ -95,7 +181,7 @@ const ForestWrapper = () => {
                     </button>
                 </div>
                 
-            </ContentContainer>
+            </ContentContainer>}
         </div>}
     </>
 }
