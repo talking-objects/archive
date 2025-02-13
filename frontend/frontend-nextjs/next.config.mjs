@@ -2,6 +2,12 @@
 const nextConfig = {
     reactStrictMode: false,
     output: "standalone", // Docker 
+    env: {
+        EVA_API_URL: process.env.EVA_API_URL,
+        PROXY_HOST: process.env.PROXY_HOST,
+        PROXY_PORT: process.env.PROXY_PORT,
+        PROXY_PROTOCOL: process.env.PROXY_PROTOCOL
+    },
     webpack(config) { // SVGR
         // Grab the existing rule that handles SVG imports
         const fileLoaderRule = config.module.rules.find((rule) =>

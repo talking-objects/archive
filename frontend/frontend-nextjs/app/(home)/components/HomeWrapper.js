@@ -4,7 +4,6 @@ import ContentContainer from "@/app/components/containers/ContentContainer";
 import AboutSection from "./AboutSection";
 import RelatedSection from "./RelatedSection";
 import HomeHeader from "./HomeHeader";
-import { getVideo } from "@/app/utils/hooks/pandora_api";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { componentDataLoadingState, loadingState } from "@/app/utils/recoillib/state/state";
@@ -13,7 +12,7 @@ import LoadingCon from "@/app/components/LoadingCon";
 import CurrentStage from "./CurrentStage";
 import AboutSection2 from "./AboutSection2";
 import { ScrollSmoother } from "gsap/all";
-import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
+
 import ExploreSection from "./ExploreSection";
 import { useQuery } from "@tanstack/react-query";
 import { getVideos } from "@/app/utils/hooks/eva_api";
@@ -24,44 +23,47 @@ import { getVideos } from "@/app/utils/hooks/eva_api";
 
 
 const HomeWrapper = () => {
-  const { data: videos, isLoading: isLoadingVideos } = useQuery({
+  const { data: videos, isLoading: isLoadingVideos, error: videosNotFound } = useQuery({
     queryKey: ["videos"],
-    queryFn: getVideos
+    queryFn: () => {
+      return getVideos({random: true, page: 1, page_limit: 5})
+    }
   })
-  const itemList = ["AT", "G", "U"]
-  const [mainVideoId, setMainVideoId] = useState([...itemList][Math.floor(Math.random() * itemList.length)])
-  const { data, isLoading } = getVideo({ pId: mainVideoId });
+
   const [currentVideo, setCurrentVideo] = useState(null);
   const getLoadingState = useRecoilValue(loadingState);
-  const [getComDataLoadingState, setComDataLoadingState] = useRecoilState(componentDataLoadingState)
 
   useEffect(() => {
-    if(isLoading){
-      setComDataLoadingState(false)
+    
+    if(!isLoadingVideos && videos) {
+    
+      setCurrentVideo(videos.data[0]);
     }
-    if (!isLoading) {
-      setComDataLoadingState(true)
-      setCurrentVideo(fakeVideoDataList[mainVideoId] ? fakeVideoDataList[mainVideoId] : data.data.items[0]);
-    }
-  }, [data]);
+  }, [videos, isLoadingVideos]);
 
   useEffect(() => {
     if(videos){
      console.log(videos)
     }
   }, [videos])
+
+  if(videosNotFound){
+    return <div className="w-full h-screen flex justify-center items-center">
+      <div className="text-black text-[24px] font-ibm_mono_bolditalic">No videos found</div>
+    </div>
+  }
   return (
     <>
-       
       {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
         <LoadingCon ready={Boolean(currentVideo)} />
       )}
-      {(getLoadingState.isLoading && !isLoading && currentVideo) && (
+
+      {(getLoadingState.isLoading && !isLoadingVideos && currentVideo) && (
         <MainContainer>
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (
             <ContentContainer padding={false}>
-              <CurrentStage itemList={itemList} setMainVideoId={setMainVideoId} mainVideoId={mainVideoId} />
+              <CurrentStage itemList={videos.data} setCurrentVideo={setCurrentVideo} currentVideo={currentVideo} />
               <AboutSection />
               <AboutSection2 />
               <ExploreSection />

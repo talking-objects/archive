@@ -28,7 +28,7 @@ export const CATEGORYSVALUE = [
 
     },
     {
-       slug: "artistic_reflections",
+       slug: "artistic_reflection",
        value: "Artistic Reflections",
        color: "#691220",
        tBG: "bg-eva-c3",
