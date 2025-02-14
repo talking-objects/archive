@@ -99,7 +99,7 @@ const LoadingCon = ({ ready = false, comLoader=()=>{} }) => {
         </div>
         <div
           id="loadingAniDoor2"
-          className="absolute top-1/2 left-0 w-full h-1/2 bg-white flex items-end justify-center"
+          className="absolute top-1/2 left-0 w-full h-1/2 bg-white flex items-start justify-center"
         >
           <div className="loadingAniDoorBorder w-0 h-1 border-t border-black"></div>
         </div>

@@ -132,26 +132,9 @@ const ClipIcon = () => {
 };
 
 const ForestContentsImageBox = ({ val }) => {
-  const [getId, setId] = useState(null);
-  const [getPostFrame, setPostFrame] = useState(null);
-  useEffect(() => {
-    console.log(val);
-    if (val.type === "R") {
-      setId(val.id);
-      setPostFrame(val.posterFrame);
-    }
-    if (val.type === "C") {
-      setId(val.id.split("/")[0]);
-      setPostFrame(val.in);
-    }
-    if (val.type === "A") {
-      setId(val.item);
-      setPostFrame(val.in);
-    }
-  }, []);
+
   return (
     <div
-      // style={{backgroundImage: `url(${BASE_URL}/${getId}/480p${getPostFrame}.jpg)`}}
       className="w-full aspect-video bg-neutral-200 rounded-md overflow-hidden flex justify-center items-center relative"
     >
       <Image

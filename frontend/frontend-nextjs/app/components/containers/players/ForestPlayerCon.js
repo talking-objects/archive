@@ -173,30 +173,31 @@ const ForestPlayerCon = ({data, metaData}) => {
    },[])
 
    const onPlay = (toggle) => {
-      if(videoRef){
-         if(toggle){
-            videoRef.current.play()
-            setPlayToggle(true)
-            setPlayToggleReal(true)
-         }else{
-            videoRef.current.pause()
-            setPlayToggle(false)
-            setPlayToggleReal(false)
+         if(videoRef){
+            if(toggle){
+               videoRef.current.play()
+               setPlayToggle(true)
+               setPlayToggleReal(true)
+            }else{
+               videoRef.current.pause()
+               setPlayToggle(false)
+               setPlayToggleReal(false)
+            }
          }
-      }
    }
    const findCurrentVideo = (data) => {
-      if(videoRef){
+      if(videoRef && data.length > 0){
          videoRef.current.src = `${BASE_URL}/${data[currentIndex].pandora_id}/480p1.mp4`
          videoRef.current.currentTime = 0
       }
-    }
+     }
+    
     useEffect(() => {
           findCurrentVideo(data)
-    },[])
+    },[data])
    
-   return (<div className="w-full h-[calc(100svh-56px)] relativer">
-      <div className="w-full h-[calc(100svh-56px)] overflow-hidden flex flex-col">
+   return (<div className="w-full h-[calc(100svh-118px)] relative">
+      <div className="w-full h-[calc(100svh-118px)] overflow-hidden flex flex-col">
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}

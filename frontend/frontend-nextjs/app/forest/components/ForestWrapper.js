@@ -19,6 +19,7 @@ const ForestWrapper = () => {
     const [query, setQuery] = useState(null)
     const [searchTimestamp, setSearchTimestamp] = useState(0);
     const {register, handleSubmit, getValues, setValue} = useForm()
+
     // Get Videos
     const {data: videos, isLoading: isLoadingVideos} = useQuery({
         queryKey: ["videos", page],
@@ -93,6 +94,7 @@ const ForestWrapper = () => {
             }
         }
     }
+
     // Get Forest Data
     useEffect(() => {
         if(!toggleSearch){
@@ -101,10 +103,6 @@ const ForestWrapper = () => {
             getForestDataSearch()
         }
     }, [videos, clips, page, videosSearch, clipsSearch, query, searchTimestamp])
-
-  
-
-   
 
     const onLoadMore = () => {
         setPage(page + 1)
@@ -137,9 +135,11 @@ const ForestWrapper = () => {
         )}
         {forestData && <div className="w-full h-full  flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
-            {/* {<ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />} */}
+            {forestData.length === 0 && <div className="w-full h-[calc(100svh-118px)] flex justify-center items-center">
+                <div className="text-black text-[24px] font-ibm_mono_bolditalic">No videos found</div>
+            </div>}
+            {forestData.length > 0 && <ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />}
             <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40] flex items-center px-4">
-
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <input 
                         {...register("search")}
@@ -168,17 +168,31 @@ const ForestWrapper = () => {
             {forestData.length > 0 && <ContentContainer>
                 <ForestContentsBox allData={forestData} />
                 <div className="w-full flex justify-center mt-4">
-                    <button 
-                        onClick={onLoadMore}
-                        disabled={videos?.total_pages <= page && clips?.total_pages <= page}
-                        className={`px-6 py-2 text-white rounded-md transition-colors duration-200 ${
+                    {!toggleSearch ? (
+                        <button 
+                            onClick={onLoadMore}
+                            disabled={videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page}
+                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 ${
                             videos?.total_pages <= page && clips?.total_pages <= page 
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-[#8BA5F8] hover:bg-[#7B97F7]'
                         }`}
-                    >
-                        Load More
-                    </button>
+                        >
+                            Load More
+                        </button>
+                    ) : (
+                        <button 
+                            onClick={onLoadMore}
+                            disabled={videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page}
+                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 ${
+                            videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page 
+                            ? 'bg-gray-400 cursor-not-allowed'
+                            : 'bg-[#8BA5F8] hover:bg-[#7B97F7]'
+                        }`}
+                        >
+                            Load More
+                        </button>
+                    )}
                 </div>
                 
             </ContentContainer>}
