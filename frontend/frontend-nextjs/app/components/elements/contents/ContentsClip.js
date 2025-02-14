@@ -65,6 +65,16 @@ const ContentsClip = ({
                 clipData={clipData}
               />
             )}
+          {clipData.annotations?.tag_annotations &&
+            clipData.annotations.tag_annotations.length > 0 && (
+              <CateAndTagWrapper2
+                clip={clip}
+                getVideoData={clipData}
+                videoId={videoId}
+                changeItemTime={() => {}}
+                clipData={clipData}
+              />
+            )}
           {clipData.annotations?.reference_annotations &&
             clipData.annotations.reference_annotations.length > 0 && (
               <RefWapper

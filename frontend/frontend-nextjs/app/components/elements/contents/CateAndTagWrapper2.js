@@ -8,6 +8,12 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime, clip=false, 
     const [currentCatAndTagData, setCurrentCatAndTagData] = useState(null)
     const [currentColor, setCurrentColor] = useState(CATEGORY_AND_TAGVALUE[0].color)
 
+    useEffect(() => {
+     
+        if(clipData){
+            setCurrentCatAndTagData(clipData)
+        }   
+    },[clipData])
     const getAllData = () => {
         const clonedData = JSON.parse(JSON.stringify(getVideoData));
         const categoires = [...clonedData.annotations.category_annotations]
@@ -99,6 +105,11 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime, clip=false, 
         {clip && <div className="w-full aspect-video relative overflow-hidden flex flex-col justify-center items-center gap-4">
            
             {clipData.annotations.category_annotations.slice(0,1).map((val, idx) => {
+                return <div key={idx} style={{backgroundColor:val.value.value.color}} className="w-full aspect-square bg-cover bg-center bg-no-repeat flex items-center justify-center">
+                    <div style={{backgroundImage: `url(${BASE_URL}/${val.pandora_id}/480p${parseFloat(val.start)}.jpg)`}} className="w-full aspect-video bg-cover bg-center bg-no-repeat"></div>
+                </div>
+            })}
+            {clipData.annotations.tag_annotations.slice(0,1).map((val, idx) => {
                 return <div key={idx} style={{backgroundColor:val.value.value.color}} className="w-full aspect-square bg-cover bg-center bg-no-repeat flex items-center justify-center">
                     <div style={{backgroundImage: `url(${BASE_URL}/${val.pandora_id}/480p${parseFloat(val.start)}.jpg)`}} className="w-full aspect-video bg-cover bg-center bg-no-repeat"></div>
                 </div>

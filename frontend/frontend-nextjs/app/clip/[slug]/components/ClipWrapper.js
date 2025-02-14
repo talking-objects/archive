@@ -30,7 +30,7 @@ const ClipWrapper = () => {
   const [clipData, setClipData] = useState(null);
   useEffect(() => {
     if (!isLoadingClip && !isClipNotFound) {
-      console.log(clip)
+   
       setClipVideo(clip);
 
       const annotations = {
@@ -66,7 +66,7 @@ const ClipWrapper = () => {
           annotations.tag_annotations.push(clip.data)
           break;
       }
-
+      console.log(annotations)
       setClipData({
         annotations
       })

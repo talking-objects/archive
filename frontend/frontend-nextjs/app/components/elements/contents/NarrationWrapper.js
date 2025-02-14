@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import ContentBox from "./ContentBox";
 
-const NarrationWrapper = ({getVideoData, changeItemTime}) => {
+const NarrationWrapper = ({getVideoData, changeItemTime, clip=false}) => {
     const [showNarration, setShowNarration] = useState(false)
     useEffect(() => {
         const narrationSubCon = document.querySelector("#narrationSubCon");
-        narrationSubCon.style.minHeight = `${narrationSubCon.clientWidth}px`
+        if(!clip){
+            narrationSubCon.style.minHeight = `${narrationSubCon.clientWidth}px`
+        }
         
     },[])
-    return <ContentBox title={"Narrations"} id="narration_box">
-    <div id="narrationSubCon" className="flex flex-col w-full h-fit overflow-hidden  ">
+    return <ContentBox clip={clip} title={"Narrations"} id="narration_box">
+    <div id="narrationSubCon" className="flex flex-col w-full h-fit overflow-hidden">
         <div className="flex flex-col gap-4 w-full h-full bg-eva-c2 bg-opacity-[27%] px-4 py-4">
         {
             getVideoData.slice(0, showNarration ? getVideoData.length : 4).map((val, idx) => {

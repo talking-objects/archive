@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import ContentBox from "./ContentBox";
 
-const RefWapper = ({getVideoData, changeItemTime}) => {
+const RefWapper = ({getVideoData, changeItemTime, clip=false}) => {
     const [openRef, setOpenRef] = useState(false)
     useEffect(() => {
             const refSubCon = document.querySelector("#refSubCon");
-            refSubCon.style.minHeight = `${refSubCon.clientWidth}px`
-            
+            if(!clip){
+                refSubCon.style.minHeight = `${refSubCon.clientWidth}px`
+            }
         },[])
     return (
-      <ContentBox title={"References"} id="ref_box">
+      <ContentBox clip={clip} title={"References"} id="ref_box">
         <div
           id="refSubCon"
           className="flex flex-col w-full h-fit overflow-hidden"
