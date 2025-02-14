@@ -19,3 +19,4 @@ export const getVideosSearch = ({page=1, page_limit=5, query=null} = {}) => inst
 export const getClipsSearch = ({page=1, page_limit=5, query=null} = {}) => instance.get(`clips/search`, {params: {page, page_limit, query}}).then((response) => response.data);   
 export const getEvaVideo = (id) => instance.get(`videos/${id}`).then((response) => response.data);
 export const getClips = ({random=false, page=1, page_limit=5} = {}) => instance.get(`clips/`, {params: {random, page, page_limit}}).then((response) => response.data);
+export const getClip = (id) => instance.get(`clips/${id}`).then((response) => response.data);

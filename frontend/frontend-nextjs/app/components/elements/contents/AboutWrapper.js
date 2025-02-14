@@ -10,8 +10,8 @@ const ContentTextHtml = ({text}) => {
    return <div dangerouslySetInnerHTML={{__html: `${text}`}} className="text-[16px] font-ibm_mono_regular leading-tight"></div>
 }
 
-const AboutWapper = ({getVideoData}) => {
-    return <ContentBox title={"Context"} id="context_box" about={true}>
+const AboutWapper = ({getVideoData, clip=false}) => {
+    return <ContentBox clip={clip} title={"Context"} id="context_box" about={true}>
     {getVideoData.description && <div>
        <LabelTitle text={"Description"} />
        <ContentTextHtml text={getVideoData.description} />

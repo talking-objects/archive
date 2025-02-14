@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import ContentBox from "./ContentBox";
 import * as d3 from "d3"
 
-const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
+const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => {
     const eventSvgContainer = useRef(null)
     const svgRefEvent = useRef(null)
     const eventTextBoxRef = useRef(null)
@@ -50,7 +50,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
             .attr("x", 10)
             .attr("y", itemGroupSize.height/1.5 - 25)
             .attr("fill", "blue")
-            .attr("width", itemGroupSize.height -20)
+            .attr("width", itemGroupSize.width -20)
             .attr("height", bgBarWidth)
             
 
@@ -268,10 +268,10 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime}) => {
 
 
     return (
-      <ContentBox title={"Annotated Events"} id="event_box">
+      <ContentBox clip={clip} title={"Annotated Events"} id="event_box">
         <div
           ref={eventSvgContainer}
-          className="w-full aspect-square flex bg-white relative overflow-hidden"
+          className={`w-full ${clip ? "aspect-video" : "aspect-square"}  flex bg-white relative overflow-hidden`}
         >
           <svg ref={svgRefEvent}></svg>
           <div

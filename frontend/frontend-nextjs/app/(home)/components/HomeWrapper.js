@@ -34,18 +34,12 @@ const HomeWrapper = () => {
   const getLoadingState = useRecoilValue(loadingState);
 
   useEffect(() => {
-    
     if(!isLoadingVideos && videos) {
-    
       setCurrentVideo(videos.data[0]);
     }
   }, [videos, isLoadingVideos]);
 
-  useEffect(() => {
-    if(videos){
-     console.log(videos)
-    }
-  }, [videos])
+
 
   if(videosNotFound){
     return <div className="w-full h-screen flex justify-center items-center">
@@ -58,7 +52,7 @@ const HomeWrapper = () => {
         <LoadingCon ready={Boolean(currentVideo)} />
       )}
 
-      {(getLoadingState.isLoading && !isLoadingVideos && currentVideo) && (
+      {(currentVideo) && (
         <MainContainer>
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (

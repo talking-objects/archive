@@ -1,71 +1,114 @@
-import { MainContainer } from "@/app/components/containers/Containers";
-import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
+  import { MainContainer } from "@/app/components/containers/Containers";
+import VideoPlayerConClip from "@/app/components/containers/players/VideoPlayerConClip";
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { createFakeAnnotations } from "@/app/utils/hooks/etc";
-import { getClip } from "@/app/utils/hooks/pandora_api";
+import { getClip, getClips, getEvaVideo } from "@/app/utils/hooks/eva_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
-import { useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
-
+import ContentsClip from "@/app/components/elements/contents/ContentsClip";
 const ClipWrapper = () => {
-  const searchParams = useSearchParams();
-  const videoContainerRef = useRef(null);
-  const { isLoading, data, error } = getClip({
-    originId: searchParams.get("clipId"),
-  });
+  const params = useParams();
+  const { data: clip, isLoading: isLoadingClip, error: isClipNotFound } = useQuery({
+    queryKey: ["clip", params.slug],
+    queryFn: () => getClip(params.slug)
+  })
+
+  const {data: video, isLoading: isLoadingVideo, error: isVideoNotFound} = useQuery({
+    queryKey: ["video", clip?.data?.video_id],
+    queryFn: () => getEvaVideo(clip.data.video_id),
+    enabled: Boolean(clip?.data?.video_id)
+  })
+  const [getClipVideo, setClipVideo] = useState(null);
   const [getVideoData, setVideoData] = useState(null);
-  const [isReady, setIsReady] = useState(false)
   const getLoadingState = useRecoilValue(loadingState);
+  const videoContainerRef = useRef(null);
+  const [isReady, setIsReady] = useState(false)
+  const [clipData, setClipData] = useState(null);
+  useEffect(() => {
+    if (!isLoadingClip && !isClipNotFound) {
+      console.log(clip)
+      setClipVideo(clip);
+
+      const annotations = {
+        category_annotations: [],
+        event_annotations: [],
+        place_annotations: [],
+        reference_annotations: [],
+        narration_annotations: [],
+        data_annotations: [],
+        tag_annotations: []
+      }
+
+      switch (clip.data.type) {
+        case "categoryLayer":
+          annotations.category_annotations.push(clip.data)
+          break;
+        case "eventLayer":
+          annotations.event_annotations.push(clip.data)
+          break;
+        case "placeLayer":
+          annotations.place_annotations.push(clip.data)
+          break;
+        case "referenceLayer":
+          annotations.reference_annotations.push(clip.data)
+          break;
+        case "narrationLayer":
+          annotations.narration_annotations.push(clip.data)
+          break;
+        case "dataLayer":
+          annotations.data_annotations.push(clip.data)
+          break;
+        case "tagLayer":
+          annotations.tag_annotations.push(clip.data)
+          break;
+      }
+
+      setClipData({
+        annotations
+      })
+    }
+  }, [clip, isLoadingClip]);
 
   useEffect(() => {
-    if (!isLoading) {
-      let editedData = JSON.parse(JSON.stringify(data.data.items[0]));
-      editedData.originId = editedData.id;
-      editedData.id = searchParams.get("id");
-      editedData.duration = editedData.out - editedData.in;
-      editedData.director = [];
-
-      // 🤡 FakeData: You can use "editedData.annotations" later.
-      /* 
-        Data Strucutre
-        {
-          categoryList: [],
-          eventList: [],
-          narrationList: [],
-          placeList: [],
-          refList: [],
-          tagList: []
-        }
-      */
-      editedData.nAnnotations = createFakeAnnotations({
-        duration: editedData.out - editedData.in,
-        editVersion: true,
-      });
-
-      setVideoData(editedData);
+    if (!isLoadingVideo && !isVideoNotFound) {
+      console.log(video)
+      setVideoData(video);
     }
-  }, [data]);
+  }, [video, isLoadingVideo]);
+
 
 
   if((getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady))){
     return <div className="w-full h-[100svh]">
-      <LoadingDataCon ready={isReady} readyData={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
+      <LoadingDataCon ready={isReady} readyData={Boolean(getClipVideo && getVideoData)} comLoader={() => setIsReady(true)} />
     </div>
   }
+
+  if(isClipNotFound){
+    return <div className="w-full h-[100svh]">
+      <div className="w-full h-full flex justify-center items-center">
+        <div className="text-black text-[24px] font-ibm_mono_bolditalic">Clip Not Found</div>
+      </div>
+    </div>
+  }
+
 
   return (
     <>
     {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
-        <LoadingCon ready={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
+        <LoadingCon ready={Boolean(getClipVideo && getVideoData)} comLoader={() => setIsReady(true)} />
       )}
-    {!isLoading && getVideoData && <MainContainer>
+    {getClipVideo && !isLoadingClip && getVideoData && <MainContainer>
       {(
         <>
           <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
-            <VideoPlayerCon data={getVideoData} clip={true} />
+            <VideoPlayerConClip data={getClipVideo} clip={true} videoData={getVideoData} />
           </div>
+          <ContentsClip getVideoData={getVideoData} isLoading={isLoadingVideo} videoId={getVideoData.pandora_id} clipData={clipData} />
         </>
       )}
     </MainContainer>}

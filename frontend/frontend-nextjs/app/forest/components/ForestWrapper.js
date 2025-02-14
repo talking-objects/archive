@@ -24,7 +24,7 @@ const ForestWrapper = () => {
     const {data: videos, isLoading: isLoadingVideos} = useQuery({
         queryKey: ["videos", page],
         queryFn: () => {
-            return getVideos({page: page, page_limit: 4, random: false})
+            return getVideos({page: page, page_limit: 8, random: false})
         },
         keepPreviousData: true 
     })  
@@ -33,7 +33,7 @@ const ForestWrapper = () => {
     const {data: clips, isLoading: isLoadingClips} = useQuery({
         queryKey: ["clips", page],
         queryFn: () => {
-            return getClips({page: page, page_limit: 4, random: false})
+            return getClips({page: page, page_limit: 8, random: false})
         },
         keepPreviousData: true 
     })       
@@ -41,7 +41,7 @@ const ForestWrapper = () => {
     const {data: videosSearch, isLoading: isLoadingVideosSearch} = useQuery({
         queryKey: ["videosSearch", page, query],
         queryFn: () => {
-            return getVideosSearch({page: page, page_limit: 4, query: query})
+            return getVideosSearch({page: page, page_limit: 8, query: query})
         },
         keepPreviousData: true,
         enabled: toggleSearch && query !== null
@@ -50,7 +50,7 @@ const ForestWrapper = () => {
     const {data: clipsSearch, isLoading: isLoadingClipsSearch} = useQuery({
         queryKey: ["clipsSearch", page, query],
         queryFn: () => {
-            return getClipsSearch({page: page, page_limit: 4, query: query})
+            return getClipsSearch({page: page, page_limit: 8, query: query})
         },
         keepPreviousData: true,
         enabled: toggleSearch && query !== null
@@ -70,6 +70,7 @@ const ForestWrapper = () => {
             // Only proceed if we have data to add
             if(newForestDataClips.length > 0) {
                 // Randomly sort the combined array
+               
                 newForestDataClips = newForestDataClips.sort(() => Math.random() - 0.5)
                 // Add new data to previous data
                 setForestData(prev => [...prev, ...newForestDataClips])
