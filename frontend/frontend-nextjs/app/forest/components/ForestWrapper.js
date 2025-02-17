@@ -17,6 +17,7 @@ const ForestWrapper = () => {
     const [forestData, setForestData] = useState([]);  
     const [toggleSearch, setToggleSearch] = useState(false)
     const [query, setQuery] = useState(null)
+    const [filterView, setFilterView] = useState("all")
     const [showFilters, setShowFilters] = useState(false)
     const [filterQuery, setFilterQuery] = useState({
         video_filter: true,
@@ -31,7 +32,23 @@ const ForestWrapper = () => {
         }
     })
     const [searchTimestamp, setSearchTimestamp] = useState(0);
+    const [searchTrigger, setSearchTrigger] = useState(false);
     const {register, handleSubmit, getValues, setValue} = useForm()
+
+    // Add new state for temporary filter values
+    const [tempFilterView, setTempFilterView] = useState("all")
+    const [tempFilterQuery, setTempFilterQuery] = useState({
+        video_filter: true,
+        clip_filter: {
+            reference_data: true,
+            category_data: true,
+            event_data: true,
+            place_data: true,
+            narration_data: true,
+            data_data: true,
+            tag_data: true
+        }
+    })
 
     // Get Videos
     const {data: videos, isLoading: isLoadingVideos} = useQuery({
@@ -59,7 +76,7 @@ const ForestWrapper = () => {
             return getVideosSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery)})
         },
         keepPreviousData: true,
-        enabled: toggleSearch || query !== null
+        enabled: searchTrigger
     })  
 
     const {data: clipsSearch, isLoading: isLoadingClipsSearch} = useQuery({
@@ -68,7 +85,7 @@ const ForestWrapper = () => {
             return getClipsSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery)})
         },
         keepPreviousData: true,
-        enabled: toggleSearch || query !== null
+        enabled: searchTrigger
     })  
     
     const getForestData = () => {
@@ -127,16 +144,17 @@ const ForestWrapper = () => {
         setToggleSearch(true)
         setForestData([])
         setPage(1)
+        // Apply temporary filters when submitting
+        setFilterView(tempFilterView)
+        setFilterQuery(tempFilterQuery)
         if(getValues("search") !== ""){
-            console.log(getValues("search"))
             setQuery(getValues("search"))
-            setSearchTimestamp(Date.now())
+            setSearchTrigger(true)
         }else{
-            console.log(getValues("search"))
-            setQuery(null)
-            setSearchTimestamp(Date.now())
-           
+            setQuery("")
+            setSearchTrigger(true)
         }
+        setSearchTimestamp(Date.now())
     }
     const onCancelSearch = () => {
         setToggleSearch(false)
@@ -144,6 +162,64 @@ const ForestWrapper = () => {
         setPage(1)
         setQuery(null)
         setValue("search", "")
+        // Reset both temporary and actual filters
+        setFilterView("all")
+        setTempFilterView("all")
+        setFilterQuery({
+            video_filter: true,
+            clip_filter: {
+                reference_data: true,
+                category_data: true,
+                event_data: true,
+                place_data: true,
+                narration_data: true,
+                data_data: true,
+                tag_data: true
+            }
+        })
+        setTempFilterQuery({
+            video_filter: true,
+            clip_filter: {
+                reference_data: true,
+                category_data: true,
+                event_data: true,
+                place_data: true,
+                narration_data: true,
+                data_data: true,
+                tag_data: true
+            }
+        })
+        setSearchTrigger(false)
+    }
+
+    const handleFilter = ({filter, view}) => {
+        // Update temporary filter values instead of actual ones
+        setTempFilterView(view)
+        setTempFilterQuery(prev => {
+            if(filter === "all"){
+                const newClipFilter = Object.keys(prev.clip_filter).reduce((acc, key) => {
+                    acc[key] = true;
+                    return acc;
+                }, {});
+                return {
+                    ...prev,
+                    clip_filter: newClipFilter
+                }
+            }
+            const newClipFilter = Object.keys(prev.clip_filter).reduce((acc, key) => {
+                acc[key] = false;
+                return acc;
+            }, {});
+            
+            if (filter in prev.clip_filter) {
+                newClipFilter[filter] = true;
+            }
+            
+            return {
+                ...prev,
+                clip_filter: newClipFilter
+            };
+        });
     }
 
 
@@ -179,12 +255,48 @@ const ForestWrapper = () => {
                         </button>
                         {showFilters && (
                             <div className="absolute top-full right-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px]">
-                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Category</button>
-                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Event</button>
-                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Place</button>
-                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Narration</button>
-                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Data</button>
-                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Tag</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "all", view: "all"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "all" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >All</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "category_data", view: "category_data"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "category_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Category</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "event_data", view: "event_data"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "event_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Event</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "place_data", view: "place_data"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "place_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Place</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "narration_data", view: "narration_data"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "narration_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Narration</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "data_data", view: "data_data"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "data_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Data</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "tag_data", view: "tag_data"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "tag_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Tag</button>
                             </div>
                         )}
                     </div>
