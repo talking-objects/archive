@@ -37,11 +37,24 @@ const ForestWrapper = () => {
         },
         keepPreviousData: true 
     })       
+
+    const test = {
+        video_filter: true,
+        clip_filter: {
+            reference_data: false,
+            category_data: true,
+            event_data: true,
+            place_data: true,
+            narration_data: true,
+            data_data: true,
+            tag_data: true
+        }
+    }
     
     const {data: videosSearch, isLoading: isLoadingVideosSearch} = useQuery({
         queryKey: ["videosSearch", page, query],
         queryFn: () => {
-            return getVideosSearch({page: page, page_limit: 8, query: query})
+            return getVideosSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(test)})
         },
         keepPreviousData: true,
         enabled: toggleSearch && query !== null
@@ -50,7 +63,7 @@ const ForestWrapper = () => {
     const {data: clipsSearch, isLoading: isLoadingClipsSearch} = useQuery({
         queryKey: ["clipsSearch", page, query],
         queryFn: () => {
-            return getClipsSearch({page: page, page_limit: 8, query: query})
+            return getClipsSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(test)})
         },
         keepPreviousData: true,
         enabled: toggleSearch && query !== null
