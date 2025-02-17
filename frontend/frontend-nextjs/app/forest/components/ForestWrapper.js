@@ -202,7 +202,7 @@ const ForestWrapper = () => {
                     return acc;
                 }, {});
                 return {
-                    ...prev,
+                    video_filter: true,
                     clip_filter: newClipFilter
                 }
             }
@@ -216,10 +216,11 @@ const ForestWrapper = () => {
             }
             
             return {
-                ...prev,
+                video_filter: false,
                 clip_filter: newClipFilter
             };
         });
+        setShowFilters(prev => !prev)
     }
 
 
@@ -242,13 +243,19 @@ const ForestWrapper = () => {
             <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40] flex justify-between items-center px-4">
                 <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1">Sort by</div>
                 <div className="flex items-center gap-2">
-                    <div className="text-white text-[16px] font-ibm_mono_bolditalic">Filter by</div>
+                    <div className="text-white text-[16px] font-ibm_mono_bolditalic">Filter by Annotations</div>
                     <div className="relative">
                         <button 
                             onClick={() => setShowFilters(prev => !prev)}
                             className="text-white text-[16px] font-ibm_mono_bolditalic px-4 py-2 bg-[#7B97F7] rounded-md hover:bg-[#6A88F6] transition-colors flex items-center gap-2"
                         >
-                            Annotations
+                            {tempFilterView === "all" ? "All" : 
+                             tempFilterView === "category_data" ? "Category" :
+                             tempFilterView === "event_data" ? "Event" :
+                             tempFilterView === "place_data" ? "Place" :
+                             tempFilterView === "narration_data" ? "Narration" :
+                             tempFilterView === "data_data" ? "Data" :
+                             tempFilterView === "tag_data" ? "Tag" : "All"}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
