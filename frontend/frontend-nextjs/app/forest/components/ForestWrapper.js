@@ -17,6 +17,19 @@ const ForestWrapper = () => {
     const [forestData, setForestData] = useState([]);  
     const [toggleSearch, setToggleSearch] = useState(false)
     const [query, setQuery] = useState(null)
+    const [showFilters, setShowFilters] = useState(false)
+    const [filterQuery, setFilterQuery] = useState({
+        video_filter: true,
+        clip_filter: {
+            reference_data: true,
+            category_data: true,
+            event_data: true,
+            place_data: true,
+            narration_data: true,
+            data_data: true,
+            tag_data: true
+        }
+    })
     const [searchTimestamp, setSearchTimestamp] = useState(0);
     const {register, handleSubmit, getValues, setValue} = useForm()
 
@@ -38,35 +51,24 @@ const ForestWrapper = () => {
         keepPreviousData: true 
     })       
 
-    const test = {
-        video_filter: true,
-        clip_filter: {
-            reference_data: false,
-            category_data: true,
-            event_data: true,
-            place_data: true,
-            narration_data: true,
-            data_data: true,
-            tag_data: true
-        }
-    }
+ 
     
     const {data: videosSearch, isLoading: isLoadingVideosSearch} = useQuery({
-        queryKey: ["videosSearch", page, query],
+        queryKey: ["videosSearch", page, query, filterQuery],
         queryFn: () => {
-            return getVideosSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(test)})
+            return getVideosSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery)})
         },
         keepPreviousData: true,
-        enabled: toggleSearch && query !== null
+        enabled: toggleSearch || query !== null
     })  
 
     const {data: clipsSearch, isLoading: isLoadingClipsSearch} = useQuery({
-        queryKey: ["clipsSearch", page, query],
+        queryKey: ["clipsSearch", page, query, filterQuery],
         queryFn: () => {
-            return getClipsSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(test)})
+            return getClipsSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery)})
         },
         keepPreviousData: true,
-        enabled: toggleSearch && query !== null
+        enabled: toggleSearch || query !== null
     })  
     
     const getForestData = () => {
@@ -125,8 +127,16 @@ const ForestWrapper = () => {
         setToggleSearch(true)
         setForestData([])
         setPage(1)
-        setQuery(getValues("search"))
-        setSearchTimestamp(Date.now())
+        if(getValues("search") !== ""){
+            console.log(getValues("search"))
+            setQuery(getValues("search"))
+            setSearchTimestamp(Date.now())
+        }else{
+            console.log(getValues("search"))
+            setQuery(null)
+            setSearchTimestamp(Date.now())
+           
+        }
     }
     const onCancelSearch = () => {
         setToggleSearch(false)
@@ -153,31 +163,58 @@ const ForestWrapper = () => {
                 <div className="text-black text-[24px] font-ibm_mono_bolditalic">No videos found</div>
             </div>}
             {forestData.length > 0 && <ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />}
-            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40] flex items-center px-4">
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <input 
-                        {...register("search")}
-                        type="text" 
-                        placeholder="Search"
-                        className="px-4 py-2 rounded-md mr-2" 
-                    />
-                    <button 
-                        type="submit"
-                        className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
-                    >
-                        Search
-                    </button>
-                </form>
-                {toggleSearch && (
-                    <div className="flex items-center ml-4">
-                        <button
-                            onClick={onCancelSearch}
-                            className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
-                    >
-                        Cancel Search
+            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40] flex justify-between items-center px-4">
+                <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1">Sort by</div>
+                <div className="flex items-center gap-2">
+                    <div className="text-white text-[16px] font-ibm_mono_bolditalic">Filter by</div>
+                    <div className="relative">
+                        <button 
+                            onClick={() => setShowFilters(prev => !prev)}
+                            className="text-white text-[16px] font-ibm_mono_bolditalic px-4 py-2 bg-[#7B97F7] rounded-md hover:bg-[#6A88F6] transition-colors flex items-center gap-2"
+                        >
+                            Annotations
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
                         </button>
+                        {showFilters && (
+                            <div className="absolute top-full right-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px]">
+                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Category</button>
+                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Event</button>
+                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Place</button>
+                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Narration</button>
+                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Data</button>
+                                <button className="text-black text-[16px] font-ibm_mono_regular px-4 py-2 hover:bg-gray-100 rounded-md text-left">Tag</button>
+                            </div>
+                        )}
                     </div>
-                )}
+                </div>
+                <div className="w-full flex justify-end items-center h-full flex-[1]">
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <input 
+                            {...register("search")}
+                            type="text" 
+                            placeholder="Search"
+                            className="px-4 py-2 rounded-md mr-2" 
+                        />
+                        <button 
+                            type="submit"
+                            className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
+                        >
+                            Search
+                        </button>
+                    </form>
+                    {toggleSearch && (
+                        <div className="flex items-center ml-4">
+                            <button
+                                onClick={onCancelSearch}
+                                className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
+                        >
+                            Reset
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
             {forestData.length > 0 && <ContentContainer>
                 <ForestContentsBox allData={forestData} />
