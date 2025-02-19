@@ -33,6 +33,8 @@ const ForestWrapper = () => {
     })
     const [searchTimestamp, setSearchTimestamp] = useState(0);
     const [searchTrigger, setSearchTrigger] = useState(false);
+    const [sortBy, setSortBy] = useState("time")
+    const [showSort, setShowSort] = useState(false)
     const {register, handleSubmit, getValues, setValue} = useForm()
 
     // Add new state for temporary filter values
@@ -223,6 +225,10 @@ const ForestWrapper = () => {
         setShowFilters(prev => !prev)
     }
 
+    const handleSort = (sort) => {
+        setSortBy(sort)
+        setShowSort(false)
+    }
 
     if((getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady))){
         return <div className="w-full h-[100svh]">
@@ -241,7 +247,36 @@ const ForestWrapper = () => {
             </div>}
             {forestData.length > 0 && <ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />}
             <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[40] flex justify-between items-center px-4">
-                <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1">Sort by</div>
+                <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1 flex items-center gap-2">
+                    <div>Sort by</div>
+                    <div className="relative">
+                        <button 
+                            onClick={() => setShowSort(prev => !prev)}
+                            className="text-white text-[16px] font-ibm_mono_bolditalic flex items-center gap-2 bg-[#7B97F7] rounded-md px-4 py-2"
+                        >
+                            {sortBy === "time" ? "Time" : "Type"}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        {showSort && (
+                            <div className="absolute top-full left-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px]">
+                                <button 
+                                    onClick={() => handleSort("time")}
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        sortBy === "time" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Time</button>
+                                <button
+                                    onClick={() => handleSort("type")} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        sortBy === "type" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Type</button>
+                            </div>
+                        )}
+                    </div>
+                </div>
                 <div className="flex items-center gap-2">
                     <div className="text-white text-[16px] font-ibm_mono_bolditalic">Filter by Annotations</div>
                     <div className="relative">
