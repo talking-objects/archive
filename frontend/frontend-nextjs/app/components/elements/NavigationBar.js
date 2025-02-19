@@ -48,7 +48,7 @@ const NavigationBar = () => {
   return (
     <>
       { (
-        <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[2000] text-white flex items-center gap-4 justify-between duration-700`}>
+        <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[3001] text-white flex items-center gap-4 justify-between duration-700`}>
           <div onClick={() => router.push("/")} className="cursor-pointer px-4 w-fit h-full flex justify-center items-center">
             <div>Experimental Video Archive</div>
           </div>
