@@ -77,9 +77,9 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
             .attr("height", itemBoxWidth)
             .attr("fill", "rgba(255,100,0,1)")
             .on("click", function(d, i){
-                if(i.idx !== currentEventIdx){
+                if(i.pk !== currentEventIdx){
                     changeItemTime({data:i})
-                    const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
+                    const yAxisGroupBox = d3.select(`#yAItemGroup${i.pk}`)
                     yAxisGroupBox
                     .transition()
                     .duration(300)
@@ -87,7 +87,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                         return `translate(${scaleTime(new Date(d.value.value.startDate))}, 75)rotate(90)`
                     })
                 
-                    const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
+                    const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.pk}`)
                     yAxisGroupLine
                     .transition()
                     .duration(300)
@@ -109,18 +109,18 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                         // textBoxInput.innerHTML = `<div className="flex flex-col gap-8"><div className="textbox-header">Event${i.idx}</div><div>IN:${i.in}</div></div>`
                     }
                     setCurrentEventData(i)
-                    currentEventIdx = i.idx
+                    currentEventIdx = i.pk
 
                     for(let j = 0; j < eventData.length; j++){
-                        if(eventData[j].idx !== i.idx ){
-                            const yAxisGroupBox = d3.select(`#yAItemGroup${eventData[j].idx}`)
+                        if(eventData[j].pk !== i.pk ){
+                            const yAxisGroupBox = d3.select(`#yAItemGroup${eventData[j].pk}`)
                             yAxisGroupBox
                             .transition()
                             .duration(300)
                             .attr("transform", function(d, i){
                                 return `translate(${scaleTime(new Date(eventData[j].value.value.startDate))}, 50)rotate(90)`
                             })
-                            const yAxisGroupLine = d3.select(`#yAItemGroupLine${eventData[j].idx}`)
+                            const yAxisGroupLine = d3.select(`#yAItemGroupLine${eventData[j].pk}`)
                             yAxisGroupLine
                             .transition()
                             .duration(300)
@@ -129,14 +129,14 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                         }
                     }
                 }else{
-                     const yAxisGroupBox = d3.select(`#yAItemGroup${i.idx}`)
+                     const yAxisGroupBox = d3.select(`#yAItemGroup${i.pk}`)
                         yAxisGroupBox
                         .transition()
                         .duration(300)
                         .attr("transform", function(d, i){
                             return `translate(${scaleTime(new Date(d.value.value.startDate))}, 50)rotate(90)`
                         })
-                        const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.idx}`)
+                        const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.pk}`)
                         yAxisGroupLine
                         .transition()
                         .duration(300)
@@ -174,7 +174,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
             .data(eventData)
             .join("g")
             .attr("id", function(d, i){
-                return `yAItemGroup${d.idx}`
+                return `yAItemGroup${d.pk}`
             })
             .attr("transform", function(d, i){
                 return `translate(${scaleTime(new Date(d.value.value.startDate))}, 50)rotate(90)`
@@ -188,7 +188,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                 .attr("x", 0)
                 .attr("y", 0)
                 .attr("id", function(d, i){
-                    return `yAItemGroupLine${d.idx}`
+                    return `yAItemGroupLine${d.pk}`
                 })
                 .attr("width", pointerLineWidth)
                 .attr("height", 1)
