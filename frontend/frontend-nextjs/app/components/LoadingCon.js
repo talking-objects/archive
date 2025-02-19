@@ -90,7 +90,7 @@ const LoadingCon = ({ ready = false, comLoader=()=>{} }) => {
       textAni();
     }, []);
     return (
-      <div className="w-screen h-[100svh] bg-opacity-0 flex justify-center items-center fixed top-0 left-0 z-[3000] overflow-hidden">
+      <div className="w-screen h-[100svh] bg-opacity-0 flex justify-center items-center fixed top-0 left-0 z-[5000] overflow-hidden">
         <div
           id="loadingAniDoor1"
           className="absolute top-0 left-0 w-full h-1/2 bg-white flex items-end justify-center"

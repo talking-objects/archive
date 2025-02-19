@@ -1,10 +1,22 @@
+import EventWrapperForest from "@/app/components/elements/contents/EventWrapperForest";
+import { useEffect, useState } from "react";
 
 
+const ForestEventWrapper = ({allEvents}) => {
+    const [getEventData, setEventData] = useState([]);
 
-const ForestEventWrapper = () => {
+    useEffect(() => {
+        setEventData(allEvents.map(v => {
+            const data = v.data
+            data.pk = v.pk
+            return data
+        }));
+        console.log(allEvents)
+    }, [allEvents]);
+
     return (
-        <div>
-            <div>Event</div>
+        <div className="w-full h-full bg-blue-400">
+            <EventWrapperForest getVideoData={getEventData} isLoading={!Boolean(getEventData)} changeItemTime={() => {}} clip={true} />
         </div>
     )
 }
