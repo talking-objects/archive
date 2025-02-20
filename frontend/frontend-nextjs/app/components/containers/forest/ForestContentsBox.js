@@ -1,7 +1,7 @@
 import { BASE_URL, COLORS } from "@/app/utils/constant/etc";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 const InfoLable = ({ children }) => {
   return (
@@ -132,22 +132,55 @@ const ClipIcon = () => {
 };
 
 const ForestContentsImageBox = ({ val }) => {
-
+  const [showImage, setShowImage] = useState(false)
+  useEffect(() => {
+    console.log(val)
+    if(val.type === "raw"){
+      setShowImage(true)
+    }else{
+      if(val.type === "clip"){
+        if(val?.data?.type === "placeLayer" || val?.data?.type === "tagLayer" || val?.data?.type === "categoryLayer" || val?.data?.type === "eventLayer"){
+          setShowImage(true)
+        }else{
+          setShowImage(false)
+        }
+      }
+    }
+  },[val])
   return (
     <div
-      className="w-full aspect-video bg-neutral-200 rounded-md overflow-hidden flex justify-center items-center relative"
+      className="w-full aspect-video bg-neutral-200 rounded-sm overflow-hidden flex justify-center items-center relative"
     >
-      <Image
+      {showImage &&<Image
         src={`${BASE_URL}/${
           val.type === "clip" ? val.data.pandora_id : val.pandora_id
         }/480p${val.type === "clip" ? val.data.start : val.poster}.jpg`}
         alt=""
         fill
         style={{ objectFit: "cover" }}
-      />
-      {val.layer === "placeList" && (
-        <div className="bg-white text-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          Place
+      />}
+      {
+        !showImage && (
+          <div className="w-full h-full bg-white rounded-sm flex p-2">
+            <div className="text-xs font-ibm_mono_regular px-2 py-1">
+              {val.type === "clip" && val?.data.type === "narrationLayer" && val?.data?.value?.value}
+            </div>
+          </div>
+        )
+      }
+      {val.type === "clip" && val?.data?.type === "placeLayer" && (
+        <div className="bg-white text-black absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-ibm_mono_semibold px-2 py-1 rounded-sm">
+          {val?.data?.value?.value?.placeName}
+        </div>
+      )}
+      {val.type === "clip" && val?.data?.type === "tagLayer" && (
+        <div className="bg-eva-c6 text-white absolute bottom-0 left-0 text-xs font-ibm_mono_semibold px-2 py-1">
+          {val?.data?.value?.value.split(",").map(v => `#${v.trim()}`).join(", ")}
+        </div>
+      )}
+      {val.type === "clip" && val?.data?.type === "categoryLayer" && (
+        <div style={{backgroundColor: `${val?.data?.value?.value?.color}`}} className=" text-white absolute bottom-0 left-0 text-xs font-ibm_mono_semibold px-2 py-1">
+          {val?.data?.value?.value?.value}
         </div>
       )}
     </div>
