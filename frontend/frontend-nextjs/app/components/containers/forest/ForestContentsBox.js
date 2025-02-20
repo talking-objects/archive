@@ -139,7 +139,7 @@ const ForestContentsImageBox = ({ val }) => {
       setShowImage(true)
     }else{
       if(val.type === "clip"){
-        if(val?.data?.type === "placeLayer" || val?.data?.type === "tagLayer" || val?.data?.type === "categoryLayer" || val?.data?.type === "eventLayer"){
+        if(val?.data?.type === "placeLayer" || val?.data?.type === "tagLayer" || val?.data?.type === "categoryLayer" || val?.data?.type === "eventLayer" || val?.data?.type === "dataLayer"){
           setShowImage(true)
         }else{
           setShowImage(false)
@@ -164,6 +164,10 @@ const ForestContentsImageBox = ({ val }) => {
           <div className="w-full h-full bg-white rounded-sm flex p-2">
             <div className="text-xs font-ibm_mono_regular px-2 py-1">
               {val.type === "clip" && val?.data.type === "narrationLayer" && val?.data?.value?.value}
+              {val.type === "clip" && val?.data.type === "referenceLayer" && <div className="flex flex-col gap-1 text-xs font-ibm_mono_semibold">
+                <div className=""> {val?.data?.value?.value.url}</div>
+                <div className="">{val?.data?.value?.value.text}</div>
+              </div>}
             </div>
           </div>
         )
