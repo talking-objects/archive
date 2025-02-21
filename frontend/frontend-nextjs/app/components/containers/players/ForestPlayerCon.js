@@ -138,28 +138,28 @@ const ForestPlayerCon = ({data, metaData}) => {
     useEffect(() => {
       const onSpaceScroll = (event) => {
          if (event.code === 'Space') {
-            event.preventDefault(); 
+            // event.preventDefault(); 
           }
         
       }
       const onKeyController = (event) => {
-         event.preventDefault(); 
-         if (event.code === 'Space') {
-            if(videoRef){
-               if(videoRef.current.paused){
+         // event.preventDefault(); 
+         // if (event.code === 'Space') {
+         //    if(videoRef){
+         //       if(videoRef.current.paused){
                   
-                  videoRef.current.play()
-                  setPlayToggle(true)
-                  setPlayToggleReal(true)
+         //          videoRef.current.play()
+         //          setPlayToggle(true)
+         //          setPlayToggleReal(true)
            
-               }else{
-                  videoRef.current.pause()
-                  setPlayToggle(false)
-                  setPlayToggleReal(false)
+         //       }else{
+         //          videoRef.current.pause()
+         //          setPlayToggle(false)
+         //          setPlayToggleReal(false)
       
-               }
-            }
-          }
+         //       }
+         //    }
+         //  }
       }
 
       // event = keyup & keydown

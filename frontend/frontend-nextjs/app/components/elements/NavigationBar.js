@@ -1,6 +1,6 @@
 "use client";
 import { loadingState } from "@/app/utils/recoillib/state/state";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import gsap from "gsap"
 import { useRouter } from "next/navigation";
@@ -43,13 +43,44 @@ const InfiniteScrollingText = () => {
 
 const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
+  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter()
+
+  const handleClose = () => {
+    setIsOpen(false)
+  }
+
+  const onLinkClick = (path) => {
+    setIsOpen(false)
+    router.push(path)
+  }
 
   return (
     <>
       { (
-        <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[3001] text-white flex items-center gap-4 justify-between duration-700`}>
-          <div onClick={() => router.push("/")} className="cursor-pointer px-4 w-fit h-full flex justify-center items-center">
+        <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[3001] text-white flex items-center gap-4 justify-center duration-700`}>
+          <div className="absolute left-0 h-full flex items-center">
+            <button onClick={() => setIsOpen(!isOpen)} className="p-4 transition-colors">
+              <div className="w-6 h-0.5 bg-white mb-1"></div>
+              <div className="w-6 h-0.5 bg-white mb-1"></div>
+              <div className="w-6 h-0.5 bg-white"></div>
+            </button>
+            {isOpen && (
+              <div className="absolute top-full left-0 bg-[#C2CEFB] w-48 h-screen shadow-lg">
+                <div className="flex justify-end p-4">
+                  <button onClick={handleClose} className="text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <a onClick={() => onLinkClick("/about")} className="block px-4 py-2 hover:bg-gray-800 transition-colors">About</a>
+                <a onClick={() => onLinkClick("/videos")} className="block px-4 py-2 hover:bg-gray-800 transition-colors">Videos</a>
+                <a onClick={() => onLinkClick("/contact")} className="block px-4 py-2 hover:bg-gray-800 transition-colors">Contact</a>
+              </div>
+            )}
+          </div>
+          <div onClick={() => onLinkClick("/")} className="cursor-pointer px-4 w-fit h-full flex justify-center items-center">
             <div>Experimental Video Archive</div>
           </div>
           {/* <InfiniteScrollingText /> */}
