@@ -134,7 +134,6 @@ const ClipIcon = () => {
 const ForestContentsImageBox = ({ val }) => {
   const [showImage, setShowImage] = useState(false)
   useEffect(() => {
-    console.log(val)
     if(val.type === "raw"){
       setShowImage(true)
     }else{

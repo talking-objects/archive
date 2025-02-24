@@ -127,6 +127,7 @@ const ForestWrapper = () => {
             }
             // Only proceed if we have data to add
             if(newForestDataClips.length > 0) {
+                console.log(newForestDataClips)
                 setForestData(prev => [...prev, ...newForestDataClips])
                
             }
@@ -151,6 +152,7 @@ const ForestWrapper = () => {
         setPage(1)
         // Apply temporary filters when submitting
         setSortBy(tempSortBy)
+     
         setFilterView(tempFilterView)
         setFilterQuery(tempFilterQuery)
         if(getValues("search") !== ""){
@@ -245,14 +247,14 @@ const ForestWrapper = () => {
         {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
             <LoadingCon ready={Boolean((!isLoadingVideos && !isLoadingClips))} comLoader={() => setIsReady(true)} />
         )}
-        {forestData && <div className="w-full h-full  flex flex-col items-center relative pt-[56px]">
+        {forestData && <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
             {/* Forest Video Player */}
             {forestData.length === 0 && <div className="w-full h-[calc(100svh-118px)] flex justify-center items-center">
                 <div className="text-black text-[24px] font-ibm_mono_bolditalic">No videos found</div>
             </div>}
-            {forestData.length > 0 && <ForestPlayerCon data={[...forestData].splice(0, 8).filter(item => item.type === "raw")} />}
-            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[3000] flex justify-between items-center px-4">
-                <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1 flex items-center gap-2">
+            {forestData.length > 0 && <ForestPlayerCon data={[...forestData].splice(0, 8)} />}
+            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[3000] flex justify-between items-center px-4 gap-4">
+                {/* <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1 flex items-center gap-2">
                     <div>Sort by</div>
                     <div className="relative">
                         <button 
@@ -281,8 +283,8 @@ const ForestWrapper = () => {
                             </div>
                         )}
                     </div>
-                </div>
-                <div className="flex items-center gap-2">
+                </div> */}
+                <div className="flex items-center gap-2 w-fit">
                     <div className="text-white text-[16px] font-ibm_mono_bolditalic">Filter by Annotations</div>
                     <div className="relative">
                         <button 
@@ -291,6 +293,7 @@ const ForestWrapper = () => {
                         >
                             {tempFilterView === "all" ? "All" : 
                              tempFilterView === "category_data" ? "Category" :
+                             tempFilterView === "reference_data" ? "Reference" :
                              tempFilterView === "event_data" ? "Event" :
                              tempFilterView === "place_data" ? "Place" :
                              tempFilterView === "narration_data" ? "Narration" :
@@ -314,6 +317,12 @@ const ForestWrapper = () => {
                                         tempFilterView === "category_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
                                 >Category</button>
+                                <button 
+                                    onClick={() => handleFilter({filter: "reference_data", view: "reference_data"})} 
+                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                        tempFilterView === "reference_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                    }`}
+                                >Reference</button>
                                 <button 
                                     onClick={() => handleFilter({filter: "event_data", view: "event_data"})} 
                                     className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
@@ -348,17 +357,17 @@ const ForestWrapper = () => {
                         )}
                     </div>
                 </div>
-                <div className="w-full flex justify-end items-center h-full flex-[1]">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="w-full flex justify-start items-center h-full flex-[1]">
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 w-full">
                         <input 
                             {...register("search")}
                             type="text" 
                             placeholder="Search"
-                            className="px-4 py-2 rounded-md mr-2" 
+                            className="px-4 py-2 rounded-md mr-2 w-full focus:outline-none focus:ring-0" 
                         />
                         <button 
                             type="submit"
-                            className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
+                            className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors font-ibm_mono_semibold"
                         >
                             Search
                         </button>
@@ -367,15 +376,15 @@ const ForestWrapper = () => {
                         <div className="flex items-center ml-4">
                             <button
                                 onClick={onCancelSearch}
-                                className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors"
-                        >
-                            Reset
+                                className="px-4 py-2 bg-red-400 text-white rounded-md hover:bg-red-500 transition-colors flex items-center gap-2 font-ibm_mono_semibold"
+                            >
+                                Reset
                             </button>
                         </div>
                     )}
                 </div>
             </div>
-            {forestData.length > 0 && (filterView === "all" || filterView === "category_data" || filterView === "narration_data" || filterView === "data_data" || filterView === "tag_data") && <ContentContainer>
+            {forestData.length > 0 && (filterView === "all" || filterView === "category_data" || filterView === "narration_data" || filterView === "data_data" || filterView === "tag_data" || filterView === "reference_data") && <ContentContainer>
                 <ForestContentsBox allData={forestData} />
                 <div className="w-full flex justify-center mt-4">
                     {!toggleSearch ? (

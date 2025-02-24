@@ -22,9 +22,9 @@ const ForestPlayerCon = ({data, metaData}) => {
             if (isUpdating) return; // 이미 업데이트 중이라면 실행하지 않음
 
             const getCurrentTime = videoElement?.currentTime
-            console.log(getCurrentTime)
+            
 
-            if (Math.round(getCurrentTime) > (parseFloat(data[currentIndex].end) - 1)) {
+            if (Math.round(getCurrentTime) > (data[currentIndex].type === "raw" ? parseFloat(data[currentIndex].end) : parseFloat(data[currentIndex].data.end) - 1)) {
                // 중복 실행 방지를 위해 플래그 설정
                isUpdating = true;
                
@@ -36,8 +36,8 @@ const ForestPlayerCon = ({data, metaData}) => {
 
                const getNextVideo = data[currentIndex + 1];
                if (getNextVideo) {
-                  videoRef.current.src = `${BASE_URL}/${getNextVideo.pandora_id}/480p1.mp4`
-                  videoRef.current.currentTime = 0 // getNextVideo.in
+                  videoRef.current.src = `${BASE_URL}/${getNextVideo.type === "raw" ? getNextVideo.pandora_id : getNextVideo.data.pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = getNextVideo.type === "raw" ? parseFloat(getNextVideo.start) : parseFloat(getNextVideo.data.start) // getNextVideo.in
                   setCurrentIndex((prev) => prev + 1);
                   // videoRef.current.currentTime = getNextVideo.in;
                
@@ -53,8 +53,8 @@ const ForestPlayerCon = ({data, metaData}) => {
                   }
                   
                }else{
-                  videoRef.current.src = `${BASE_URL}/${data[0].pandora_id}/480p1.mp4`
-                  videoRef.current.currentTime = 0
+                  videoRef.current.src = `${BASE_URL}/${data[0].type === "raw" ? data[0].pandora_id : data[0].data.pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = data[0].type === "raw" ? parseFloat(data[0].start) : parseFloat(data[0].data.start)
                   // videoRef.current.currentTime = data[0].in
                   setCurrentIndex(0);
                
@@ -72,9 +72,8 @@ const ForestPlayerCon = ({data, metaData}) => {
                // Update the video current time
                const newCurrentTime = videoElement?.currentTime
                // const newCurrentTime = videoElement?.currentTime - data[currentIndex].in
-               if (newCurrentTime > averageTime) {
+               if (newCurrentTime > (data[currentIndex].type === "raw" ? averageTime : parseFloat(data[currentIndex].data.start) + averageTime)) {
                //   next video
-               console.log("next video")
                   // 중복 실행 방지를 위해 플래그 설정
                isUpdating = true;
                
@@ -86,8 +85,8 @@ const ForestPlayerCon = ({data, metaData}) => {
 
                const getNextVideo = data[currentIndex + 1];
                if (getNextVideo) {
-                  videoRef.current.src = `${BASE_URL}/${getNextVideo.pandora_id}/480p1.mp4`
-                  videoRef.current.currentTime = 0 // getNextVideo.in
+                  videoRef.current.src = `${BASE_URL}/${getNextVideo.type === "raw" ? getNextVideo.pandora_id : getNextVideo.data.pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = getNextVideo.type === "raw" ? 0 : parseFloat(getNextVideo.data.start) // getNextVideo.in
                   setCurrentIndex((prev) => prev + 1);
                   // videoRef.current.currentTime = getNextVideo.in;
                
@@ -103,8 +102,8 @@ const ForestPlayerCon = ({data, metaData}) => {
                   }
                   
                }else{
-                  videoRef.current.src = `${BASE_URL}/${data[0].pandora_id}/480p1.mp4`
-                  videoRef.current.currentTime = 0
+                  videoRef.current.src = `${BASE_URL}/${data[0].type === "raw" ? data[0].pandora_id : data[0].data.pandora_id}/480p1.mp4`
+                  videoRef.current.currentTime = data[0].type === "raw" ? 0 : parseFloat(data[0].data.start)
                   // videoRef.current.currentTime = data[0].in
                   setCurrentIndex(0);
                
@@ -119,7 +118,7 @@ const ForestPlayerCon = ({data, metaData}) => {
                }
                }else{
                   // current video
-                  console.log("current video")
+                  // console.log("current video")
                }
            
             }
@@ -187,8 +186,8 @@ const ForestPlayerCon = ({data, metaData}) => {
    }
    const findCurrentVideo = (data) => {
       if(videoRef && data.length > 0){
-         videoRef.current.src = `${BASE_URL}/${data[currentIndex].pandora_id}/480p1.mp4`
-         videoRef.current.currentTime = 0
+         videoRef.current.src = `${BASE_URL}/${data[currentIndex].type === "raw" ? data[currentIndex].pandora_id : data[currentIndex].data.pandora_id}/480p1.mp4`
+         videoRef.current.currentTime = data[currentIndex].type === "raw" ? parseFloat(data[currentIndex].start) : parseFloat(data[currentIndex].data.start)
       }
      }
     
@@ -229,7 +228,7 @@ const ForestPlayerCon = ({data, metaData}) => {
                      key={idx} 
                      className="w-full h-full bg-white relative border-r-2 border-black last:border-r-0">
                         <Image
-                           src={`${BASE_URL}/${data[idx].pandora_id}/480p${data[idx].poster}.jpg`}
+                           src={`${BASE_URL}/${data[idx].type === "raw" ? data[idx].pandora_id : data[idx].data.pandora_id}/480p${ data[idx].type === "raw" ? data[idx].poster : data[idx].data.start}.jpg`}
                            alt=""
                            fill
                            style={{objectFit: "cover"}}

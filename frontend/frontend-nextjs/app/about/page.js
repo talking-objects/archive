@@ -1,4 +1,4 @@
-import AboutWrapper from "./components/ImprintWrapper";
+import AboutWrapper from "./components/AboutWrapper";
 
 
 const AboutPage = () => {
