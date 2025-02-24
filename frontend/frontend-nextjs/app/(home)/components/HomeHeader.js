@@ -13,9 +13,7 @@ const HomeHeader = ({ currentVideo }) => {
   const moveToVideo = ({ videoId }) => {
     router.push(`/video/${videoId}`);
   };
-  useEffect(() => {
-      console.log(currentVideo)
-  }, []);
+
 
   return (
     

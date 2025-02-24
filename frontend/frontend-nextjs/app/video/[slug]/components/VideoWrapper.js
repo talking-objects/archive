@@ -30,7 +30,7 @@ const VideoWrapper = () => {
  
   useEffect(() => {
     if (!isLoadingVideo && !isVideoNotFound) {
-      console.log(video)
+   
       setVideoData(video);
     }
   }, [video, isLoadingVideo]);
