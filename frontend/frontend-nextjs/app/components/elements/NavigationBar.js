@@ -77,7 +77,33 @@ const NavigationBar = () => {
                 <div onClick={() => onLinkClick("/")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black">Home</div>
                 <div onClick={() => onLinkClick("/forest")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">Archive</div>
                 <div onClick={() => onLinkClick("/about")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">About</div>
-                <div onClick={() => onLinkClick("/related")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">Related Resources</div>
+                <div className="flex flex-col">
+                  <div className="block px-4 py-2 transition-colors text-black font-ibm_mono_semibold select-none">Related Resources</div>
+                  <a target="_blank" href="https://talkingobjectsarchive.org" className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                    <div className="flex items-center gap-1">
+                      <div>Archive</div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                      </svg>
+                    </div>
+                  </a>
+                  <a target="_blank" href="https://talkingobjectsarchive.org/team" className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                    <div className="flex items-center gap-1">
+                      <div>Team</div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                      </svg>
+                    </div>
+                  </a>
+                  <a target="_blank" href="https://talkingobjectsarchive.org/info/documentation" className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                    <div className="flex items-center gap-1">
+                      <div>Documentation</div>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                      </svg>
+                    </div>
+                  </a>
+                </div>
               </div>
             )}
           </div>
