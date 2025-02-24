@@ -66,17 +66,18 @@ const NavigationBar = () => {
               <div className="w-6 h-0.5 bg-white"></div>
             </button>
             {isOpen && (
-              <div className="absolute top-full left-0 bg-[#C2CEFB] w-48 h-screen shadow-lg">
+              <div className="absolute top-full left-0 bg-[#C2CEFB] w-72 h-screen shadow-lg">
                 <div className="flex justify-end p-4">
-                  <button onClick={handleClose} className="text-white">
+                  <button onClick={handleClose} className="text-black">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
-                <a onClick={() => onLinkClick("/about")} className="block px-4 py-2 hover:bg-gray-800 transition-colors">About</a>
-                <a onClick={() => onLinkClick("/videos")} className="block px-4 py-2 hover:bg-gray-800 transition-colors">Videos</a>
-                <a onClick={() => onLinkClick("/contact")} className="block px-4 py-2 hover:bg-gray-800 transition-colors">Contact</a>
+                <div onClick={() => onLinkClick("/")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black">Home</div>
+                <div onClick={() => onLinkClick("/forest")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">Archive</div>
+                <div onClick={() => onLinkClick("/about")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">About</div>
+                <div onClick={() => onLinkClick("/related")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">Related Resources</div>
               </div>
             )}
           </div>
