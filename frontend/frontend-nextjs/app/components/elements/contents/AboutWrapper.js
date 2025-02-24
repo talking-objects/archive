@@ -10,23 +10,23 @@ const ContentTextHtml = ({text}) => {
    return <div dangerouslySetInnerHTML={{__html: `${text}`}} className="text-[16px] font-ibm_mono_regular leading-tight"></div>
 }
 
-const AboutWapper = ({getVideoData}) => {
-    return <ContentBox title={"Context"} id="context_box" about={true}>
-    {getVideoData.summary && <div>
+const AboutWapper = ({getVideoData, clip=false}) => {
+    return <ContentBox clip={clip} title={"Context"} id="context_box" about={true}>
+    {getVideoData.description && <div>
        <LabelTitle text={"Description"} />
-       <ContentTextHtml text={getVideoData.summary} />
+       <ContentTextHtml text={getVideoData.description} />
        {/* <div className="text-sm whitespace-break-spaces" dangerouslySetInnerHTML={{__html: getVideoData.summary}}></div> */}
     </div>}
     <div className="grid grid-cols-3 mt-4 gap-4">
-       {getVideoData.user && <div>
+       {(getVideoData.author || getVideoData.contributors) && <div>
           <LabelTitle text={"Contributors"} />
-          {getVideoData.director && <ContentText text={typeof getVideoData.director === "string" ? getVideoData.director : getVideoData.director.join(", ")} />}
-          {getVideoData.user && <ContentText text={typeof getVideoData.user === "string" ? getVideoData.user : getVideoData.user.join(", ")} />}
+          {getVideoData.author && <ContentText text={typeof getVideoData.author === "string" ? getVideoData.author : getVideoData.author.join(", ")} />}
+          {getVideoData.contributors && <ContentText text={typeof getVideoData.contributors === "string" ? getVideoData.contributors : getVideoData.contributors.join(", ")} />}
           
        </div>}
        {getVideoData.country && <div>
           <LabelTitle text={"Country"} />
-          <ContentText text={getVideoData.country.join(", ")} />
+          <ContentText text={getVideoData.country} />
        </div>}
        {getVideoData.place && <div>
           <LabelTitle text={"Place"} />

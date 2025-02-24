@@ -1,11 +1,6 @@
 import { BASE_URL } from "@/app/utils/constant/etc"
-import { formatTime } from "@/app/utils/hooks/etc"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
-import { LegendContainer, VideoNavigation } from "../../elements/Elements"
-import DiagramaticView from "./views/DiagramaticView"
-import EntangledView from "./views/EntangledView"
-import OverviewView from "./views/OverviewView"
 import VideoTitle from "./elements/VideoTitle"
 import VideoMeta from "./elements/VideoMeta"
 import VideoController from "./elements/VideoController"
@@ -13,7 +8,7 @@ import VideoPlayerContainer from "./elements/VideoPlayerContainer"
 
 
 
-const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTimeForMini}) => {
+const VideoPlayerConClip = ({data, clip=false, videoData=null}) => {
     const [toggleLegend, setToggleLegend] = useState(false)
     const videoRef = useRef(null)
     const [playToggle, setPlayToggle] = useState(false)
@@ -72,15 +67,9 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
     }
     const onClickProgressBar = (e) => {
  
-       if(videoRef){
-          if(!clip){
-             videoRef.current.currentTime = parseFloat(e.target.value)
-             setCurrentTime(e.target.value)
-          }else{
-             
-             videoRef.current.currentTime = parseFloat(e.target.value) + data.in
-             setCurrentTime(e.target.value)
-          }
+       if(videoRef){ 
+            videoRef.current.currentTime = parseFloat(e.target.value) + parseFloat(data.data.start)
+            setCurrentTime(e.target.value)
        }
           
       
@@ -90,21 +79,16 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
     useEffect(() => {
        if(clip){
           if(videoRef){
-             videoRef.current.currentTime = data.in
+             videoRef.current.currentTime = parseFloat(data.data.start)
           }
        }
     },[])
+
+   
  
  
 
-   //  For MiniVideo Player
-    useEffect(() => {
-      if(showContentVideo){
-         videoRef.current.pause()
-         setPlayToggle(false)
-         setCurrentTimeForMini(videoRef.current.currentTime)
-      }
-    },[showContentVideo])
+  
  
     // video keyboard controller
     useEffect(() => {
@@ -124,14 +108,10 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
        const onKeyController = (event) => {
           event.preventDefault(); 
           if (event.code === 'Space') {
-             if(videoRef && !showContentVideo){
+             if(videoRef){
                 if(videoRef.current.paused){
-                   
                    videoRef.current.play()
                    setPlayToggle(true)
-                }else{
-                   videoRef.current.pause()
-                   setPlayToggle(false)
                 }
              }
            }
@@ -176,20 +156,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
           if(event.which === 55){
              onToggleShow("place")
           }
-          // // +10s
-          // if(event.key === "ArrowRight"){
-          //    event.preventDefault()
-          //    if (videoRef.current) {
-          //       // 비디오가 있을 때만 실행
-          //       videoRef.current.currentTime = Math.min(
-          //          videoRef.current.currentTime + 20,
-          //          videoRef.current.duration
-          //      );
-            
-          //       setCurrentTime(videoRef.current.currentTime);
-          //   }
-             
-          // }
+        
          
        }
  
@@ -201,34 +168,21 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
           document.removeEventListener("keyup", onKeyController)
           document.removeEventListener("keydown", onSpaceScroll)
        }
-    },[showContentVideo])
+    },[])
  
     // update video progress bar
     useEffect(() => {
        const videoElement = videoRef.current
        if (playToggle && videoElement) {
           const handleTimeUpdate = () => {
-             if(!clip){
-                const newCurrentTime = videoElement?.currentTime
-                // 
-                setCurrentTime(newCurrentTime)
-                if(videoElement.ended){
-                   // video ended
-                   // - update play icon
-                   // - update progress bar
-                   
-                   setPlayToggle(false)
-                   setCurrentTime(0)
-                }
-             }
              if(clip){
                 const newCurrentTime = videoElement?.currentTime
                 // 
-                setCurrentTime(newCurrentTime - data.in)
+                setCurrentTime(newCurrentTime - parseFloat(data.data.start))
                 // end
-                if(Math.round(newCurrentTime) > data.out){
+                if(Math.round(newCurrentTime) > parseFloat(data.data.end)){
                    videoElement.pause()
-                   videoElement.currentTime = data.in
+                   videoElement.currentTime = parseFloat(data.data.start)
                    setCurrentTime(0)
                    setPlayToggle(false)
                 }
@@ -245,7 +199,7 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
     },[playToggle])
     return <VideoPlayerContainer toggleLegend={toggleLegend} onToggleLegend={onToggleLegend}>
          <div className="w-full h-full flex flex-col overflow-hidden relative group">
-             <video ref={videoRef} src={`${BASE_URL}/${data.pandora_id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
+             <video ref={videoRef} src={`${BASE_URL}/${data.data.pandora_id}/480p1.mp4`} className={`${(toggleShow.view === "overview" && playToggle) ? "w-[calc(100vw-660px)]" : "w-full"} h-full bg-black transition-all duration-1000`} controls={false} aria-label="video player" preload="auto">
                <source type="video/mp4" />
                Your browser does not support the video tag.
              </video>
@@ -278,30 +232,22 @@ const VideoPlayerCon = ({data, clip=false, showContentVideo=false, setCurrentTim
 
                 {clip && <div className={`${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} w-fit text-black px-2 py-1 bg-[#9E21E8] text-4xl font-bold italic transition-all duration-1000`}>Clip</div>}
                 <div className={`${(!playToggle) ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} duration-1000 flex`}>
-                  <VideoTitle text={data.title} />
+                  <VideoTitle text={videoData?.title} />
                 </div>
-                <VideoMeta playToggle={playToggle} currentVideo={data} />
+                <VideoMeta playToggle={playToggle} currentVideo={videoData} />
                 
-                {clip && <div onClick={() => route.push(`/video/${data.id}`)} className={`text-black bg-white w-fit px-2 py-2 cursor-pointer ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
+                {clip && <div onClick={() => route.push(`/video/${data.data.video_id}`)} className={`text-black bg-white w-fit px-2 py-2 cursor-pointer ${!playToggle ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"} transition-all duration-1000`}>
                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 19.5-15-15m0 0v11.25m0-11.25h11.25" />
                    </svg>
                 </div>}
              </div>
-               {/* Video Data Visualization : Diagramatic View */}
-               {(videoRef) && <DiagramaticView data={data.annotations} clip={clip} toggleShow={toggleShow} setCurrentTime={setCurrentTime} videoRef={videoRef} playToggle={playToggle} duration={parseFloat(data.duration)} />}
-               {/* Video Data Visualization : Entangled View */}
-               {(videoRef) && <EntangledView annotationData={data.annotations} clip={clip} toggleShow={toggleShow} playToggle={playToggle} currentTime={currentTime} />}
-               {/* Video Data Visualization : Overview View */}
-               {(videoRef) && <OverviewView annotationData={data.annotations} clip={clip} currentTime={currentTime} videoRef={videoRef} setCurrentTime={setCurrentTime} toggleShow={toggleShow} playToggle={playToggle} />}
             </div>
 
             {/* video controller */}
-            {videoRef && <VideoController togglePlay={togglePlay} playToggle={playToggle} currentTime={currentTime} maxDuration={data.duration} clip={clip} onClickProgressBar={onClickProgressBar} />}
-            {/* video navigation */}
-            <VideoNavigation onToggleShow={onToggleShow} toggleShow={toggleShow} onToggleLegend={onToggleLegend} />
+            {videoRef && <VideoController togglePlay={togglePlay} playToggle={playToggle} currentTime={currentTime} maxDuration={parseFloat(data.data.end) - parseFloat(data.data.start)} clip={clip} onClickProgressBar={onClickProgressBar} />}
          </VideoPlayerContainer>
     
  }
 
-export default VideoPlayerCon
+export default VideoPlayerConClip

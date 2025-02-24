@@ -1,7 +1,9 @@
+
 import SmoothScroll from "./components/containers/SmootherCon";
 import Footer from "./components/elements/Footer";
 import NavigationBar from "./components/elements/NavigationBar";
 import "./globals.css";
+import QueryProviderCustom from "./utils/recoillib/queryClientProvider";
 import RecoilContextProvider from "./utils/recoillib/RecoilContextProvider";
 
 // export const metadata = {
@@ -24,22 +26,24 @@ export default async function RootLayout({ children }) {
         <link rel="icon" href="/icon.ico?v=2" sizes="any" type="image/x-icon"  />
       </head>
       <body suppressHydrationWarning={true}>
-        <RecoilContextProvider>
-            <div className="hidden md:block">
-              <NavigationBar />
-              {/* <SmoothScroll> */}
-              {children}
-              <Footer />
-              {/* </SmoothScroll> */}
-            </div>
-            <div className="flex flex-col md:hidden w-screen h-screen justify-between items-center px-4 py-4">
-              <div className="font-eva text-4xl">Experimental video archive</div>
-              <div className="w-full h-full flex justify-center items-center flex-col p-8">
-                <div className="font-ibm_mono_semibold text-xl mb-8 w-full">Desktop Experience Recommended</div>
-                <div className="font-ibm_mono_regular w-full text-xl">Our site is currently optimized for larger screens. For the best performance and user experience, please visit us on a desktop or laptop.</div>
+        <QueryProviderCustom>
+          <RecoilContextProvider>
+              <div className="hidden md:block">
+                <NavigationBar />
+                {/* <SmoothScroll> */}
+                {children}
+                <Footer />
+                {/* </SmoothScroll> */}
               </div>
-            </div>
-        </RecoilContextProvider>
+              <div className="flex flex-col md:hidden w-screen h-screen justify-between items-center px-4 py-4">
+                <div className="font-eva text-4xl">Experimental video archive</div>
+                <div className="w-full h-full flex justify-center items-center flex-col p-8">
+                  <div className="font-ibm_mono_semibold text-xl mb-8 w-full">Desktop Experience Recommended</div>
+                  <div className="font-ibm_mono_regular w-full text-xl">Our site is currently optimized for larger screens. For the best performance and user experience, please visit us on a desktop or laptop.</div>
+                </div>
+              </div>
+          </RecoilContextProvider>
+        </QueryProviderCustom>
       </body>
     </html>
   );

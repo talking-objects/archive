@@ -14,7 +14,7 @@ const globalFetcher = (bodyData) => {
 // 🟡 User
 
 // 🔵 Annotations 
-export const getAllAnnotations = ({pagination}={}) => {
+export const getAllAnnotations = ({pagination, amount=AMOUNT_OF_PAGINATION}={}) => {
   const bodyData = {
       action: "findAnnotations",
       data: {
@@ -22,7 +22,7 @@ export const getAllAnnotations = ({pagination}={}) => {
         'duration', 'layer', 'item', 'videoRatio', 'languages',
         'entity', 'event', 'place'],
         sort: [{ key: "created", operator: "-" }],
-        range: [(pagination - 1) * AMOUNT_OF_PAGINATION, pagination * AMOUNT_OF_PAGINATION],
+        range: [(pagination - 1) * amount, pagination * amount],
         // query: {
         //   conditions: [{"key": "duration", "value": 10000, "operator": ">" }]
         // }

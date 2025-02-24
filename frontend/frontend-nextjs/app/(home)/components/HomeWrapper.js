@@ -4,7 +4,6 @@ import ContentContainer from "@/app/components/containers/ContentContainer";
 import AboutSection from "./AboutSection";
 import RelatedSection from "./RelatedSection";
 import HomeHeader from "./HomeHeader";
-import { getVideo } from "@/app/utils/hooks/pandora_api";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { componentDataLoadingState, loadingState } from "@/app/utils/recoillib/state/state";
@@ -13,64 +12,55 @@ import LoadingCon from "@/app/components/LoadingCon";
 import CurrentStage from "./CurrentStage";
 import AboutSection2 from "./AboutSection2";
 import { ScrollSmoother } from "gsap/all";
-import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
-import SectionContainer from "./elements/SectionContainer";
-import SectionHeader from "./elements/SectionHeader";
-import SectionSubHeader from "./elements/SectionSubHeader";
-import Link from "next/link";
 
-const ForestSection = () => {
-  const exText = {
-    title: `Explore our Archive`,
-    subTitle: `Explore Manyfolded Knowlegde and Relations`
-  }
-  return  <SectionContainer big={true}>
-    <div className="flex flex-col w-full px-4 items-center">
-      <SectionHeader text={exText.title} />
-      <SectionSubHeader text={exText.subTitle} />
-      <div className="w-full h-[60svh] bg-red-400 mt-12">
-        <Link href="/forest"><div className="text-black">Forest</div></Link>
-      </div>
-      <div className="w-full h-[60svh] bg-red-400 mt-12"></div>
-      <div className="w-full h-[60svh] bg-red-400 mt-12"></div>
-    </div>
-  </SectionContainer>
-}
+import ExploreSection from "./ExploreSection";
+import { useQuery } from "@tanstack/react-query";
+import { getVideos } from "@/app/utils/hooks/eva_api";
+
+
+
+
 
 
 const HomeWrapper = () => {
-  const itemList = ["AT", "G", "U"]
-  const [mainVideoId, setMainVideoId] = useState([...itemList][Math.floor(Math.random() * itemList.length)])
-  const { data, isLoading } = getVideo({ pId: mainVideoId });
+  const { data: videos, isLoading: isLoadingVideos, error: videosNotFound } = useQuery({
+    queryKey: ["videos"],
+    queryFn: () => {
+      return getVideos({random: true, page: 1, page_limit: 5})
+    }
+  })
+
   const [currentVideo, setCurrentVideo] = useState(null);
   const getLoadingState = useRecoilValue(loadingState);
-  const [getComDataLoadingState, setComDataLoadingState] = useRecoilState(componentDataLoadingState)
 
   useEffect(() => {
-    if(isLoading){
-      setComDataLoadingState(false)
+    if(!isLoadingVideos && videos) {
+      setCurrentVideo(videos.data[0]);
     }
-    if (!isLoading) {
-      setComDataLoadingState(true)
-      setCurrentVideo(fakeVideoDataList[mainVideoId] ? fakeVideoDataList[mainVideoId] : data.data.items[0]);
-    }
-  }, [data]);
+  }, [videos, isLoadingVideos]);
 
+
+
+  if(videosNotFound){
+    return <div className="w-full h-screen flex justify-center items-center">
+      <div className="text-black text-[24px] font-ibm_mono_bolditalic">No videos found</div>
+    </div>
+  }
   return (
     <>
-       
       {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
         <LoadingCon ready={Boolean(currentVideo)} />
       )}
-      {(getLoadingState.isLoading && !isLoading && currentVideo) && (
+
+      {(currentVideo) && (
         <MainContainer>
           <HomeHeader currentVideo={currentVideo} />
           {getLoadingState.hasAnimated && (
             <ContentContainer padding={false}>
-              <CurrentStage itemList={itemList} setMainVideoId={setMainVideoId} mainVideoId={mainVideoId} />
+              <CurrentStage itemList={videos.data} setCurrentVideo={setCurrentVideo} currentVideo={currentVideo} />
               <AboutSection />
               <AboutSection2 />
-              <ForestSection />
+              <ExploreSection />
               <RelatedSection />
             </ContentContainer>
           )}

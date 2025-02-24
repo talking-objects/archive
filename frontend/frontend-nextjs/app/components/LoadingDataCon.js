@@ -50,7 +50,7 @@ const LoadingDataCon = ({ ready = false,readyData, comLoader=()=>{} }) => {
       textAni();
     }, []);
     return (
-      <div className="w-screen h-[100svh] flex justify-center items-center fixed top-0 left-0 z-[2000] overflow-hidden bg-white">
+      <div className="w-screen h-[100svh] flex justify-center items-center fixed top-0 left-0 z-[5000] overflow-hidden bg-white">
         <div className="flex overflow-hidden">
           {Array.from("Optimizing video quality...").map((val, idx) => {
             return (

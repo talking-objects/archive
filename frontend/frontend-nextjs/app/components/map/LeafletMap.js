@@ -1,9 +1,10 @@
 import { icon } from "leaflet";
-import { useEffect, useRef } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import * as L from "leaflet"
 import 'leaflet/dist/leaflet.css'
 import "./Map.css"
+import Link from "next/link";
 
 function MapWithResize() {
   const map = useMap();
@@ -34,9 +35,9 @@ function MapUpdate({center, allPlaces}) {
 
   useEffect(() => {
 
-    if(allPlaces){
+    if(allPlaces && allPlaces.length > 0){
       const positions = allPlaces.map((v) => {
-        return [v.position.lat, v.position.long]
+        return [parseFloat(v.value.value.latitude), parseFloat(v.value.value.longitude)]
       })
       const bounds = L.latLngBounds(positions);
 
@@ -50,9 +51,9 @@ function MapUpdate({center, allPlaces}) {
 }
 
 
-const CustomMarker = ({ center, v, content, changeItemTime}) => {
+const CustomMarker = ({ center, v, content, changeItemTime, forest=false}) => {
   const markerRef = useRef(null)
-  const isCenterMarker = center[0] === v.position.lat && center[1] === v.position.long;
+  const isCenterMarker = center[0] === parseFloat(v.value.value.latitude) && center[1] === parseFloat(v.value.value.longitude);
   // useEffect(() => {
   //   if (markerRef.current) {
   //     // Set zIndexOffset: higher value for the marker with ICON2
@@ -73,26 +74,27 @@ const CustomMarker = ({ center, v, content, changeItemTime}) => {
 
  
     return <CircleMarker
-    key={`${v.position.lat}-${v.position.long}`} 
+    key={`${parseFloat(v.value.value.latitude)}-${parseFloat(v.value.value.longitude)}`} 
     eventHandlers={{
       click: () => {
-        if(content){
+        if(content && changeItemTime){
           changeItemTime({data: v})
         }
       }
     }}
     ref={markerRef}
-    center={[v.position.lat, v.position.long]}
+    center={[parseFloat(v.value.value.latitude), parseFloat(v.value.value.longitude)]}
     radius={10}
     pathOptions={{color: isCenterMarker ? "#EC6735" : "#F1A73D", weight: 4, fillColor: isCenterMarker ? "#3118E8" : "white", fillOpacity: 1}}
     >
       <Popup className="rounded-none" minWidth={400} maxWidth={400}>
         <div className="font-ibm_mono_regular w-full min-w-[320px] bg-white max-h-[350px] overflow-y-scroll py-4 px-4 flex flex-col ">
-          {v.value?.source && <a target="_blank" className="flex w-fit h-fit justify-center items-center font-ibm_mono_bold rounded-md mb-4" href={`${v.value.source}`}><div className="w-[24px] h-[24px] flex justify-center items-center text-black"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
+          {forest && <Link href={`/clip/${v.pk}`}><div className="text-black mb-4">Show Clip</div></Link>}
+          {v.value?.value?.url && <a target="_blank" className="flex w-fit h-fit justify-center items-center font-ibm_mono_bold rounded-md mb-4" href={`${v.value.value.url}`}><div className="w-[24px] h-[24px] flex justify-center items-center text-black"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                      </svg></div></a>}
-          {v.value?.placeName && <div className="font-ibm_mono_bold mb-2">{v.value.placeName}</div>}
-          {v.value?.content && <div className="whitespace-pre-wrap">{v.value.content}</div>}
+          {v.value?.value?.placeName && <div className="font-ibm_mono_bold mb-2">{v.value.value.placeName}</div>}
+          {v.value?.value?.text && <div className="whitespace-pre-wrap">{v.value.value.text}</div>}
         </div>
       </Popup>
     </CircleMarker>
@@ -114,7 +116,7 @@ const CustomMarker = ({ center, v, content, changeItemTime}) => {
   //       </Marker>
   // )
 }
-const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeItemTime=false, diagramatic=false}) => {
+const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeItemTime=false, diagramatic=false, forest=false}) => {
   // const ICON = icon({
   //   iconUrl: "/map-marker.svg",
   //   iconSize: [32, 32],
@@ -124,7 +126,19 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
   //   iconUrl: "/marker-19.svg",
   //   iconSize: [32, 32],
   // })
-
+  const [forestData, setForestData] = useState([])
+  useEffect(() => {
+    if(allPlaces && forest){
+      setForestData(allPlaces.map(v => {
+        const data = v.data
+        data.pk = v.pk
+        return data
+      }))
+    }
+    if(allPlaces && !forest){
+      setForestData(allPlaces)
+    }
+  }, [allPlaces])
 
  
   return (
@@ -139,11 +153,12 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
         </Popup>
       </Marker> */}
       {
-        allPlaces && allPlaces.map((v, idx) => {
-          return <CustomMarker changeItemTime={changeItemTime} key={idx} content={content} v={v} center={center}/>
+        forestData && forestData.map((v, idx) => {
+          return <CustomMarker forest={forest} changeItemTime={changeItemTime} key={idx} content={content} v={v} center={center}/>
         })
       }
-      <MapUpdate center={center} allPlaces={allPlaces} />
+   
+      <MapUpdate center={center} allPlaces={forestData} />
     </MapContainer>
   );
 };

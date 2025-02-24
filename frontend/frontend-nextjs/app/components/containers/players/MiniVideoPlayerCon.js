@@ -2,37 +2,10 @@ import { BASE_URL } from "@/app/utils/constant/etc";
 import { formatTime } from "@/app/utils/hooks/etc";
 import { useEffect, useRef, useState } from "react";
 
-const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrentTimeForMini, getVideoData, showContentVideo}) => {
+const MiniVideoPlayerCon = ({ currentBox, getItemTime, getCurrentTimeForMini, getVideoData, showContentVideo}) => {
     const videoRef = useRef();
     const [playing, setPlaying] = useState(false)
-    const [currentData, setCurrentData] = useState(null)
     const [currentTime, setCurrentTime] = useState(0)
-    const boxes = {
-        contextBox: {
-            name: "contextBox",
-            annotationName: ""
-        },
-        placeBox: {
-            name: "placeBox",
-            annotationName: "placeList"
-        },
-        eventBox: {
-            name: "eventBox",
-            annotationName: "eventList"
-        },
-        cateAndTagBox: {
-            name: "cateAndTagBox",
-            annotationName: ["categoryList", "tagList"]
-        },
-        refBox: {
-            name: "refBox",
-            annotationName: "refList"
-        },
-        narrationBox: {
-            name: "narrationBox",
-            annotationName: "narrationList"
-        },
-    };
 
     useEffect(() => {
         if(videoRef){
@@ -49,8 +22,8 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
       },[showContentVideo, getCurrentTimeForMini])
 
     useEffect(() => {
-        if(videoRef && Boolean(getItemTime)){
-            if(getItemTime > 0){
+        if(videoRef && (getItemTime !== null && getItemTime !== undefined)){
+            if(getItemTime >= 0){
                 videoRef.current.currentTime = getItemTime
                 setCurrentTime(getItemTime)
             }
@@ -73,21 +46,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         setPlaying(prev => !prev)
     }
 
-    useEffect(() => {
-        if(currentBox){
-            if(boxes[currentBox].name === "contextBox"){
-                setCurrentData(null)
-            }else if(boxes[currentBox].name === "cateAndTagBox"){
-                
-            }else{
-                
-                setCurrentData(getVideoData.nAnnotations[boxes[currentBox].annotationName])
-            }
-            // setCurrentData(getVideoData.nAnnotations[])
-            // 
-        }
-       
-    },[currentBox])
+  
 
      // update video progress bar
      useEffect(() => {
@@ -178,7 +137,7 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
         <div className="w-full bg-black flex items-center justify-center h-[50vh]">
           <video
             ref={videoRef}
-            src={`${BASE_URL}/${getVideoData.id}/480p1.mp4`}
+            src={`${BASE_URL}/${getVideoData.pandora_id}/480p1.mp4`}
             className={`w-full h-full `}
             controls={false}
             aria-label="video player"
@@ -197,18 +156,18 @@ const MiniVideoPlayerCon = ({getCurrentItem, currentBox, getItemTime, getCurrent
                   onChange={(e) => onClickProgressBar(e)}
                   step={0.01}
                   min={0}
-                  max={getVideoData.duration}
+                  max={parseFloat(getVideoData.duration)}
                   defaultValue={0}
                   type="range"
                   className="w-full bg-red-400 range-custom"
                 />
                 <progress
                   value={currentTime}
-                  max={getVideoData.duration}
+                  max={parseFloat(getVideoData.duration)}
                   className="absolute bg-red-400 w-full h-full select-none pointer-events-none"
                 ></progress>
               </div>
-               <div className="w-fit text-[12px] font-ibm_mono_regular whitespace-nowrap">{formatTime(currentTime)} / {formatTime(getVideoData.duration)}</div>
+               <div className="w-fit text-[12px] font-ibm_mono_regular whitespace-nowrap">{formatTime(currentTime)} / {formatTime(parseFloat(getVideoData.duration))}</div>
             </div>
             {/* <div>
                         {boxes[currentBox].name === "placeBox" && <div className="w-full h-[16px] bg-eva-c4 "></div>}

@@ -8,6 +8,8 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
   const svgContainerRef = useRef(null);
   const [toggleGrid, setToggleGrid] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
+
+
   const createGrid = ({ data, bgColor = "#fff", svgContainerSize  }) => {
     if (svgContainerRef && svgRef) {
      
@@ -55,8 +57,8 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
         .data(data)
         .join("g")
         .attr("transform", (d, i) => {
-            const remainder = x(parseFloat(d.in) % 60);
-            const div = y(Math.floor(parseFloat(d.in) / 60)) - 30;
+            const remainder = x(parseFloat(d.start) % 60);
+            const div = y(Math.floor(parseFloat(d.start) / 60)) - 30;
             return `translate(${remainder}, ${div})`
         })
         .each(function(d2, i2){
@@ -84,11 +86,11 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
                 
             rect
             .attr("fill", function(d4){
-              if(d4.category){
-                const getBG = CATEGORY_AND_TAGVALUE.filter((val) => val.slug === d4.category.slug)
-                return getBG[0].color
+              console.log(d4)
+              if(d4.type === "categoryLayer"){
+                return d4.value.value.color
               }else{
-                return CATEGORY_AND_TAGVALUE[CATEGORY_AND_TAGVALUE.length - 1].color
+                return d4.value.value.color
               }
             })
             .attr("width", "30px")
@@ -99,7 +101,8 @@ const CTVis = ({ data, bgColor, totalDuration , videoId, changeItemTime}) => {
             .attr("x", 0) 
             .attr("y", 0)
             .attr("xlink:href", () => {
-                return `${BASE_URL}/${videoId}/480p${d2.in}.jpg`
+              console.log(`${BASE_URL}/${videoId}/480p${parseFloat(d2.start)}.jpg`)
+                return `${BASE_URL}/${videoId}/480p${parseFloat(d2.start)}.jpg`
             })
             .attr("background", "red")
             rect2

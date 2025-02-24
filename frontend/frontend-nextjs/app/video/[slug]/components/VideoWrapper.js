@@ -8,19 +8,20 @@ import VideoPlayerCon from "@/app/components/containers/players/VideoPlayerCon";
 import Contents from "@/app/components/elements/contents/Contents";
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
-import { fakeVideoDataList } from "@/app/utils/constant/fakeData";
-import { createFakeAnnotations } from "@/app/utils/hooks/etc";
-import { getAllAnnotations, getVideo } from "@/app/utils/hooks/pandora_api";
+import { getEvaVideo } from "@/app/utils/hooks/eva_api";
 import { loadingState } from "@/app/utils/recoillib/state/state";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 
 const VideoWrapper = () => {
   const params = useParams();
+  const { data: video, isLoading: isLoadingVideo, error: isVideoNotFound } = useQuery({
+    queryKey: ["video", params.slug],
+    queryFn: () => getEvaVideo(params.slug)
+  })
   const [getVideoData, setVideoData] = useState(null);
-  const { isLoading, data, error } = getVideo({ pId: params.slug });
-  const {data:annotationData, isLoading:annotationLoading} = getAllAnnotations({itemId:params.slug})
   const videoContainerRef = useRef(null);
   const [showContentVideo, setShowContentVideo] = useState(false);
   const [getCurrentTimeForMini, setCurrentTimeForMini] = useState(0)
@@ -28,46 +29,13 @@ const VideoWrapper = () => {
   const getLoadingState = useRecoilValue(loadingState);
  
   useEffect(() => {
-    if (!isLoading && !annotationLoading) {
-      // 🤡Fake DataData: You can use "annotationData" later.
-      /* 
-        Data Strucutre
-        {
-          categoryList: [],
-          eventList: [],
-          narrationList: [],
-          placeList: [],
-          refList: [],
-          tagList: []
-        }
-      */
-
-      data.data.items[0].nAnnotations = createFakeAnnotations({
-        duration: data.data.items[0].duration,
-        editVersion: false,
-      });
-      
-      
-      setVideoData(fakeVideoDataList[params.slug] ? fakeVideoDataList[params.slug]:  data.data.items[0]);
+    if (!isLoadingVideo && !isVideoNotFound) {
+   
+      setVideoData(video);
     }
-  }, [data, annotationData]);
+  }, [video, isLoadingVideo]);
 
-  // useEffect(() => {
-  //   if(getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady)){
-  //     if(Boolean(getVideoData)){
-  //       setIsReady(true)
-  //     }
-  //   }
-  // },[getVideoData])
-
-  if (error) {
-    return (
-      <div className="w-screen h-[100svh] flex justify-center items-center">
-        Error
-      </div>
-    );
-  }
-
+  
   // Show Contents Video
   useEffect(() => {
     if (videoContainerRef) {
@@ -92,27 +60,33 @@ const VideoWrapper = () => {
 
   if((getLoadingState.isLoading && getLoadingState.hasAnimated && !Boolean(isReady))){
     return <div className="w-full h-[100svh]">
-      <LoadingDataCon ready={isReady} readyData={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
+      <LoadingDataCon ready={isReady} readyData={Boolean(!isLoadingVideo)} comLoader={() => setIsReady(true)} />
+    </div>
+  }
+
+  if(isVideoNotFound){
+    return <div className="w-full h-[100svh]">
+      <div className="w-full h-full flex justify-center items-center">
+        <div className="text-black text-[24px] font-ibm_mono_bolditalic">Video Not Found</div>
+      </div>
     </div>
   }
 
   return (
     <>
-    
       {(!getLoadingState.isLoading || !getLoadingState.hasAnimated) && (
-        <LoadingCon ready={Boolean(getVideoData)} comLoader={() => setIsReady(true)} />
+        <LoadingCon ready={Boolean(!isLoadingVideo)} comLoader={() => setIsReady(true)} />
       )}
-      
-     {!isLoading && getVideoData && (<MainContainer>
-        <>
-          <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
-            <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} setCurrentTimeForMini={setCurrentTimeForMini} />
-          </div>
-          {getLoadingState.hasAnimated && <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={params.slug} isLoading={isLoading} getVideoData={getVideoData} showContentVideo={showContentVideo} />}
-          
-         
-        </>
-    </MainContainer>)}
+      {getVideoData && !isLoadingVideo && (
+        <MainContainer>
+          <>
+            <div ref={videoContainerRef} className="w-full h-[100svh] relative pt-[56px]">
+              <VideoPlayerCon data={getVideoData} showContentVideo={showContentVideo} setCurrentTimeForMini={setCurrentTimeForMini} />
+            </div>
+            {getLoadingState.hasAnimated && <Contents getCurrentTimeForMini={getCurrentTimeForMini} videoId={getVideoData.pandora_id} isLoading={isLoadingVideo} getVideoData={getVideoData} showContentVideo={showContentVideo} />}
+          </>
+        </MainContainer>)
+      }
     </>
   );
 };

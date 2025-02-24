@@ -13,9 +13,7 @@ const HomeHeader = ({ currentVideo }) => {
   const moveToVideo = ({ videoId }) => {
     router.push(`/video/${videoId}`);
   };
-  useEffect(() => {
-    
-  }, []);
+
 
   return (
     
@@ -29,14 +27,14 @@ const HomeHeader = ({ currentVideo }) => {
           className="w-full h-full relative bg-white"
         >
           <Image
-            src={`${BASE_URL}/${currentVideo.id}/480p${currentVideo.posterFrame ? currentVideo.posterFrame : 0}.jpg`}
+            src={`${BASE_URL}/${currentVideo.pandora_id}/480p${currentVideo.poster ? currentVideo.poster : 0}.jpg`}
             alt=""
             fill
             style={{objectFit: "cover"}}
           />  
         </div>
         <div
-          onClick={() => moveToVideo({ videoId: currentVideo.id })}
+          onClick={() => moveToVideo({ videoId: currentVideo.pk })}
           className="absolute z-[45] w-[180px] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer opacity-0 group-hover:opacity-100 bg-black bg-opacity-0 rounded-full text-white transition-all duration-300"
         >
           <svg

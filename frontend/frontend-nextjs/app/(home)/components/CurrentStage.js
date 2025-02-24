@@ -23,21 +23,8 @@ const IndicatorBtn = ({ left=true, clickFunc}) => {
     }
   </div>
 }
-const CurrentStageBox = ({ val, clickFunc, mainVideoId }) => {
-  const { data, isLoading } = getVideo({ pId: val });
-  const [getCurrentVideo, setCurrentVideo] = useState(null);
- 
-
-  useEffect(() => {
-    if (!isLoading) {
-      
-      
-      if (data.data.items[0]) {
-        setCurrentVideo(data.data.items[0]);
-      }
-    }
-  }, [data]);
-  if (!getCurrentVideo) {
+const CurrentStageBox = ({ val, clickFunc, currentVideo }) => { 
+  if (!val) {
     return (
       <div className="w-full aspect-video bg-cover bg-center bg-no-repeat">
         Error
@@ -47,28 +34,25 @@ const CurrentStageBox = ({ val, clickFunc, mainVideoId }) => {
   return (
     <div
       onClick={clickFunc}
-      // style={{
-      //   backgroundImage: `url(${BASE_URL}/${getCurrentVideo.id}/480p${getCurrentVideo.posterFrame}.jpg)`,
-      // }}
       className={`relative w-full aspect-video bg-cover bg-center bg-no-repeat cursor-pointer group overflow-hidden`}
     >
       <Image
-        src={`${BASE_URL}/${getCurrentVideo.id}/480p${getCurrentVideo.posterFrame}.jpg`}
+        src={`${BASE_URL}/${val.pandora_id}/480p${val.poster}.jpg`}
         alt=""
         fill
         style={{objectFit: "cover"}}
       /> 
-      <div className={`w-full h-full absolute top-0 left-0 bg-black ${val === mainVideoId ? "bg-opacity-0" : "bg-opacity-40"} group-hover:bg-opacity-0 transition-all`}></div>
-      <div className={`w-full  absolute top-0 left-0 ${val === mainVideoId ? "bg-opacity-0" : "bg-opacity-40"} opacity-0 group-hover:opacity-100 transition-all flex p-2`}>
+      <div className={`w-full h-full absolute top-0 left-0 bg-black ${val.pk === currentVideo.pk ? "bg-opacity-0" : "bg-opacity-40"} group-hover:bg-opacity-0 transition-all`}></div>
+      <div className={`w-full  absolute top-0 left-0 ${val.pk === currentVideo.pk ? "bg-opacity-0" : "bg-opacity-40"} opacity-0 group-hover:opacity-100 transition-all flex p-2`}>
         <div className="text-[24px] font-ibm_mono_bolditalic text-black flex">
-          <span className="bg-eva-c2 inline leading-tight">{getCurrentVideo.title}</span>
+          <span className="bg-eva-c2 inline leading-tight">{val.title}</span>
         </div>
       </div>
     </div>
   );
 };
 
-const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
+const CurrentStage = ({ itemList, setCurrentVideo, currentVideo }) => {
   const [swiperRef, setSwiperRef] = useState(null);
 
   const onNext = () => {
@@ -83,8 +67,8 @@ const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
     }
   };
 
-  const onChangeCurrentVideo = (videoId) => {
-    setMainVideoId(videoId)
+  const onChangeCurrentVideo = (videodata) => {
+    setCurrentVideo(videodata)
   }
 
   return (
@@ -103,7 +87,7 @@ const CurrentStage = ({ itemList, setMainVideoId, mainVideoId }) => {
           >
             {
                 itemList.length > 0 && itemList.map((val, idx) => {
-                  return <SwiperSlide key={idx} ><CurrentStageBox val={val} mainVideoId={mainVideoId} clickFunc={() => onChangeCurrentVideo(val)} /></SwiperSlide>
+                  return <SwiperSlide key={idx} ><CurrentStageBox val={val} currentVideo={currentVideo} clickFunc={() => onChangeCurrentVideo(val)} /></SwiperSlide>
                 })
               }
           </Swiper>
