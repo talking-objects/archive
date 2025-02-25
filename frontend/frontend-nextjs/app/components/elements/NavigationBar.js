@@ -1,9 +1,10 @@
 "use client";
-import { loadingState } from "@/app/utils/recoillib/state/state";
+import { loadingState, forestDataState, forestPageState, forestQueryState } from "@/app/utils/recoillib/state/state";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import gsap from "gsap"
 import { useRouter, usePathname } from "next/navigation";
+import { filterViewState, filterQueryState, tempFilterViewState, tempFilterQueryState, toggleSearchState, searchTriggerState, searchTimestampState } from "@/app/utils/recoillib/state/state";
 
 const InfiniteScrollingText = () => {
   useEffect(() => {
@@ -45,13 +46,88 @@ const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
+  const [filterView, setFilterView] = useRecoilState(filterViewState)
+  const [tempFilterView, setTempFilterView] = useRecoilState(tempFilterViewState)
+  const [filterQuery, setFilterQuery] = useRecoilState(filterQueryState)
+  const [tempFilterQuery, setTempFilterQuery] = useRecoilState(tempFilterQueryState)
+  const [toggleSearch, setToggleSearch] = useRecoilState(toggleSearchState)
+  const [searchTrigger, setSearchTrigger] = useRecoilState(searchTriggerState)
+  const [searchTimestamp, setSearchTimestamp] = useRecoilState(searchTimestampState)
+  const [forestData, setForestData] = useRecoilState(forestDataState)
+  const [page, setPage] = useRecoilState(forestPageState)
+  const [forestQuery, setForestQuery] = useRecoilState(forestQueryState)
+     // 현재 경로와 이동하려는 경로가 같은지 확인
+     const pathname = usePathname();
+  const handleFilter = ({filter, view}) => {
+    return new Promise((resolve) => {
+        setTempFilterQuery(prev => {
+            const newState = filter === "all" 
+                ? {
+                    video_filter: true,
+                    clip_filter: Object.keys(prev.clip_filter).reduce((acc, key) => {
+                        acc[key] = true;
+                        return acc;
+                    }, {})
+                }
+                : {
+                    video_filter: false,
+                    clip_filter: Object.keys(prev.clip_filter).reduce((acc, key) => {
+                        acc[key] = filter === key;
+                        return acc;
+                    }, {})
+                };
+            resolve(newState);
+            return newState;
+        });
+    });
+}
 
-  // usePathname을 사용하여 메인 경로 체크
-  const isMainPath = () => {
-    return ['/', '/forest', '/about'].includes(pathname);
-  };
+const onClick = async ({view, filter, path}) => {
+ 
+    const isSamePath = pathname === path;
 
+    setTempFilterView(view);
+    setFilterView(view);
+   
+    
+    if(filter === "all") {
+       
+       
+        const allFilterState = {
+            video_filter: true,
+            clip_filter: {
+                reference_data: true,
+                category_data: true,
+                event_data: true,
+                place_data: true,
+                narration_data: true,
+                data_data: true,
+                tag_data: true
+            }
+        };
+        setFilterQuery(allFilterState);
+        setTempFilterQuery(allFilterState);
+        setToggleSearch(false);
+        setSearchTrigger(false);
+        setSearchTimestamp(Date.now());
+    } else {
+      
+       
+        const newFilterState = await handleFilter({filter, view});
+        setToggleSearch(true);
+        setSearchTrigger(true);
+        setFilterQuery(newFilterState);
+        setSearchTimestamp(Date.now());
+    }
+    setForestQuery("")
+    setForestData([])
+    setIsOpen(false);
+    setPage(1)
+    // 같은 페이지일 경우 router.push를 하지 않음
+    if (!isSamePath) {
+        router.push(path);
+    }
+}
 
   const handleBack = () => {
     router.back();
@@ -88,7 +164,24 @@ const NavigationBar = () => {
                       </button>
                     </div>
                     <div onClick={() => onLinkClick("/")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black">Home</div>
-                    <div onClick={() => onLinkClick("/forest")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">Archive</div>
+                    <div className="flex flex-col">
+                      <div className="block px-4 py-2 transition-colors text-black font-ibm_mono_semibold select-none">Archive</div>
+                      <div onClick={() => onClick({view: "all", filter: "all", path: "/forest"})} className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                        <div className="flex items-center gap-1">
+                          <div>Forest</div>
+                        </div>
+                      </div>
+                      <div onClick={() => onClick({view: "place_data", filter: "place_data", path: "/forest"})} className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                        <div className="flex items-center gap-1">
+                          <div>Places</div>
+                        </div>
+                      </div>
+                      <div onClick={() => onClick({view: "event_data", filter: "event_data", path: "/forest"})} className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                        <div className="flex items-center gap-1">
+                          <div>Events</div>
+                        </div>
+                      </div>
+                    </div>
                     <div onClick={() => onLinkClick("/about")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">About</div>
                     <div className="flex flex-col">
                       <div className="block px-4 py-2 transition-colors text-black font-ibm_mono_semibold select-none">Related Resources</div>

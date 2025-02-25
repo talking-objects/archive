@@ -19,7 +19,7 @@ const ForestSubSection = ({forestData}) => {
                   />
                 </ContentContainer>
           )}
-        <ExploreBtn path={"/forest"} filter={"all"} view={"all"} />
+        <ExploreBtn path={"/forest"} filter={"all"} view={"all"} title={"Explore"} subTitle={"All Items"} />
       </div>
     
   );

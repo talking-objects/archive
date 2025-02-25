@@ -4,7 +4,7 @@ import ForestPlayerCon from "@/app/components/containers/players/ForestPlayerCon
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { getClips, getVideos, getVideosSearch, getClipsSearch } from "@/app/utils/hooks/eva_api";
-import { filterQueryState, filterViewState, loadingState, searchTriggerState, tempFilterQueryState, tempFilterViewState, toggleSearchState } from "@/app/utils/recoillib/state/state";
+import { filterQueryState, filterViewState, forestDataState, forestPageState, forestQueryState, loadingState, searchTriggerState, searchTimestampState, tempFilterQueryState, tempFilterViewState, toggleSearchState } from "@/app/utils/recoillib/state/state";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -14,15 +14,15 @@ import ForestEventWrapper from "./ForestEventWrapper";
 const ForestWrapper = () => {
     const [isReady, setIsReady] = useState(false)
     const getLoadingState = useRecoilValue(loadingState);
-    const [page, setPage] = useState(1);    
-    const [forestData, setForestData] = useState([]);  
+    const [page, setPage] = useRecoilState(forestPageState);    
+    const [forestData, setForestData] = useRecoilState(forestDataState);  
     const [toggleSearch, setToggleSearch] = useRecoilState(toggleSearchState)
-    const [query, setQuery] = useState("")
+    const [query, setQuery] = useRecoilState(forestQueryState)
     const [filterView, setFilterView] = useRecoilState(filterViewState)
     const [showFilters, setShowFilters] = useState(false)
     const [filterQuery, setFilterQuery] = useRecoilState(filterQueryState)
  
-    const [searchTimestamp, setSearchTimestamp] = useState(0);
+    const [searchTimestamp, setSearchTimestamp] = useRecoilState(searchTimestampState)
     const [searchTrigger, setSearchTrigger] = useRecoilState(searchTriggerState)
     const [sortBy, setSortBy] = useState("time")
     const [tempSortBy, setTempSortBy] = useState("time")
@@ -54,7 +54,7 @@ const ForestWrapper = () => {
  
     
     const {data: videosSearch, isLoading: isLoadingVideosSearch} = useQuery({
-        queryKey: ["videosSearch", page, query, filterQuery, sortBy],
+        queryKey: ["videosSearch", page, query, filterQuery, sortBy, searchTimestamp],
         queryFn: () => {
             return getVideosSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery), sort_by: sortBy})
         },
@@ -63,7 +63,7 @@ const ForestWrapper = () => {
     })  
 
     const {data: clipsSearch, isLoading: isLoadingClipsSearch} = useQuery({
-        queryKey: ["clipsSearch", page, query, filterQuery, sortBy],
+        queryKey: ["clipsSearch", page, query, filterQuery, sortBy, searchTimestamp],
         queryFn: () => {
             return getClipsSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery), sort_by: sortBy})
         },
@@ -112,6 +112,10 @@ const ForestWrapper = () => {
             }
         }
     }
+
+    useEffect(() => {
+        onCancelSearch()
+    }, [])
 
     // Get Forest Data
     useEffect(() => {

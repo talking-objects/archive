@@ -7,6 +7,26 @@ export const loadingState = atom({
   },
 });
 
+export const forestQueryState = atom({
+  key: "forestQueryState",
+  default: ""
+})
+
+export const forestPageState = atom({
+  key: "forestPageState",
+  default: 1
+})  
+
+export const forestDataState = atom({
+  key: "forestDataState",
+  default: []
+})
+
+export const searchTimestampState = atom({
+  key: "searchTimestampState",
+  default: 0
+})  
+
 export const componentDataLoadingState = atom({
   key: "componentDataLoadingState",
   default: false

@@ -6,12 +6,13 @@ const ForestEventWrapper = ({allEvents}) => {
     const [getEventData, setEventData] = useState([]);
 
     useEffect(() => {
-        setEventData(allEvents.map(v => {
-            const data = v.data
-            data.pk = v.pk
-            return data
-        }));
-        console.log(allEvents)
+        if(allEvents.length > 0){
+            setEventData(allEvents.map(v => {
+                const data = JSON.parse(JSON.stringify(v.data))
+                data.pk = v.pk
+                return data
+            }));
+        }
     }, [allEvents]);
 
     return (
