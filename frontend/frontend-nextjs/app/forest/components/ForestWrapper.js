@@ -4,10 +4,10 @@ import ForestPlayerCon from "@/app/components/containers/players/ForestPlayerCon
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { getClips, getVideos, getVideosSearch, getClipsSearch } from "@/app/utils/hooks/eva_api";
-import { loadingState } from "@/app/utils/recoillib/state/state";
+import { filterQueryState, filterViewState, loadingState, searchTriggerState, tempFilterQueryState, tempFilterViewState, toggleSearchState } from "@/app/utils/recoillib/state/state";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useForm } from "react-hook-form";
 import LeafletMap from "@/app/components/map/Map";
 import ForestEventWrapper from "./ForestEventWrapper";
@@ -16,43 +16,22 @@ const ForestWrapper = () => {
     const getLoadingState = useRecoilValue(loadingState);
     const [page, setPage] = useState(1);    
     const [forestData, setForestData] = useState([]);  
-    const [toggleSearch, setToggleSearch] = useState(false)
-    const [query, setQuery] = useState(null)
-    const [filterView, setFilterView] = useState("all")
+    const [toggleSearch, setToggleSearch] = useRecoilState(toggleSearchState)
+    const [query, setQuery] = useState("")
+    const [filterView, setFilterView] = useRecoilState(filterViewState)
     const [showFilters, setShowFilters] = useState(false)
-    const [filterQuery, setFilterQuery] = useState({
-        video_filter: true,
-        clip_filter: {
-            reference_data: true,
-            category_data: true,
-            event_data: true,
-            place_data: true,
-            narration_data: true,
-            data_data: true,
-            tag_data: true
-        }
-    })
+    const [filterQuery, setFilterQuery] = useRecoilState(filterQueryState)
+ 
     const [searchTimestamp, setSearchTimestamp] = useState(0);
-    const [searchTrigger, setSearchTrigger] = useState(false);
+    const [searchTrigger, setSearchTrigger] = useRecoilState(searchTriggerState)
     const [sortBy, setSortBy] = useState("time")
     const [tempSortBy, setTempSortBy] = useState("time")
     const [showSort, setShowSort] = useState(false)
     const {register, handleSubmit, getValues, setValue} = useForm()
 
     // Add new state for temporary filter values
-    const [tempFilterView, setTempFilterView] = useState("all")
-    const [tempFilterQuery, setTempFilterQuery] = useState({
-        video_filter: true,
-        clip_filter: {
-            reference_data: true,
-            category_data: true,
-            event_data: true,
-            place_data: true,
-            narration_data: true,
-            data_data: true,
-            tag_data: true
-        }
-    })
+    const [tempFilterView, setTempFilterView] = useRecoilState(tempFilterViewState)
+    const [tempFilterQuery, setTempFilterQuery] = useRecoilState(tempFilterQueryState)
 
     // Get Videos
     const {data: videos, isLoading: isLoadingVideos} = useQuery({

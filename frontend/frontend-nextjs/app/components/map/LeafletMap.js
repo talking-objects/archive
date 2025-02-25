@@ -130,7 +130,7 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
   useEffect(() => {
     if(allPlaces && forest){
       setForestData(allPlaces.map(v => {
-        const data = v.data
+        const data = JSON.parse(JSON.stringify(v.data))
         data.pk = v.pk
         return data
       }))

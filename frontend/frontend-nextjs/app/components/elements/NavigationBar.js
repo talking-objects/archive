@@ -70,7 +70,7 @@ const NavigationBar = () => {
     <>
       {(
         <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[3001] text-white flex items-center gap-4 justify-center duration-700`}>
-          {isMainPath() ? (
+          {(
             <>
               <div className="absolute left-0 h-full flex items-center">
                 <button onClick={() => setIsOpen(!isOpen)} className="p-4 transition-colors">
@@ -124,20 +124,7 @@ const NavigationBar = () => {
                 <div>Experimental Video Archive</div>
               </div>
             </>
-          ) : (
-            <>
-              <div className="absolute left-0 h-full flex items-center">
-                <button onClick={handleBack} className="p-4 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                  </svg>
-                </button>
-              </div>
-              <div className="cursor-pointer px-4 w-fit h-full flex justify-center items-center">
-                <div>Experimental Video Archive</div>
-              </div>
-            </>
-          )}
+          ) }
         </div>
       )}
     </>
