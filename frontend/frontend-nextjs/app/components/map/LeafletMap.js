@@ -133,7 +133,6 @@ const LeafletMap = ({center=[52.5200,13.4050], allPlaces, content=false, changeI
         if(v && v.data){
           const data = JSON.parse(JSON.stringify(v.data))
           data.pk = v.pk
-          console.log(data)
           return data
         }
       }))

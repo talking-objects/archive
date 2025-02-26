@@ -1,7 +1,7 @@
 import { BASE_URL } from "@/app/utils/constant/etc"
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
-
+import { useRouter } from "next/navigation"
 
 const ForestPlayerCon = ({data, metaData}) => {
    const videoRef = useRef(null)
@@ -9,7 +9,7 @@ const ForestPlayerCon = ({data, metaData}) => {
    const [playToggleReal, setPlayToggleReal] = useState(false)
 
    const [currentIndex, setCurrentIndex] = useState(0)
-
+   const router = useRouter()
 
    // change Current Time and Next Video
    useEffect(() => {
@@ -194,14 +194,22 @@ const ForestPlayerCon = ({data, metaData}) => {
     useEffect(() => {
           findCurrentVideo(data)
     },[data])
+
+    const onPush = (v) => {
+      if(v.type === "raw"){
+        window.open(`/video/${v.pk}`, '_blank');
+      }else{
+        window.open(`/clip/${v.pk}`, '_blank');
+      }
+    }
    
    return (<div className="w-full h-[calc(100svh-118px)] relative">
       <div className="w-full h-[calc(100svh-118px)] overflow-hidden flex flex-col">
          {/* Video Container */}
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}
-            <div  className={` bg-opacity-0 ${playToggleReal ? "flex" : "hidden"} absolute top-0 left-0 w-full h-full bg-black z-40 transition-all duration-500 justify-end items-end py-4 px-4`}>
-               <div onClick={() => onPlay(false)} className="w-fit h-9 border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4">
+            <div  className={`bg-opacity-0 ${playToggleReal ? "flex" : "hidden"} absolute top-0 left-0 w-full h-full bg-black z-40 transition-all duration-500 justify-end items-end py-4 px-4`}>
+               <div onClick={() => onPlay(false)} className="w-fit h-9 bg-black border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="size-7">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
                   </svg>
@@ -213,29 +221,45 @@ const ForestPlayerCon = ({data, metaData}) => {
               Your browser does not support the video tag.
             </video>}
             {/* Video Info */}
-            <div onClick={() => onPlay(true)} className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex ${playToggleReal ? "opacity-0 pointer-events-none cursor-auto" : "opacity-100 pointer-events-auto cursor-pointer"} transition-all duration-1000`}>
-               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <div className="w-32 h-32 border border-white rounded-full flex justify-center items-center text-white">
-                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="size-14">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                     </svg>
-
-                  </div>
-               </div>
+            <div className={`absolute top-0 left-0 z-[20] overflow-hidden w-full h-full bg-white flex ${playToggleReal ? "opacity-0 pointer-events-none cursor-auto" : "opacity-100 pointer-events-auto "} transition-all duration-1000`}>
+               
                {
                   data.map((v, idx) => {
                      return <div 
                      key={idx} 
-                     className="w-full h-full bg-white relative border-r-2 border-black last:border-r-0">
+                     className="w-full h-full bg-white relative border-r-2 border-white last:border-r-0">
+                        
                         <Image
                            src={`${BASE_URL}/${data[idx].type === "raw" ? data[idx].pandora_id : data[idx].data.pandora_id}/480p${ data[idx].type === "raw" ? data[idx].poster : data[idx].data.start}.jpg`}
                            alt=""
                            fill
                            style={{objectFit: "cover"}}
                         />
+                        <div onClick={() => onPush(v)} className="absolute top-0 right-0 bg-white w-[24px] h-[24px] flex justify-center items-center cursor-pointer">
+                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
+                             <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                           </svg>
+                        </div>
                      </div>
                   })
                }
+               <div  className={`bg-opacity-0 ${!playToggleReal ? "flex" : "hidden"} pointer-events-none absolute top-0 left-0 w-full h-full bg-black z-40 transition-all duration-500 justify-end items-end py-4 px-4`}>
+                  <div onClick={() => onPlay(true)} className="w-fit h-9 bg-black border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4 pointer-events-auto">
+                     <svg
+                     xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     fill="currentColor"
+                     className="size-7 translate-x-[2px] opacity-90"
+                     >
+                     <path
+                       fillRule="evenodd"
+                       d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z"
+                       clipRule="evenodd"
+                     />
+                     </svg>
+                     Play Preview
+                  </div>
+               </div>
             </div>
            
          

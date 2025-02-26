@@ -36,9 +36,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
               ))
             const minDate = new Date(Math.min(...eventData.map((val) => new Date(val.value.value.startDate).getTime())))
        
-            const xScale = d3.scaleTime()
-                .domain([minDate, maxDate])
-                .range([0, itemGroupSize.width - 20]);
+            const scaleTime = d3.scaleTime([minDate, maxDate],[0, itemGroupSize.width - 20])
 
             svg
             .style("width", `100%`)
@@ -50,38 +48,22 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
             const itemBoxWidth = 50
             const bgBar = svg
             .append("rect")
-            .attr("x", 0)
-            .attr("y", itemGroupSize.height/2 - 25)
+            .attr("x", 10)
+            .attr("y", itemGroupSize.height/1.5 - 25)
             .attr("fill", "blue")
-            .attr("width", itemGroupSize.width)
+            .attr("width", itemGroupSize.width -20)
             .attr("height", bgBarWidth)
             
 
             // zoom이 적용될 그룹 생성
             const timelineGroup = svg.append("g");
 
-            // zoom 동작 정의 수정
+            // zoom 동작 정의
             const zoom = d3.zoom()
                 .scaleExtent([1, 10])
-                .translateExtent([
-                    [0, 0],
-                    [itemGroupSize.width, itemGroupSize.height]
-                ])
                 .on("zoom", (event) => {
-                    // recover the new scale
-                    const newXScale = event.transform.rescaleX(xScale);
-                    
-                    // update timelineBoxs position
-                    timelineBoxG
-                        .selectAll("rect")
-                        .attr("x", function(d) {
-                            return newXScale(new Date(d.value.value.startDate));
-                        });
-
-                    // 만약 axis를 추가한다면:
-                    // if (yAxisGroup) {
-                    //     yAxisGroup.call(d3.axisLeft(newXScale));
-                    // }
+                    const transform = event.transform;
+                    timelineGroup.attr("transform", `translate(${transform.x}, 0) scale(${transform.k}, 1)`);
                 });
 
             svg.call(zoom);
@@ -89,20 +71,20 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
             // timelineBoxs를 timelineGroup 안에 생성
             const timelineBoxG = timelineGroup
             .append("g")
-            .attr("transform", `translate(0, ${itemGroupSize.height/2 - 25})`);
+            .attr("transform", `translate(5, ${itemGroupSize.height/1.5 - 25})`);
 
             const timelineBoxs = timelineBoxG
             .selectAll("rect")
             .data(eventData)
             .join("rect")
             .attr("x", function(d,i){
-              return xScale(new Date(d.value.value.startDate))
+              return scaleTime(new Date(d.value.value.startDate))
           })
             .attr("y", 0)
             .attr("width", 10)
             .attr("height", itemBoxWidth)
             .attr("fill", "rgba(255,100,0,1)")
-            .attr("fill-opacity", 0.8)
+            .attr("fill-opacity", 0.5)
             .on("click", function(d, i){
                 if(i.pk !== currentEventIdx){
                     changeItemTime({data:i})
@@ -111,7 +93,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                     .transition()
                     .duration(300)
                     .attr("transform", function(d, i){
-                        return `translate(${xScale(new Date(d.value.value.startDate))}, 75)rotate(90)`
+                        return `translate(${scaleTime(new Date(d.value.value.startDate))}, 75)rotate(90)`
                     })
                 
                     const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.pk}`)
@@ -145,7 +127,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                             .transition()
                             .duration(300)
                             .attr("transform", function(d, i){
-                                return `translate(${xScale(new Date(eventData[j].value.value.startDate))}, 50)rotate(90)`
+                                return `translate(${scaleTime(new Date(eventData[j].value.value.startDate))}, 50)rotate(90)`
                             })
                             const yAxisGroupLine = d3.select(`#yAItemGroupLine${eventData[j].pk}`)
                             yAxisGroupLine
@@ -161,7 +143,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                         .transition()
                         .duration(300)
                         .attr("transform", function(d, i){
-                            return `translate(${xScale(new Date(d.value.value.startDate))}, 50)rotate(90)`
+                            return `translate(${scaleTime(new Date(d.value.value.startDate))}, 50)rotate(90)`
                         })
                         const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.pk}`)
                         yAxisGroupLine
@@ -299,13 +281,10 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
     return (
       <div className="w-full h-full bg-white relative px-4 py-2">
         <div
-        
-          className={`w-full flex h-full bg-white relative overflow-hidden flex-col`}
+          ref={eventSvgContainer}
+          className={`w-full flex h-full bg-white relative overflow-hidden`}
         >
-          <div className="w-full h-full bg-white"></div>
-          <div ref={eventSvgContainer} className="w-full h-full bg-blue-500">
-            <svg ref={svgRefEvent}></svg>
-          </div>
+          <svg ref={svgRefEvent}></svg>
           <div
             ref={eventTextBoxRef}
             className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"

@@ -44,7 +44,6 @@ const ExploreSection = () => {
     const getForestData = () => {
         if(videos && !isLoadingVideos && clips && !isLoadingClips){
             const data = [...videos.data, ...clips.data]
-            console.log(data)
             setForestData(data)
             
         }
