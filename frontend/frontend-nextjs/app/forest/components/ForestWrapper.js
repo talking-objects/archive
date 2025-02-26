@@ -4,20 +4,22 @@ import ForestPlayerCon from "@/app/components/containers/players/ForestPlayerCon
 import LoadingCon from "@/app/components/LoadingCon";
 import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { getClips, getVideos, getVideosSearch, getClipsSearch } from "@/app/utils/hooks/eva_api";
-import { loadingState } from "@/app/utils/recoillib/state/state";
-import { useQuery } from "@tanstack/react-query";
+import { loadingState} from "@/app/utils/recoillib/state/state";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useForm } from "react-hook-form";
 import LeafletMap from "@/app/components/map/Map";
 import ForestEventWrapper from "./ForestEventWrapper";
+import { useSearchParams } from 'next/navigation';
+
 const ForestWrapper = () => {
+    const searchParams = useSearchParams();
     const [isReady, setIsReady] = useState(false)
     const getLoadingState = useRecoilValue(loadingState);
     const [page, setPage] = useState(1);    
     const [forestData, setForestData] = useState([]);  
-    const [toggleSearch, setToggleSearch] = useState(false)
-    const [query, setQuery] = useState(null)
+    const [query, setQuery] = useState("");
     const [filterView, setFilterView] = useState("all")
     const [showFilters, setShowFilters] = useState(false)
     const [filterQuery, setFilterQuery] = useState({
@@ -31,9 +33,11 @@ const ForestWrapper = () => {
             data_data: true,
             tag_data: true
         }
-    })
-    const [searchTimestamp, setSearchTimestamp] = useState(0);
-    const [searchTrigger, setSearchTrigger] = useState(false);
+        
+      })
+ 
+    const [searchTimestamp, setSearchTimestamp] = useState(0)
+    const [searchTrigger, setSearchTrigger] = useState(false)
     const [sortBy, setSortBy] = useState("time")
     const [tempSortBy, setTempSortBy] = useState("time")
     const [showSort, setShowSort] = useState(false)
@@ -53,6 +57,10 @@ const ForestWrapper = () => {
             tag_data: true
         }
     })
+
+    // toggleSearch의 초기값을 searchParams에 따라 설정
+    const initialFilterParam = searchParams.get('filter');
+    const [toggleSearch, setToggleSearch] = useState(initialFilterParam && initialFilterParam !== 'all');
 
     // Get Videos
     const {data: videos, isLoading: isLoadingVideos} = useQuery({
@@ -75,7 +83,7 @@ const ForestWrapper = () => {
  
     
     const {data: videosSearch, isLoading: isLoadingVideosSearch} = useQuery({
-        queryKey: ["videosSearch", page, query, filterQuery, sortBy],
+        queryKey: ["videosSearch", page, query, filterQuery, sortBy, searchTimestamp],
         queryFn: () => {
             return getVideosSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery), sort_by: sortBy})
         },
@@ -84,7 +92,7 @@ const ForestWrapper = () => {
     })  
 
     const {data: clipsSearch, isLoading: isLoadingClipsSearch} = useQuery({
-        queryKey: ["clipsSearch", page, query, filterQuery, sortBy],
+        queryKey: ["clipsSearch", page, query, filterQuery, sortBy, searchTimestamp],
         queryFn: () => {
             return getClipsSearch({page: page, page_limit: 8, query: query, filter_params: JSON.stringify(filterQuery), sort_by: sortBy})
         },
@@ -125,21 +133,103 @@ const ForestWrapper = () => {
             if(clipsSearch && !isLoadingClipsSearch && clipsSearch.data){
                 newForestDataClips = [...newForestDataClips, ...clipsSearch.data]
             }
+        
             // Only proceed if we have data to add
             if(newForestDataClips.length > 0) {
-                console.log(newForestDataClips)
+               
                 setForestData(prev => [...prev, ...newForestDataClips])
                
             }
         }
     }
 
+    useEffect(() => {
+        const filterParam = searchParams.get('filter');
+        
+        const initializeState = () => {
+            setForestData([]);
+            setPage(1);
+            setQuery("");
+            setValue("search", "");
+            
+            if (filterParam) {
+                setTempFilterView(filterParam);
+                setFilterView(filterParam);
+                
+                if (filterParam === 'all') {
+                    const allFilterState = {
+                        video_filter: true,
+                        clip_filter: {
+                            reference_data: true,
+                            category_data: true,
+                            event_data: true,
+                            place_data: true,
+                            narration_data: true,
+                            data_data: true,
+                            tag_data: true
+                        }
+                    };
+                    setFilterQuery(allFilterState);
+                    setTempFilterQuery(allFilterState);
+                    setToggleSearch(false);
+                    setSearchTrigger(false);
+                } else {
+                    const filteredState = {
+                        video_filter: false,
+                        clip_filter: {
+                            reference_data: filterParam === 'reference_data',
+                            category_data: filterParam === 'category_data',
+                            event_data: filterParam === 'event_data',
+                            place_data: filterParam === 'place_data',
+                            narration_data: filterParam === 'narration_data',
+                            data_data: filterParam === 'data_data',
+                            tag_data: filterParam === 'tag_data'
+                        }
+                    };
+                    setFilterQuery(filteredState);
+                    setTempFilterQuery(filteredState);
+                    setToggleSearch(true);
+                    setSearchTimestamp(Date.now());
+                    setSearchTrigger(true);
+                }
+            } else {
+                // URL 파라미터가 없는 경우 기본값으로 초기화
+                const defaultState = {
+                    video_filter: true,
+                    clip_filter: {
+                        reference_data: true,
+                        category_data: true,
+                        event_data: true,
+                        place_data: true,
+                        narration_data: true,
+                        data_data: true,
+                        tag_data: true
+                    }
+                };
+                setFilterView("all");
+                setTempFilterView("all");
+                setFilterQuery(defaultState);
+                setTempFilterQuery(defaultState);
+                setToggleSearch(false);
+                setSearchTrigger(false);
+            }
+        };
+
+        initializeState();
+    }, [searchParams]);
+
     // Get Forest Data
     useEffect(() => {
         if(!toggleSearch){
-            getForestData()
+            if(!isLoadingVideos && !isLoadingClips){
+                console.log("all")
+                getForestData()
+            }
         }else{
-            getForestDataSearch()
+            if(!isLoadingVideosSearch && !isLoadingClipsSearch){
+                console.log("search")
+                getForestDataSearch()
+            }
         }
     }, [videos, clips, page, videosSearch, clipsSearch, query, searchTimestamp])
 

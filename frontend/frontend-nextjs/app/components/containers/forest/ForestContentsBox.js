@@ -195,11 +195,10 @@ const ForestContentsBox = ({ allData }) => {
 
   const onPush = (value) => {
     if (value.type === "raw") {
-      router.push(`/video/${value.pk}`);
+      window.open(`/video/${value.pk}`, '_blank');
     }
     if (value.type === "clip") {
-    
-      router.push(`/clip/${value.pk}`);
+      window.open(`/clip/${value.pk}`, '_blank');
     }
   };
 

@@ -1,9 +1,10 @@
 "use client";
-import { loadingState } from "@/app/utils/recoillib/state/state";
+import { loadingState, forestDataState, forestPageState, forestQueryState } from "@/app/utils/recoillib/state/state";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import gsap from "gsap"
 import { useRouter, usePathname } from "next/navigation";
+import { filterViewState, filterQueryState, tempFilterViewState, tempFilterQueryState, toggleSearchState, searchTriggerState, searchTimestampState } from "@/app/utils/recoillib/state/state";
 
 const InfiniteScrollingText = () => {
   useEffect(() => {
@@ -45,13 +46,12 @@ const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const pathname = usePathname();
 
-  // usePathname을 사용하여 메인 경로 체크
-  const isMainPath = () => {
-    return ['/', '/forest', '/about'].includes(pathname);
-  };
-
+const onClick = async ({view, filter, path}) => {
+    setIsOpen(false)
+    // URL에 필터 파라미터 추가
+    router.push(`${path}?&filter=${filter}`);
+}
 
   const handleBack = () => {
     router.back();
@@ -70,7 +70,7 @@ const NavigationBar = () => {
     <>
       {(
         <div className={`${(getLoadingState.isLoading) ? "translate-y-0" : "-translate-y-full"} navAni font-ibm_mono_semibold text-[16px] fixed top-0 left-0 w-full h-[56px] bg-black z-[3001] text-white flex items-center gap-4 justify-center duration-700`}>
-          {isMainPath() ? (
+          {(
             <>
               <div className="absolute left-0 h-full flex items-center">
                 <button onClick={() => setIsOpen(!isOpen)} className="p-4 transition-colors">
@@ -88,7 +88,24 @@ const NavigationBar = () => {
                       </button>
                     </div>
                     <div onClick={() => onLinkClick("/")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black">Home</div>
-                    <div onClick={() => onLinkClick("/forest")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">Archive</div>
+                    <div className="flex flex-col">
+                      <div className="block px-4 py-2 transition-colors text-black font-ibm_mono_semibold select-none">Archive</div>
+                      <div onClick={() => onClick({view: "all", filter: "all", path: "/forest"})} className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                        <div className="flex items-center gap-1">
+                          <div>Forest</div>
+                        </div>
+                      </div>
+                      <div onClick={() => onClick({view: "place_data", filter: "place_data", path: "/forest"})} className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                        <div className="flex items-center gap-1">
+                          <div>Places</div>
+                        </div>
+                      </div>
+                      <div onClick={() => onClick({view: "event_data", filter: "event_data", path: "/forest"})} className="block px-4 pl-6 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_regular">
+                        <div className="flex items-center gap-1">
+                          <div>Events</div>
+                        </div>
+                      </div>
+                    </div>
                     <div onClick={() => onLinkClick("/about")} className="block px-4 py-2 hover:bg-eva-c2 transition-colors cursor-pointer text-black font-ibm_mono_semibold">About</div>
                     <div className="flex flex-col">
                       <div className="block px-4 py-2 transition-colors text-black font-ibm_mono_semibold select-none">Related Resources</div>
@@ -124,20 +141,7 @@ const NavigationBar = () => {
                 <div>Experimental Video Archive</div>
               </div>
             </>
-          ) : (
-            <>
-              <div className="absolute left-0 h-full flex items-center">
-                <button onClick={handleBack} className="p-4 transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-                  </svg>
-                </button>
-              </div>
-              <div className="cursor-pointer px-4 w-fit h-full flex justify-center items-center">
-                <div>Experimental Video Archive</div>
-              </div>
-            </>
-          )}
+          ) }
         </div>
       )}
     </>
