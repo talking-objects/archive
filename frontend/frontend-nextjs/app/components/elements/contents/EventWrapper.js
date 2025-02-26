@@ -20,62 +20,101 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => 
      const createTimeLine = ({eventData, eventSvgContainerSize}) => {
      
         if(svgRefEvent.current && eventSvgContainer.current){
-            const svgContainerSize = eventSvgContainerSize
-            // const svgContainerSize = {
-            //     width: eventSvgContainer.current.clientWidth,
-            //     height: eventSvgContainer.current.clientHeight
-            // }
-
             const itemGroupSize = eventSvgContainerSize
-            itemGroupSize.height = itemGroupSize.height
             const svg = d3.select(svgRefEvent.current);
        
             svg.selectAll("*").remove()
+            
+            // 날짜 범위 계산
             const maxDate = new Date(Math.max(
-                ...eventData.map((val) => new Date(val.value.value.startDate).getTime()) // eventData에서 가장 큰 startDate 계산
-              ))
-            const minDate = new Date(Math.min(...eventData.map((val) => new Date(val.value.value.startDate).getTime())))
+                ...eventData.map((val) => new Date(val.value.value.startDate).getTime())
+            ))
+            const minDate = new Date(Math.min(
+                ...eventData.map((val) => new Date(val.value.value.startDate).getTime())
+            ))
        
-            const scaleTime = d3.scaleTime([minDate, maxDate],[0, itemGroupSize.width - 20])
+            // 두 개의 별도 scale 생성 (items용, axis용)
+            const xScale = d3.scaleTime()
+                .domain([minDate, maxDate])
+                .range([0, itemGroupSize.width - 25]);
+            
+            const xScaleAxis = d3.scaleTime()
+                .domain([minDate, maxDate])
+                .range([0, itemGroupSize.width]);
 
             svg
             .style("width", `100%`)
             .style("height", `100%`)
             .style("background", "#fff")
 
+            // 파란색 배경
             const bgBarWidth = 50
             const itemBoxWidth = 50
             const bgBar = svg
             .append("rect")
-            .attr("x", 10)
-            .attr("y", itemGroupSize.height/1.5 - 25)
+            .attr("x", 0)
+            .attr("y", itemGroupSize.height/2 - 25)
             .attr("fill", "blue")
-            .attr("width", itemGroupSize.width -20)
+            .attr("width", itemGroupSize.width)
             .attr("height", bgBarWidth)
             
+            // axis 그룹 추가
+            const xAxis = svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0, ${itemGroupSize.height/2 + 35})`);
 
-            const timelineBoxG = svg
-            .append("g")
-            .attr("transform", `translate(5, ${itemGroupSize.height/1.5 - 25})`)
+            // 초기 axis 생성
+            xAxis.call(
+                d3.axisBottom(xScaleAxis)
+                .ticks(5)
+                .tickFormat(d3.timeFormat("%Y-%m-%d"))
+            );
 
+            // zoom 동작 정의
+            const zoom = d3.zoom()
+                .scaleExtent([1, 10])
+                .translateExtent([
+                    [0, 0],
+                    [itemGroupSize.width, itemGroupSize.height]
+                ])
+                .on("zoom", (event) => {
+                    // 새로운 scale 계산
+                    const newXScale = event.transform.rescaleX(xScale);
+                    const newXScaleAxis = event.transform.rescaleX(xScaleAxis);
+                    
+                    // items 위치 업데이트
+                    timelineBoxG
+                        .selectAll("rect")
+                        .attr("x", function(d) {
+                            return newXScale(new Date(d.value.value.startDate));
+                        });
+
+                    // axis 업데이트
+                    xAxis.call(
+                        d3.axisBottom(newXScaleAxis)
+                        .ticks(5)
+                        .tickFormat(d3.timeFormat("%Y-%m-%d"))
+                    );
+                });
+
+            svg.call(zoom);
+
+            // items 그룹 생성
+            const timelineBoxG = svg.append("g");
+
+            // items 생성
             const timelineBoxs = timelineBoxG
             .selectAll("rect")
             .data(eventData)
             .join("rect")
             .attr("x", function(d,i){
-              return scaleTime(new Date(d.value.value.startDate))
-          })
-            .attr("y", 0)
-            .attr("width", function(d, i){
-              // return (scaleTime(d.endDate) - scaleTime(d.startDate)) < 5 ? 5 : (scaleTime(d.endDate) - scaleTime(d.startDate))
-              const bH = scaleTime(new Date(d.value.value.endDate)) - scaleTime(new Date(d.value.value.startDate))
-              if((scaleTime(new Date(d.value.value.startDate)) + bH) > itemGroupSize.height){
-                  return 10
-              }
-              return 10
-          })
+                return xScale(new Date(d.value.value.startDate))
+            })
+            .attr("y", itemGroupSize.height/2 - 25)
+            .attr("width", 10)
             .attr("height", itemBoxWidth)
             .attr("fill", "rgba(255,100,0,1)")
+            .attr("fill-opacity", 0.8)
             .on("click", function(d, i){
                 if(i.id !== currentEventIdx){
                     changeItemTime({data:i})
@@ -84,7 +123,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => 
                     .transition()
                     .duration(300)
                     .attr("transform", function(d, i){
-                        return `translate(${scaleTime(new Date(d.value.value.startDate))}, 75)rotate(90)`
+                        return `translate(${xScale(new Date(d.value.value.startDate))}, 75)rotate(90)`
                     })
                 
                     const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.id}`)
@@ -118,7 +157,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => 
                             .transition()
                             .duration(300)
                             .attr("transform", function(d, i){
-                                return `translate(${scaleTime(new Date(eventData[j].value.value.startDate))}, 50)rotate(90)`
+                                return `translate(${xScale(new Date(eventData[j].value.value.startDate))}, 50)rotate(90)`
                             })
                             const yAxisGroupLine = d3.select(`#yAItemGroupLine${eventData[j].id}`)
                             yAxisGroupLine
@@ -134,7 +173,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => 
                         .transition()
                         .duration(300)
                         .attr("transform", function(d, i){
-                            return `translate(${scaleTime(new Date(d.value.value.startDate))}, 50)rotate(90)`
+                            return `translate(${xScale(new Date(d.value.value.startDate))}, 50)rotate(90)`
                         })
                         const yAxisGroupLine = d3.select(`#yAItemGroupLine${i.id}`)
                         yAxisGroupLine
@@ -169,43 +208,7 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => 
 
             const pointerLineWidth = 15
     
-            yAxisGroup
-            .selectAll("g")
-            .data(eventData)
-            .join("g")
-            .attr("id", function(d, i){
-                return `yAItemGroup${d.id}`
-            })
-            .attr("transform", function(d, i){
-                return `translate(${scaleTime(new Date(d.value.value.startDate))}, 50)rotate(90)`
-                
-            })
-            .each(function(p, j){
-                const currentG = d3.select(this);
-            
-                const pointLine = currentG
-                .append("rect")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("id", function(d, i){
-                    return `yAItemGroupLine${d.id}`
-                })
-                .attr("width", pointerLineWidth)
-                .attr("height", 1)
-                .attr("fill", "black")
-               
-                const axisText = currentG
-                .append("text")
-                .attr("x", pointerLineWidth)
-                .attr("y", 0)
-                .text(formatDateToYYYYMMDD(new Date(p.value.value.startDate)))
-                .style("text-anchor", "start")
-                .attr("dy", "0.4em")
-                .style("font-size", "12px")
-                .style("font-weight", "medium")
-
-                
-            })
+          
 
 
 
@@ -270,10 +273,13 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => 
     return (
       <ContentBox clip={clip} title={"Annotated Events"} id="event_box">
         <div
-          ref={eventSvgContainer}
-          className={`w-full ${clip ? "aspect-video" : "aspect-square"}  flex bg-white relative overflow-hidden`}
+     
+          className={`w-full ${clip ? "aspect-video" : "aspect-square"}  flex bg-white relative overflow-hidden flex-col`}
         >
-          <svg ref={svgRefEvent}></svg>
+           <div className="w-full h-full bg-white"></div>
+          <div ref={eventSvgContainer} className="w-full h-full bg-white">
+            <svg ref={svgRefEvent}></svg>
+          </div>
           <div
             ref={eventTextBoxRef}
             className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"

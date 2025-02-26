@@ -38,7 +38,10 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
        
             const xScale = d3.scaleTime()
                 .domain([minDate, maxDate])
-                .range([0, itemGroupSize.width - 20]);
+                .range([0, itemGroupSize.width - 25]);
+            const xScaleAxis = d3.scaleTime()
+                .domain([minDate, maxDate])
+                .range([0, itemGroupSize.width ]);
 
             svg
             .style("width", `100%`)
@@ -57,8 +60,17 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
             .attr("height", bgBarWidth)
             
 
-            // zoom이 적용될 그룹 생성
-            const timelineGroup = svg.append("g");
+            // zoom이 적용될 그룹 생성 전에 axis 그룹 추가
+            const xAxis = svg.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", `translate(0, ${itemGroupSize.height/2 + 35})`); // bgBar 아래에 위치
+
+            // 초기 axis 생성
+            xAxis.call(
+                d3.axisBottom(xScaleAxis)
+                .ticks(5) // 표시할 눈금 수 조절
+                .tickFormat(d3.timeFormat("%Y-%m-%d")) // 날짜 포맷 지정
+            );
 
             // zoom 동작 정의 수정
             const zoom = d3.zoom()
@@ -70,6 +82,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                 .on("zoom", (event) => {
                     // recover the new scale
                     const newXScale = event.transform.rescaleX(xScale);
+                    const newXScaleAxis = event.transform.rescaleX(xScaleAxis);
                     
                     // update timelineBoxs position
                     timelineBoxG
@@ -78,18 +91,18 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
                             return newXScale(new Date(d.value.value.startDate));
                         });
 
-                    // 만약 axis를 추가한다면:
-                    // if (yAxisGroup) {
-                    //     yAxisGroup.call(d3.axisLeft(newXScale));
-                    // }
+                    // update axis
+                    xAxis.call(
+                        d3.axisBottom(newXScaleAxis)
+                        .ticks(5)
+                        .tickFormat(d3.timeFormat("%Y-%m-%d"))
+                    );
                 });
 
             svg.call(zoom);
 
             // timelineBoxs를 timelineGroup 안에 생성
-            const timelineBoxG = timelineGroup
-            .append("g")
-            .attr("transform", `translate(0, ${itemGroupSize.height/2 - 25})`);
+            const timelineBoxG = svg.append("g");
 
             const timelineBoxs = timelineBoxG
             .selectAll("rect")
@@ -98,7 +111,7 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
             .attr("x", function(d,i){
               return xScale(new Date(d.value.value.startDate))
           })
-            .attr("y", 0)
+            .attr("y", itemGroupSize.height/2 - 25)
             .attr("width", 10)
             .attr("height", itemBoxWidth)
             .attr("fill", "rgba(255,100,0,1)")
