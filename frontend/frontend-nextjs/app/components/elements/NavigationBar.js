@@ -46,87 +46,11 @@ const NavigationBar = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
-  const [filterView, setFilterView] = useRecoilState(filterViewState)
-  const [tempFilterView, setTempFilterView] = useRecoilState(tempFilterViewState)
-  const [filterQuery, setFilterQuery] = useRecoilState(filterQueryState)
-  const [tempFilterQuery, setTempFilterQuery] = useRecoilState(tempFilterQueryState)
-  const [toggleSearch, setToggleSearch] = useRecoilState(toggleSearchState)
-  const [searchTrigger, setSearchTrigger] = useRecoilState(searchTriggerState)
-  const [searchTimestamp, setSearchTimestamp] = useRecoilState(searchTimestampState)
-  const [forestData, setForestData] = useRecoilState(forestDataState)
-  const [page, setPage] = useRecoilState(forestPageState)
-  const [forestQuery, setForestQuery] = useRecoilState(forestQueryState)
-     // 현재 경로와 이동하려는 경로가 같은지 확인
-     const pathname = usePathname();
-  const handleFilter = ({filter, view}) => {
-    return new Promise((resolve) => {
-        setTempFilterQuery(prev => {
-            const newState = filter === "all" 
-                ? {
-                    video_filter: true,
-                    clip_filter: Object.keys(prev.clip_filter).reduce((acc, key) => {
-                        acc[key] = true;
-                        return acc;
-                    }, {})
-                }
-                : {
-                    video_filter: false,
-                    clip_filter: Object.keys(prev.clip_filter).reduce((acc, key) => {
-                        acc[key] = filter === key;
-                        return acc;
-                    }, {})
-                };
-            resolve(newState);
-            return newState;
-        });
-    });
-}
 
 const onClick = async ({view, filter, path}) => {
- 
-    const isSamePath = pathname === path;
-
-    setTempFilterView(view);
-    setFilterView(view);
-   
-    
-    if(filter === "all") {
-       
-       
-        const allFilterState = {
-            video_filter: true,
-            clip_filter: {
-                reference_data: true,
-                category_data: true,
-                event_data: true,
-                place_data: true,
-                narration_data: true,
-                data_data: true,
-                tag_data: true
-            }
-        };
-        setFilterQuery(allFilterState);
-        setTempFilterQuery(allFilterState);
-        setToggleSearch(false);
-        setSearchTrigger(false);
-        setSearchTimestamp(Date.now());
-    } else {
-      
-       
-        const newFilterState = await handleFilter({filter, view});
-        setToggleSearch(true);
-        setSearchTrigger(true);
-        setFilterQuery(newFilterState);
-        setSearchTimestamp(Date.now());
-    }
-    setForestQuery("")
-    setForestData([])
-    setIsOpen(false);
-    setPage(1)
-    // 같은 페이지일 경우 router.push를 하지 않음
-    if (!isSamePath) {
-        router.push(path);
-    }
+    setIsOpen(false)
+    // URL에 필터 파라미터 추가
+    router.push(`${path}?&filter=${filter}`);
 }
 
   const handleBack = () => {

@@ -114,7 +114,7 @@ const ExploreSection = () => {
               <ContentContainer full={false}>
                 <div className="w-full h-[400px] bg-white flex">
                   <div className="w-1/2 h-full  relative">
-                    <LeafletMap allPlaces={[...forestData].filter(v => v.type === "clip").filter(v => v.data.type === "placeLayer")} forest={true} />
+                   {[...forestData].filter(v => v.type === "clip").filter(v => v.data.type === "placeLayer").length > 0 && <LeafletMap allPlaces={[...forestData].filter(v => v.type === "clip").filter(v => v.data.type === "placeLayer")} forest={true} />}
                   </div>
                   <div className="w-1/2 h-full bg-white">
                     <div className="font-ibm_mono_regular w-full min-w-[320px] bg-white max-h-[350px] overflow-y-scroll py-4 px-4 flex flex-col ">
