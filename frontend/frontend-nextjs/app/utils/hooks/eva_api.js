@@ -4,13 +4,13 @@ const instance = axios.create({
     baseURL: process.env.NODE_ENV === 'development' 
         ? "http://127.0.0.1:8000/api/v1/"
         : process.env.EVA_API_URL,
-    ...(process.env.NODE_ENV === 'production' && {
-        proxy: {
-            host: process.env.PROXY_HOST,
-            port: process.env.PROXY_PORT,
-            protocol: process.env.PROXY_PROTOCOL
-        }
-    })
+    // ...(process.env.NODE_ENV === 'production' && {
+    //     proxy: {
+    //         host: process.env.PROXY_HOST,
+    //         port: process.env.PROXY_PORT,
+    //         protocol: process.env.PROXY_PROTOCOL
+    //     }
+    // })
     // withCredentials: true
 })
 

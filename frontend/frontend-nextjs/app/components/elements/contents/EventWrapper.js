@@ -285,6 +285,9 @@ const EventWrapper = ({getVideoData, isLoading, changeItemTime, clip=false}) => 
             className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
           >
             {currentEventData && <div className="textbox">
+              <div className="flex flex-row gap-2 font-ibm_mono_semibold mb-2">
+                {`${new Date(currentEventData.value?.value?.startDate).toLocaleDateString()} - ${new Date(currentEventData.value?.value?.endDate).toLocaleDateString()}`}
+             </div>
               <div className="textboxInput whitespace-pre-wrap font-ibm_mono_regular">{currentEventData.value?.value?.text}</div>
             </div>}
           </div>

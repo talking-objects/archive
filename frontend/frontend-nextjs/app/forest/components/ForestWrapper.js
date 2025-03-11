@@ -505,7 +505,7 @@ const ForestWrapper = () => {
                 </div>
             </ContentContainer>}
             {forestData.length > 0 && (filterView === "place_data" || filterView === "event_data") && 
-                <div className="w-full h-[calc(100svh-118px)] flex flex-col gap-4 relative bg-red-400">
+                <div className="w-full h-[calc(100svh-118px)] flex flex-col gap-4 relative bg-white">
                     <div className="w-full flex justify-center mt-4 absolute bottom-4 left-0 z-[2000]">
                     {!toggleSearch ? (
                         <button 

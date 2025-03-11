@@ -11,10 +11,10 @@ const ExLink = ({text, path}) => {
 }
 const Footer = () => {
   const [getLoadingState, setLoadingState] = useRecoilState(loadingState);
-  const getComDataLoadingState = useRecoilValue(componentDataLoadingState)
+
   return (
     <>
-      {getLoadingState.isLoading && getLoadingState.hasAnimated && getComDataLoadingState && (
+      {getLoadingState.isLoading && getLoadingState.hasAnimated && (
         <div className="w-full min-h-[200px] bg-black flex text-white text-[14px] font-ibm_mono_semibold">
           <ContentContainer full={false}>
             <div className="w-full flex py-6 gap-8 leading-tight px-4">
