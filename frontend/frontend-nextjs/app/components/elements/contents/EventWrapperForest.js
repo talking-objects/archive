@@ -308,6 +308,10 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
       }
     },[getVideoData])
 
+    const onPush = (v) => {
+      window.open(`/clip/${v.pk}`, '_blank');
+    }
+
 
     return (
       <div className="w-full h-full bg-white relative px-4 py-2">
@@ -321,10 +325,13 @@ const EventWrapperForest = ({getVideoData, isLoading, changeItemTime, clip=false
           </div>
           <div
             ref={eventTextBoxRef}
-            className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
+            className="absolute top-[10px] min-w-[50px] w-[calc(100%-20px)] h-[calc(100%/1.5-50px)] overflow-y-scroll left-[10px] bg-white px-2 py-2 rounded-md border border-black -translate-y-[calc(100%+15px)] transition-all duration-700"
           >
             {currentEventData && <div className="textbox">
-              <Link href={`/clip/${currentEventData.pk}`}>Show Clip</Link>
+              <button onClick={() => onPush(currentEventData)} className="px-4 py-2 bg-[#8BA5F8] hover:bg-[#7B97F7] text-white rounded-md transition-colors duration-200 mb-4 w-1/2 max-w-[200px]">Go to Clip</button>
+             <div className="flex flex-row gap-2 font-ibm_mono_semibold mb-2">
+                {`${new Date(currentEventData.value?.value?.startDate).toLocaleDateString()} - ${new Date(currentEventData.value?.value?.endDate).toLocaleDateString()}`}
+             </div>
               <div className="textboxInput whitespace-pre-wrap font-ibm_mono_regular">{currentEventData.value?.value?.text}</div>
             </div>}
           </div>

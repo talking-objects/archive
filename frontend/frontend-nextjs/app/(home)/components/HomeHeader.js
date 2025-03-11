@@ -22,7 +22,7 @@ const HomeHeader = ({ currentVideo }) => {
         id="headerVideoAni"
         className={`w-full h-full bg-white relative group`}
       >
-        <div className="absolute top-0 left-0 w-full h-full bg-black pointer-events-none select-none bg-opacity-30"></div>
+        
         <div
           className="w-full h-full relative bg-white"
         >
@@ -33,6 +33,7 @@ const HomeHeader = ({ currentVideo }) => {
             style={{objectFit: "cover"}}
           />  
         </div>
+        <div className="absolute top-0 left-0 w-full h-full bg-black pointer-events-none select-none opacity-10 group-hover:opacity-30 transition-all duration-300"></div>
         <div
           onClick={() => moveToVideo({ videoId: currentVideo.pk })}
           className="absolute z-[45] w-[180px] aspect-square top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center cursor-pointer opacity-0 group-hover:opacity-100 bg-black bg-opacity-0 rounded-full text-white transition-all duration-300"
