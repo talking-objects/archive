@@ -9,7 +9,9 @@ import { useEffect } from "react";
 
 const HomeHeader = ({ currentVideo }) => {
   const router = useRouter();
-
+  useEffect(() => {
+    console.log(currentVideo);
+  }, [currentVideo]);
   const moveToVideo = ({ videoId }) => {
     router.push(`/video/${videoId}`);
   };
