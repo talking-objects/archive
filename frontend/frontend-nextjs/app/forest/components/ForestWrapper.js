@@ -349,43 +349,53 @@ const ForestWrapper = () => {
               
             <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[3000] flex justify-between items-center pl-4 gap-4">
             {showLegend && <LegendContainer onToggleLegend={setShowLegend} />}
-                {/* <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1 flex items-center gap-2">
-                    <div>Sort by</div>
-                    <div className="relative">
-                        <button 
-                            onClick={() => setShowSort(prev => !prev)}
-                            className="text-white text-[16px] font-ibm_mono_bolditalic flex items-center gap-2 bg-[#7B97F7] rounded-md px-4 py-2"
-                        >
-                            {tempSortBy === "time" ? "Time" : "Type"}
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </button>
-                        {showSort && (
-                            <div className="absolute top-full left-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px]">
-                                <button 
-                                    onClick={() => handleSort("time")}
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
-                                        tempSortBy === "time" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
-                                    }`}
-                                >Time</button>
-                                <button
-                                    onClick={() => handleSort("type")} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
-                                        tempSortBy === "type" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
-                                    }`}
-                                >Type</button>
-                            </div>
-                        )}
-                    </div>
-                </div> */}
+                {/* 
+                    <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1 flex items-center gap-2">
+                        <div>Sort by</div>
+                        <div className="relative">
+                            <button 
+                                onClick={() => setShowSort(prev => !prev)}
+                                className="text-white text-[16px] font-ibm_mono_bolditalic flex items-center gap-2 bg-[#7B97F7] rounded-md px-4 py-2"
+                            >
+                                {tempSortBy === "time" ? "Time" : "Type"}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </button>
+                            {showSort && (
+                                <div className="absolute top-full left-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px]">
+                                    <button 
+                                        onClick={() => handleSort("time")}
+                                        className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                            tempSortBy === "time" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                        }`}
+                                    >Time</button>
+                                    <button
+                                        onClick={() => handleSort("type")} 
+                                        className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                            tempSortBy === "type" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
+                                        }`}
+                                    >Type</button>
+                                </div>
+                            )}
+                        </div>
+                    </div> 
+                */}
                 
-                <div className="flex items-center gap-2 w-fit">
-                    <div className="text-white text-[16px] font-ibm_mono_bolditalic">Filter by Annotations</div>
+                <div className="w-full flex justify-start items-center h-full flex-[1]">
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 w-full">
+                        <input 
+                            {...register("search")}
+                            type="text" 
+                            placeholder="Search"
+                            className="px-4 py-2 rounded-md mr-2 w-full focus:outline-none focus:ring-0" 
+                        />
+                        <div className="flex items-center gap-2 w-fit">
+                    <div className="text-white text-[16px] font-ibm_mono_bolditalic whitespace-nowrap">Filter by Annotations</div>
                     <div className="relative">
-                        <button 
+                        <div 
                             onClick={() => setShowFilters(prev => !prev)}
-                            className="text-white text-[16px] font-ibm_mono_bolditalic px-4 py-2 bg-[#7B97F7] rounded-md hover:bg-[#6A88F6] transition-colors flex items-center gap-2"
+                            className="cursor-pointer text-white text-[16px] font-ibm_mono_bolditalic px-4 py-2 bg-[#7B97F7] rounded-md hover:bg-[#6A88F6] transition-colors flex items-center gap-2"
                         >
                             {tempFilterView === "all" ? "All" : 
                              tempFilterView === "category_data" ? "Category" :
@@ -398,69 +408,61 @@ const ForestWrapper = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                             </svg>
-                        </button>
+                        </div>
                         {showFilters && (
                             <div className="absolute top-full right-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px] z-[4000]">
-                                <button 
+                                <div 
                                     onClick={() => handleFilter({filter: "all", view: "all"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "all" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >All</button>
-                                <button 
+                                >All</div>
+                                <div 
                                     onClick={() => handleFilter({filter: "category_data", view: "category_data"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "category_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >Category</button>
-                                <button 
+                                >Category</div>
+                                <div 
                                     onClick={() => handleFilter({filter: "reference_data", view: "reference_data"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "reference_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >Reference</button>
-                                <button 
+                                >Reference</div>
+                                <div 
                                     onClick={() => handleFilter({filter: "event_data", view: "event_data"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "event_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >Event</button>
-                                <button 
+                                >Event</div>
+                                <div 
                                     onClick={() => handleFilter({filter: "place_data", view: "place_data"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "place_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >Place</button>
-                                <button 
+                                >Place</div>
+                                <div 
                                     onClick={() => handleFilter({filter: "narration_data", view: "narration_data"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "narration_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >Narration</button>
-                                <button 
+                                >Narration</div>
+                                <div 
                                     onClick={() => handleFilter({filter: "data_data", view: "data_data"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "data_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >Data</button>
-                                <button 
+                                >Data</div>
+                                <div 
                                     onClick={() => handleFilter({filter: "tag_data", view: "tag_data"})} 
-                                    className={`text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
+                                    className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
                                         tempFilterView === "tag_data" ? "bg-[#8BA5F8] text-white hover:bg-[#7B97F7]" : "hover:bg-gray-100"
                                     }`}
-                                >Tag</button>
+                                >Tag</div>
                             </div>
                         )}
                     </div>
                 </div>
-                <div className="w-full flex justify-start items-center h-full flex-[1]">
-                    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 w-full">
-                        <input 
-                            {...register("search")}
-                            type="text" 
-                            placeholder="Search"
-                            className="px-4 py-2 rounded-md mr-2 w-full focus:outline-none focus:ring-0" 
-                        />
                         <button 
                             type="submit"
                             className="px-4 py-2 bg-white rounded-md hover:bg-gray-100 transition-colors font-ibm_mono_semibold"
