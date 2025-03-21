@@ -51,11 +51,10 @@ const AboutWrapper = () => {
             <LoadingCon ready={isReady} comLoader={() => setIsReady(true)} />
         )}
     <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
-        <div className="w-full h-[calc(100svh-118px)] flex justify-center items-center relative">
-            <AboutPlayerCon />
-        </div>
+        <AboutPlayerCon />
+       
      
-        <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
+        <div className="">
            <div className="flex-1 flex justify-center items-center py-8">
             <div className="w-4/5 px-4 lg:px-0 lg:w-2/3 mx-auto font-ibm_mono_regular text-[16px] lg:text-[24px] flex flex-col gap-4">
             {

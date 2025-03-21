@@ -18,10 +18,21 @@ const AboutPlayerCon = ({data, clip=false, showContentVideo=false}) => {
  
   
     useEffect(() => {
-       if(videoRef){
-          setMaxDuration(videoRef.current.duration)
+       if (videoRef.current) {
+           const handleLoadedMetadata = () => {
+               setMaxDuration(videoRef.current.duration);
+           };
+
+           videoRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+           
+           // Cleanup function
+           return () => {
+               if (videoRef.current) {
+                   videoRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+               }
+           };
        }
-    },[videoRef])
+    }, [videoRef])
    
    
     const onToggleLegend = (value) => {
@@ -47,14 +58,10 @@ const AboutPlayerCon = ({data, clip=false, showContentVideo=false}) => {
        }
     }
     const onClickProgressBar = (e) => {
- 
+      
        if(videoRef){
           if(!clip){
              videoRef.current.currentTime = parseFloat(e.target.value)
-             setCurrentTime(e.target.value)
-          }else{
-             
-             videoRef.current.currentTime = parseFloat(e.target.value) + data.in
              setCurrentTime(e.target.value)
           }
        }

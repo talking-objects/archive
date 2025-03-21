@@ -223,7 +223,6 @@ const ForestWrapper = () => {
     useEffect(() => {
         if(!toggleSearch){
             if(!isLoadingVideos && !isLoadingClips){
-                console.log("all")
                 getForestData()
             }
         }else{

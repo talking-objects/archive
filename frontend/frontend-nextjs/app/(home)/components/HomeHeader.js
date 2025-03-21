@@ -3,15 +3,12 @@ import VideoTitle from "@/app/components/containers/players/elements/VideoTitle"
 import { BASE_URL } from "@/app/utils/constant/etc";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 
 
 const HomeHeader = ({ currentVideo }) => {
   const router = useRouter();
-  useEffect(() => {
-    console.log(currentVideo);
-  }, [currentVideo]);
+
   const moveToVideo = ({ videoId }) => {
     router.push(`/video/${videoId}`);
   };
