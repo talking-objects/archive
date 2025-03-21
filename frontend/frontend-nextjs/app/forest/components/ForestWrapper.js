@@ -379,6 +379,7 @@ const ForestWrapper = () => {
                         )}
                     </div>
                 </div> */}
+                
                 <div className="flex items-center gap-2 w-fit">
                     <div className="text-white text-[16px] font-ibm_mono_bolditalic">Filter by Annotations</div>
                     <div className="relative">
