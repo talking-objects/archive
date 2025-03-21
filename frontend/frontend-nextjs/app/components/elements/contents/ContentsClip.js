@@ -11,7 +11,7 @@ import ContentBox from "./ContentBox";
 import CateAndTagWrapper2 from "./CateAndTagWrapper2";
 import gsap from "gsap";
 import { formatTime } from "@/app/utils/hooks/etc";
-
+import DataWrapper from "./DataWrapper";
 const ContentsClip = ({
   videoId,
   isLoading,
@@ -89,6 +89,13 @@ const ContentsClip = ({
                 clip={clip}
                 getVideoData={clipData.annotations.narration_annotations}
                 changeItemTime={() => {}}
+              />
+            )}
+            {clipData.annotations?.data_annotations &&
+            clipData.annotations.data_annotations.length > 0 && (
+              <DataWrapper
+                clip={clip}
+                clipData={clipData}
               />
             )}
         </div>

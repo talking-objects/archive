@@ -209,7 +209,7 @@ const ForestPlayerCon = ({data, metaData}) => {
          <div className="w-full h-full flex flex-col overflow-hidden relative">
             {/* Video */}
             <div  className={`bg-opacity-0 ${playToggleReal ? "flex" : "hidden"} absolute top-0 left-0 w-full h-full bg-black z-40 transition-all duration-500 justify-end items-end py-4 px-4`}>
-               <div onClick={() => onPlay(false)} className="w-fit h-9 bg-black border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4">
+               <div onClick={() => onPlay(false)} className="w-fit h-9 bg-black border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4 font-ibm_mono_semibold">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3.5} stroke="currentColor" className="size-7">
                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25v13.5m-7.5-13.5v13.5" />
                   </svg>
@@ -244,7 +244,7 @@ const ForestPlayerCon = ({data, metaData}) => {
                   })
                }
                <div  className={`bg-opacity-0 ${!playToggleReal ? "flex" : "hidden"} pointer-events-none absolute top-0 left-0 w-full h-full bg-black z-40 transition-all duration-500 justify-end items-end py-4 px-4`}>
-                  <div onClick={() => onPlay(true)} className="w-fit h-9 bg-black border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4 pointer-events-auto">
+                  <div onClick={() => onPlay(true)} className="w-fit h-9 bg-black border border-white rounded-full gap-4 flex cursor-pointer justify-center items-center text-white px-4 pointer-events-auto font-ibm_mono_semibold">
                      <svg
                      xmlns="http://www.w3.org/2000/svg"
                      viewBox="0 0 24 24"
