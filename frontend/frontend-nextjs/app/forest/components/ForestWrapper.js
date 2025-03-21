@@ -388,7 +388,7 @@ const ForestWrapper = () => {
                             {...register("search")}
                             type="text" 
                             placeholder="Search"
-                            className="px-4 py-2 rounded-md mr-2 w-full focus:outline-none focus:ring-0" 
+                            className="px-4 py-2 rounded-md mr-2 w-full focus:outline-none focus:ring-0 max-w-[500px]" 
                         />
                         <div className="flex items-center gap-2 w-fit">
                     <div className="text-white text-[16px] font-ibm_mono_bolditalic whitespace-nowrap">Filter by Annotations</div>
@@ -469,17 +469,18 @@ const ForestWrapper = () => {
                         >
                             Search
                         </button>
-                    </form>
-                    {toggleSearch && (
+                        {toggleSearch && (
                         <div className="flex items-center ml-4">
-                            <button
+                            <div
                                 onClick={onCancelSearch}
-                                className="px-4 py-2 bg-red-400 text-white rounded-md hover:bg-red-500 transition-colors flex items-center gap-2 font-ibm_mono_semibold"
+                                className="cursor-pointer px-4 py-2 bg-red-400 text-white rounded-md hover:bg-red-500 transition-colors flex items-center gap-2 font-ibm_mono_semibold"
                             >
                                 Reset
-                            </button>
+                            </div>
                         </div>
                     )}
+                    </form>
+                   
                 </div>
                 <div onClick={() => { setShowLegend(true) }} className={`h-full aspect-square cursor-pointer select-none flex bg-[#8BA5F8] hover:bg-opacity-30 hover:bg-white justify-center items-center text-black`}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
@@ -494,7 +495,7 @@ const ForestWrapper = () => {
                         <button 
                             onClick={onLoadMore}
                             disabled={videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page}
-                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 ${
+                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 font-ibm_mono_semibold ${
                             videos?.total_pages <= page && clips?.total_pages <= page 
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-[#8BA5F8] hover:bg-[#7B97F7]'
@@ -506,7 +507,7 @@ const ForestWrapper = () => {
                         <button 
                             onClick={onLoadMore}
                             disabled={videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page}
-                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 ${
+                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 font-ibm_mono_semibold ${
                             videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page 
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-[#8BA5F8] hover:bg-[#7B97F7]'
@@ -524,7 +525,7 @@ const ForestWrapper = () => {
                         <button 
                             onClick={onLoadMore}
                             disabled={videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page}
-                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 ${
+                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 font-ibm_mono_semibold ${
                             videos?.total_pages <= page && clips?.total_pages <= page 
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-[#8BA5F8] hover:bg-[#7B97F7]'
@@ -536,7 +537,7 @@ const ForestWrapper = () => {
                         <button 
                             onClick={onLoadMore}
                             disabled={videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page}
-                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 ${
+                            className={`px-6 py-2 text-white rounded-md transition-colors duration-200 font-ibm_mono_semibold ${
                             videosSearch?.total_pages <= page && clipsSearch?.total_pages <= page 
                             ? 'bg-gray-400 cursor-not-allowed'
                             : 'bg-[#8BA5F8] hover:bg-[#7B97F7]'

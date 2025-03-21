@@ -35,7 +35,7 @@ export const LegendContainer = ({onToggleLegend}) => {
     return <div className="w-screen h-[100svh] bg-white bg-opacity-95 absolute top-0 left-0 z-[50] px-4 py-4">
     <div className="w-full max-w-screen-2xl mx-auto">
        <div className="flex w-full justify-between items-center">
-         <div className="text-4xl font-ibm_mono_bolditalic italic">Legend</div>
+         <div className="text-4xl font-ibm_mono_bolditalic">Legend</div>
          <div onClick={() => onToggleLegend(false)} className="cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-12">
                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
