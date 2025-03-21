@@ -9,11 +9,11 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime, clip=false, 
     const [currentColor, setCurrentColor] = useState(CATEGORY_AND_TAGVALUE[0].color)
 
     useEffect(() => {
-     
         if(clipData){
             setCurrentCatAndTagData(clipData)
         }   
     },[clipData])
+
     const getAllData = () => {
         const clonedData = JSON.parse(JSON.stringify(getVideoData));
         const categoires = [...clonedData.annotations.category_annotations]
@@ -33,6 +33,7 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime, clip=false, 
         const getData = [...categoires, ...tag]
         return getData
 }
+
     // categories & tags
     const onClickCatAndTag = (idx) => {
         const changeData = (dataList, tag) => {
@@ -82,9 +83,11 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime, clip=false, 
     }
     
 
+    console.log(clipData)
 
-     // categories & tags
-     useEffect(() => {
+
+    // categories & tags
+    useEffect(() => {
         if(!getVideoData) return;
         setCurrentCatAndTagData(getAllData())
         onClickCatAndTag()
@@ -101,6 +104,11 @@ const CateAndTagWrapper2 = ({getVideoData, videoId, changeItemTime, clip=false, 
                
             </div>
             {currentCatAndTagData && <CTVis changeItemTime={changeItemTime} totalDuration={parseFloat(getVideoData.duration)} data={currentCatAndTagData} bgColor={currentColor} videoId={videoId} />}
+        </div>}
+        {clip && <div className="flex gap-2 items-center justify-start flex-wrap mb-2">
+            {clipData.annotations.tag_annotations.length > 0 && clipData.annotations.tag_annotations[0].value.value.split(",").map((val, idx) => {
+                return <div key={idx} className="text-[12px] px-2 py-1 bg-[#3118E8] text-white select-none cursor-pointer transition-all duration-150 font-ibm_mono_semibold">#{val.trim()}</div>
+            })}
         </div>}
         {clip && <div className="w-full aspect-video relative overflow-hidden flex flex-col justify-center items-center gap-4">
            

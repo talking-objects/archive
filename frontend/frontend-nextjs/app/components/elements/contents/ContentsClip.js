@@ -91,10 +91,6 @@ const ContentsClip = ({
                 changeItemTime={() => {}}
               />
             )}
-       
-       
-            
-        
         </div>
       </div>
   
