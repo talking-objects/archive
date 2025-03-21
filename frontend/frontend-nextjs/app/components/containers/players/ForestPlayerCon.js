@@ -264,13 +264,11 @@ const ForestPlayerCon = ({data, metaData}) => {
            
          
          </div>
-         {/* video controller */}
-        
-         {/* video navigation */}
+      
       
       </div>
      
-       {/* video Legend */}
+     
        
    </div>
 

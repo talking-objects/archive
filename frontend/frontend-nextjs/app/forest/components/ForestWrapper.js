@@ -12,8 +12,9 @@ import { useForm } from "react-hook-form";
 import LeafletMap from "@/app/components/map/Map";
 import ForestEventWrapper from "./ForestEventWrapper";
 import { useSearchParams } from 'next/navigation';
-
+import { LegendContainer } from "@/app/components/elements/Elements";
 const ForestWrapper = () => {
+    const [showLegend, setShowLegend] = useState(false)
     const searchParams = useSearchParams();
     const [isReady, setIsReady] = useState(false)
     const getLoadingState = useRecoilValue(loadingState);
@@ -338,12 +339,16 @@ const ForestWrapper = () => {
             <LoadingCon ready={Boolean((!isLoadingVideos && !isLoadingClips))} comLoader={() => setIsReady(true)} />
         )}
         {forestData && <div className="w-full h-full flex flex-col items-center relative pt-[56px]">
+          
             {/* Forest Video Player */}
             {forestData.length === 0 && <div className="w-full h-[calc(100svh-118px)] flex justify-center items-center">
                 <div className="text-black text-[24px] font-ibm_mono_bolditalic">No videos found</div>
             </div>}
+          
             {forestData.length > 0 && <ForestPlayerCon data={[...forestData].splice(0, 8)} />}
-            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[3000] flex justify-between items-center px-4 gap-4">
+              
+            <div className="w-full h-[62px] bg-[#8BA5F8] sticky top-[56px] left-0 z-[3000] flex justify-between items-center pl-4 gap-4">
+            {showLegend && <LegendContainer onToggleLegend={setShowLegend} />}
                 {/* <div className="text-white text-[16px] font-ibm_mono_bolditalic w-full flex-1 flex items-center gap-2">
                     <div>Sort by</div>
                     <div className="relative">
@@ -472,6 +477,11 @@ const ForestWrapper = () => {
                             </button>
                         </div>
                     )}
+                </div>
+                <div onClick={() => { setShowLegend(true) }} className={`h-full aspect-square cursor-pointer select-none flex bg-[#8BA5F8] hover:bg-opacity-30 hover:bg-white justify-center items-center text-black`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-8">
+                       <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                    </svg>
                 </div>
             </div>
             {forestData.length > 0 && (filterView === "all" || filterView === "category_data" || filterView === "narration_data" || filterView === "data_data" || filterView === "tag_data" || filterView === "reference_data") && <ContentContainer>

@@ -17,7 +17,7 @@ const VideoMeta = ({ currentVideo, videoBool = true, playToggle = true, currentL
         <div className="flex flex-wrap gap-2">
           {(currentVideo.author || currentVideo.contributors) && <BoxLabel text={"Author:"} />}
           <BoxValue
-            text={`${currentVideo.author}${currentVideo.author && ","} ${currentVideo.contributors}`} 
+            text={`${currentVideo.author ? currentVideo.author : ""}${currentVideo.author && ","} ${currentVideo.contributors ? currentVideo.contributors : ""}`} 
           />
         </div>
         {currentVideo.created && <div className="flex flex-wrap gap-2">
