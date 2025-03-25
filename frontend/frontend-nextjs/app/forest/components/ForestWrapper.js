@@ -6,7 +6,7 @@ import LoadingDataCon from "@/app/components/LoadingDataCon";
 import { getClips, getVideos, getVideosSearch, getClipsSearch } from "@/app/utils/hooks/eva_api";
 import { loadingState} from "@/app/utils/recoillib/state/state";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useForm } from "react-hook-form";
 import LeafletMap from "@/app/components/map/Map";
@@ -23,6 +23,8 @@ const ForestWrapper = () => {
     const [query, setQuery] = useState("");
     const [filterView, setFilterView] = useState("all")
     const [showFilters, setShowFilters] = useState(false)
+    const menuRef = useRef(null)
+    const menuBtnRef = useRef(null)
     const [filterQuery, setFilterQuery] = useState({
         video_filter: true,
         clip_filter: {
@@ -321,6 +323,21 @@ const ForestWrapper = () => {
         setShowFilters(prev => !prev)
     }
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                if(!menuBtnRef.current.contains(event.target)){
+                    setShowFilters(false);
+                }
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+    
+
     const handleSort = (sort) => {
         
         setTempSortBy(sort)
@@ -382,34 +399,37 @@ const ForestWrapper = () => {
                 */}
                 
                 <div className="w-full flex justify-start items-center h-full flex-[1]">
-                    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-2 w-full">
+                    <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-4 w-full">
                         <input 
                             {...register("search")}
                             type="text" 
                             placeholder="Search"
-                            className="px-4 py-2 rounded-md mr-2 w-full focus:outline-none focus:ring-0 max-w-[500px]" 
+                            className="px-4 py-2 rounded-md mr-2 w-full focus:outline-none focus:ring-0 max-w-[500px] font-ibm_mono_regular" 
                         />
                         <div className="flex items-center gap-2 w-fit">
-                    <div className="text-white text-[16px] font-ibm_mono_bolditalic whitespace-nowrap">Filter by Annotations</div>
-                    <div className="relative">
-                        <div 
-                            onClick={() => setShowFilters(prev => !prev)}
-                            className="cursor-pointer text-white text-[16px] font-ibm_mono_bolditalic px-4 py-2 bg-[#7B97F7] rounded-md hover:bg-[#6A88F6] transition-colors flex items-center gap-2"
-                        >
-                            {tempFilterView === "all" ? "All" : 
-                             tempFilterView === "category_data" ? "Category" :
-                             tempFilterView === "reference_data" ? "Reference" :
-                             tempFilterView === "event_data" ? "Event" :
-                             tempFilterView === "place_data" ? "Place" :
-                             tempFilterView === "narration_data" ? "Narration" :
-                             tempFilterView === "data_data" ? "Data" :
-                             tempFilterView === "tag_data" ? "Tag" : "All"}
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                        </div>
+                        <div className="text-white text-[16px] font-ibm_mono_bolditalic whitespace-nowrap">Filter by Annotations</div>
+                        <div className="relative">
+                            <div 
+                                ref={menuBtnRef}
+                                onClick={() => setShowFilters(prev => !prev)}
+                                className="cursor-pointer text-white text-[16px] font-ibm_mono_bolditalic px-4 py-2 bg-[#7B97F7] rounded-md hover:bg-[#6A88F6] transition-colors flex items-center gap-2"
+                            >
+                                {tempFilterView === "all" ? "All" : 
+                                 tempFilterView === "category_data" ? "Category" :
+                                 tempFilterView === "reference_data" ? "Reference" :
+                                 tempFilterView === "event_data" ? "Event" :
+                                 tempFilterView === "place_data" ? "Place" :
+                                 tempFilterView === "narration_data" ? "Narration" :
+                                 tempFilterView === "data_data" ? "Data" :
+                                 tempFilterView === "tag_data" ? "Tag" : "All"}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                </svg>
+                            </div>
                         {showFilters && (
-                            <div className="absolute top-full right-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px] z-[4000]">
+                            <div 
+                            ref={menuRef}
+                            className="absolute top-full right-0 mt-2 bg-white rounded-md shadow-lg p-2 flex flex-col gap-2 min-w-[120px] z-[4000]">
                                 <div 
                                     onClick={() => handleFilter({filter: "all", view: "all"})} 
                                     className={`cursor-pointer text-black text-[16px] font-ibm_mono_regular px-4 py-2 rounded-md text-left ${
@@ -469,7 +489,7 @@ const ForestWrapper = () => {
                             Search
                         </button>
                         {toggleSearch && (
-                        <div className="flex items-center ml-4">
+                        <div className="flex items-center">
                             <div
                                 onClick={onCancelSearch}
                                 className="cursor-pointer px-4 py-2 bg-red-400 text-white rounded-md hover:bg-red-500 transition-colors flex items-center gap-2 font-ibm_mono_semibold"
