@@ -53,7 +53,7 @@ export const LegendContainer = ({onToggleLegend}) => {
             </div>
          </LegendBoxWrapper>
          <LegendBoxWrapper title={"Data"}>
-             <EtcItemBox text={"Coming Soon"}>
+             <EtcItemBox text={"Specific Data Points like Year, Link, Location, Person, or similiar"}>
                {/* <div style={{backgroundColor: `${COLORS.c6}`}} className="w-2 h-8 border border-black"></div> */}
             </EtcItemBox>
          </LegendBoxWrapper>

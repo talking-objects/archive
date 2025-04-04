@@ -1,4 +1,8 @@
+import { useEffect } from "react";
 const VideoMeta = ({ currentVideo, videoBool = true, playToggle = true, currentLanguage="en" }) => {
+ useEffect(() => {
+  console.log(currentVideo)
+ }, [currentVideo])
   return (
     <div
       className={`${
@@ -15,9 +19,9 @@ const VideoMeta = ({ currentVideo, videoBool = true, playToggle = true, currentL
           <div className="font-eva text-[120px] leading-[1.2]">C</div>
         </div>
         <div className="flex flex-wrap gap-2">
-          {(currentVideo.author || currentVideo.contributors) && <BoxLabel text={"Author:"} />}
+          {((currentVideo.author) || (currentVideo.contributors)) && <BoxLabel text={"Author:"} />}
           <BoxValue
-            text={`${currentVideo.author ? currentVideo.author : ""}${currentVideo.author && ","} ${currentVideo.contributors ? currentVideo.contributors : ""}`} 
+            text={`${(currentVideo.author) ? currentVideo.author : ""} ${currentVideo.author ? "," : ""} ${(Boolean(currentVideo.contributors)) ? currentVideo.contributors : ""}`} 
           />
         </div>
         {currentVideo.created && <div className="flex flex-wrap gap-2">
